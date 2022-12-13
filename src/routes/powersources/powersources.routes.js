@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const controller = require("../../controllers/dashboard.controller");
+const controller = require("../../controllers/powersources/powersources.controller");
 
 router.get("", controller.helloWorld);
 
