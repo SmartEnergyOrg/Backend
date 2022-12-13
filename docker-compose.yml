@@ -11,6 +11,7 @@ services:
     #  - .env
     #environment:
     #  PORT: ${PORT}
+    restart: unless-stopped
     depends_on:
       - influxdb
 
@@ -38,6 +39,6 @@ services:
       - DOCKER_INFLUXDB_INIT_ORG=SmartEnergy # required
       - DOCKER_INFLUXDB_INIT_BUCKET=mybucket # required
     entrypoint: [ "./entrypoint.sh" ]
-    restart: on-failure
+    restart: unless-stopped
     depends_on:
       - influxdb
