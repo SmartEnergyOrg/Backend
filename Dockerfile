@@ -2,7 +2,7 @@ FROM node:lts-hydrogen
 
 ENV NODE_ENV=production
 
-RUN MKDIR -p /app/node_modules && chown -R node:node /app
+RUN mkdir -p /app/node_modules && chown -R node:node /app
 
 WORKDIR /app
 
