@@ -18,8 +18,8 @@ services:
   influxdb:
     image: influxdb:latest
     container_name: "statusmonitor_influxdb"
-    volumes:
-      - myInfluxVolume:/var/lib/influxdb2:rw # hiermee wordt data gepersisteerd
+    # volumes:
+    #   - myInfluxVolume:/var/lib/influxdb2:rw # hiermee wordt data gepersisteerd
     #env_file:
     #  - .env
     ports:
@@ -27,8 +27,8 @@ services:
     restart: unless-stopped
 
   influxdb_cli:
-    links:
-      - influxdb-cli
+    # links:
+    #   - influxdb-cli
     image: influxdb:latest
     container_name: "statusmonitor_influxdb-cli"
     environment:
