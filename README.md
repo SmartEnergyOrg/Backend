@@ -13,20 +13,20 @@ If you Are on windows 10/11 Home:
 WSL -l 
 ``` 
 
-3. If you receive any errors troubleshoot.
+3. If you receive any errors, troubleshoot.
 4. If Windows did not install a default distro (Ubuntu) Install one from the MS
    store: [Ubuntu from MS store](https://apps.microsoft.com/store/detail/ubuntu/9PDXGNCFSCZV?hl=en-us&gl=US)
 5. For a more comfortable working environment get Windows Terminal and set Ubuntu as your default
-   CLI: [Windows Terminal from MS store](https://apps.microsoft.com/store/detail/ubuntu/9PDXGNCFSCZV?hl=en-us&gl=US)
+   CLI: [Windows Terminal from MS store](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701)
 6. Install Docker: [Docker](https://www.docker.com/)
 7. Restart computer
-8. Open Docker-Desktop open settings and got to: `Resources > WSL Integration` Enable Ubuntu and press refresh
-9. Open Windows Terminal or Ubuntu and see if the docker command is working.
+8. Open Docker-Desktop, open settings and go to: `Resources > WSL Integration` Enable Ubuntu and press refresh
+9. Open Windows Terminal or Ubuntu and see if the `docker` command is working.
 
 If you are on Linux, Mac or Windows 10/11 Pro:
 
 1. Install Docker
-2. Run Docker in a CLI to see if it works
+2. Run `docker` in a CLI to see if it works
 
 ### When Docker is installed:
 
