@@ -7,7 +7,8 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 0",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "populate": "node ./src/db/populate.js"
   },
   "repository": {
     "type": "git",
