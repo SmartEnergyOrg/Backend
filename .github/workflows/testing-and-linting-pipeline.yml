@@ -14,6 +14,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
+      - name: install eslint on system
+        run: npm install -g eslint
       - run: npm ci
       - run: npm run lint
       - run: npm run test
