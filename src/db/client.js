@@ -20,9 +20,4 @@ const influxDB = new InfluxDB({ url, token });
  **/
 const client = influxDB.getQueryApi(org, bucket);
 
-/**
- * Apply default tags to all points.
- **/
-client.useDefaultTags({ region: "west" });
-
 module.exports = client;

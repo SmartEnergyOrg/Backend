@@ -47,7 +47,7 @@ async function deleteAllData() {
 
 deleteAllData()
   .then(() => {
-    console.log("Sucessfully deleted");
+    console.log("Successfully deleted");
 
     /**
      * Create a write client from the getWriteApi method.
