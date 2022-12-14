@@ -32,13 +32,9 @@ app.use("*", (err, req, res, next) => {
   }
 });
 
-const port = process.env.PORT || 3333;
 const start = async () => {
   try {
-    app.listen(
-      port,
-      console.log(`Server listening on http://localhost:${port}/api/`)
-    );
+    app.listen(3333, console.log("💡 Server is running!"));
   } catch (error) {
     console.log(error);
   }
