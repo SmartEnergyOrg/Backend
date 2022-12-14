@@ -2,6 +2,10 @@
 
 [project description here]
 
+## Environment setup
+
+Add all variables from sample.env to your own custom .env file.
+
 ## Docker setup
 
 If you Are on windows 10/11 Home:
