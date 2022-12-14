@@ -7,7 +7,7 @@ on:
     branches: [dev, main]
     
 jobs:
-  testing-and-linting
+  testing-and-linting:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
