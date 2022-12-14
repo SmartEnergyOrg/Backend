@@ -1,4 +1,4 @@
-const solarService = require("../../services/solar.service");
+const solarService = require("../../services/powersources/solar.service");
 
 const getCompleteTimeline = (req, res) => {
   const completeTimeline = solarService.getCompleteTimeline();

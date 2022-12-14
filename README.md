@@ -4,7 +4,7 @@
 
 ## Docker setup
 
-If you Are on windows 10/11 Home:
+If you are on windows 10/11 Home:
 
 1. Install WSL: [WSL installation guide](https://docs.microsoft.com/en-us/windows/wsl/install)
 2. Restart your computer, and run in powershell:
@@ -31,13 +31,15 @@ If you are on Linux, Mac or Windows 10/11 Pro:
 ### When Docker is installed:
 
 1. navigate to the repo in a terminal or inside your IDE's CLI
-2. Copy and paste `sample.env` (to keep it on the repo) and rename it to `.env`
-3. run `docker-compose build`
-4. run `docker-compose up` or `docker-compose up -d` if you want to run it in the background
+2. copy and paste `sample.env` (to keep it on the repo) and rename it to `.env`
+3. edit the `.env` file so that it contains your preferred values
+4. run `docker-compose build`
+5. run `docker-compose up -d` to run the containers in the background
+6. run `docker-compose down` to stop and remove the containers
 
 ### Using remote containers with VSCode
 
-For an optimal dev environment use the Remote containers extensions.
+For an optimal dev environment use the remote containers extension
 
 1. Open VSCode in this project
 2. Install Remote - Containers from Microsoft (ms-vscode-remote.remote-containers)
