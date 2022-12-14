@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const controller = require("../../controllers/powersources/powersources.controller");
+const solarController = require("../../controllers/powersources/solar.controller");
 
-router.get("", controller.helloWorld);
+router.get("", solarController.getCompleteTimeline);
 
 module.exports = router;
