@@ -4,11 +4,7 @@ services:
     container_name: "statusmonitor_node"
     build: .
     ports:
-      - "${PORT}:${PORT}"
-    env_file:
-      - .env
-    environment:
-      PORT: ${PORT}
+      - "12345:3333"
     restart: unless-stopped
     depends_on:
       - influxdb
