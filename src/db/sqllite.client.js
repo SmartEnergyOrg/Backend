@@ -1,34 +1,28 @@
 const sqlLite = require("sqlite3").verbose();
-const database = new sqlLite.Database("AndesDb");
-
-function TestDb() {
-  database.serialize(() => {
-    //database.run("CREATE TABLE lorem (info TEXT)");
-    const stmt = database.prepare("INSERT INTO lorem VALUES (?)");
-
-    for (let i = 0; i < 10; i++) {
-      stmt.run(`Ipsum ${i}`);
-    }
-
-    stmt.finalize();
-
-    database.each("SELECT rowid AS id, info FROM lorem", (err, row) => {
-      console.log(`${row.id}: ${row.info}`);
-    });
-  });
-  //database.close();
-}
 
 class SqliteDataContext {
   DataSQL;
 
   constructor() {
-    this.DataSQL = new sqlLite.Database("DashboardConfigDB");
-    //Will setup tables
-    this.setupTables();
+    this.DataSQL = new sqlLite.Database("DashboardConfigDB", (err) => {
+      if (err) {
+        console.log("Database is not connected");
+      } else {
+        console.log("Database is connected");
+        //Will setup tables
+        this.setupTables();
+      }
+    });
   }
 
   async setupTables() {
+    const WidgetSettingTable = `CREATE TABLE IF NOT EXISTS WidgetSettings(
+        SettingId INTEGER PRIMARY KEY,
+        Position_Y INTEGER DEFAULT 0,
+        Position_X INTEGER DEFAULT 0,
+        ISACTIVE INTEGER CHECK ( 0 OR 1 ) DEFAULT 1,
+        WidgetId INTEGER,
+        FOREIGN KEY (WidgetId) REFERENCES Widget)`;
     const WidgetTable = `CREATE TABLE IF NOT EXISTS Widget (
      WidgetId INTEGER PRIMARY KEY,
      DashboardId INTEGER,
@@ -36,11 +30,7 @@ class SqliteDataContext {
      Time_Period INTEGER NOT NULL,
      Type_Graph INTEGER NOT NULL,
      Color_Graph TEXT DEFAULT 'Black',
-     InfluxQuery TEXT,
-     /*WidgetSettingsId INTEGER*/
-     Position_Y INTEGER DEFAULT 0,
-     Position_X INTEGER DEFAULT 0,
-     ISACTIVE INTEGER CHECK ( 0 OR 1 ) DEFAULT 1
+     InfluxQuery TEXT
     /*FOREIGN KEY (DashboardId) REFERENCES Dashboard*/
      )`;
     const DashBoardTable = `
@@ -78,6 +68,7 @@ class SqliteDataContext {
         this.DataSQL.run(DashBoardTable);
         this.DataSQL.run(WidgetTable);
         this.DataSQL.run(HistoricDataTable);
+        this.DataSQL.run(WidgetSettingTable);
       });
     } catch (e) {
       throw new Error(e);
@@ -87,21 +78,20 @@ class SqliteDataContext {
   //Use ? when you use a parameter within the query
   //Example 'SELECT Widget WHERE WidgetId = ?' , [1] OR 1
   //Alternative notation: 'SELECT Widget WHERE WidgetId = $Id?' { $Id: 1 }
-  PreparedStatement(Query, InputData) {
+  async PreparedStatement(Query, InputData) {
     try {
-      this.DataSQL.run(Query, InputData, (res, error) => {
-        console.log(res);
-        return res;
+      return this.DataSQL.run(Query, InputData, (err) => {
+        return true;
       });
     } catch (e) {
-      throw e;
+      return false;
     }
   }
 
   //Use this method if you want to insert
   async SingleQuery(Query) {
-    this.DataSQL.run(Query, [], (err, rows) => {
-      console.log(rows);
+    return this.DataSQL.each(Query, [], (err, rows) => {
+      return rows;
     });
   }
 
@@ -120,7 +110,7 @@ class SqliteDataContext {
   async GetAllResults(Query, Params) {
     console.log(Query);
     try {
-      this.DataSQL.each(Query, Params, (err, row) => {
+      return this.DataSQL.each(Query, Params, (err, row) => {
         if (err) {
           console.log("Niets gevonden");
         }
@@ -135,4 +125,4 @@ class SqliteDataContext {
   }
 }
 
-module.exports = { TestDb, SqliteDataContext };
+module.exports = { SqliteDataContext };
