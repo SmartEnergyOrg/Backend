@@ -18,4 +18,13 @@ services:
     container_name: "statusmonitor_influxdb"
     ports:
       - "8086:8086"
+    volumes:
+      - myInfluxVolume:/var/lib/influxdb2
+    env_file:
+      - .env
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=root
+      - DOCKER_INFLUXDB_INIT_ORG=SmartEnergy
+      - DOCKER_INFLUXDB_INIT_BUCKET=SmartEnergy
     restart: unless-stopped
