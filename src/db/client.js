@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 const { InfluxDB } = require("@influxdata/influxdb-client");
 
 /** Environment variables **/

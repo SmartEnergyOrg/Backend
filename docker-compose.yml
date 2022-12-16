@@ -1,8 +1,14 @@
 version: "3"
+volumes:
+  web_data:
+    name: myInfluxVolume
+
 services:
   node:
     container_name: "statusmonitor_node"
     build: .
+    environment:
+      - INFLUXDB_HOST=http://influx
     ports:
       - "12345:3333"
     restart: unless-stopped
@@ -12,10 +18,11 @@ services:
   influxdb:
     image: influxdb:latest
     container_name: "statusmonitor_influxdb"
+    hostname: influx
     ports:
       - "8086:8086"
     volumes:
-      - myInfluxVolume:/var/lib/influxdb2
+      - web_data:/var/lib/influxdb2
     env_file:
       - .env
     environment:
