@@ -29,7 +29,7 @@ const deleteApi = new DeleteAPI(influxDB);
 /**
  * This function will delete all the data from the database
  */
-async function deleteAllData() {
+async function deleteAllSolarData() {
   // define time interval for delete operation
   const stop = new Date();
   const start = new Date(1970);
@@ -45,7 +45,9 @@ async function deleteAllData() {
   });
 }
 
-async function addData() {
+const MINUTE_IN_MILLISECONDS = 60000;
+
+async function addSolarData() {
   /**
    * Create a write client from the getWriteApi method.
    * Provide your `org` and `bucket`.
@@ -60,7 +62,7 @@ async function addData() {
   for (let i = 0; i < 100; i++) {
     const measurement = "solar";
     const amount = Math.floor(Math.random() * 1000);
-    const timestamp = new Date(currentTime - i * 60000);
+    const timestamp = new Date(currentTime - i * MINUTE_IN_MILLISECONDS);
 
     const point = new Point(measurement)
       .floatField("amount", amount)
@@ -78,7 +80,7 @@ async function addData() {
   });
 }
 
-deleteAllData()
+deleteAllSolarData()
   .then(() => {
     console.log("Sucessfully deleted");
   })
@@ -87,7 +89,7 @@ deleteAllData()
     console.log("\nError during deletion");
   });
 
-addData().catch((err) => {
+addSolarData().catch((err) => {
   console.log(err);
-  console.log("/nError during write");
+  console.log("\nError during write");
 });
