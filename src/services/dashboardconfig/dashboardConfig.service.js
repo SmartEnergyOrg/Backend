@@ -3,57 +3,54 @@ const { SqliteDataContext } = require("../../db/sqllite.client");
 class DashboardConfigService {
   //Uses a sqlite client.
   SqlClient;
-
+  READ = 1;
+  EDIT = 2;
+  
   constructor(input) {
     console.log(input);
     this.SqlClient = new SqliteDataContext();
   }
 
   //Crud operations widgets
-  CreateWidget(
-    Title,
-    DashboardId,
-    Time_Period,
-    Type_Graph,
-    Color_Graph,
-    InfluxQuery
+  async CreateWidget(
+    Title, DashboardId, Time_Period, Type_Graph, Color_Graph, InfluxQuery
   ) {
     const sql = `
-        INSERT INTO Widget(Title,DashboardId, Time_Period, Type_Graph, Color_Graph, InfluxQuery)
+        INSERT INTO Widgets(Title,DashboardId, Time_Period, Type_Graph, Color_Graph, InfluxQuery)
         VALUES (?, ?, ?, ?, ?, ?)`;
-    const params = [
-      Title,
-      DashboardId,
-      Time_Period,
-      Type_Graph,
-      Color_Graph,
-      InfluxQuery,
-    ];
-    let result = this.SqlClient.PreparedStatement(sql, params);
-    console.log(result);
-  }
-
-  UpdateWidget(Id) {
-    const sql = `UPDATE `;
-  }
-
-  DeleteWidgets(id) {
-    const sql = `DELETE FROM Widget WHERE WidgetId = ?`;
-    return this.SqlClient.PreparedStatement(sql, id);
-  }
-
-  async GetAllWidgets() {
-    const sqlQuery = `select * from Widget;`;
-    const result = await this.SqlClient.SingleQuery(sqlQuery);
+    const params = [ Title,  DashboardId, Time_Period, Type_Graph, Color_Graph, InfluxQuery];
+    let result = await this.SqlClient.Create(sql, params);
     return result;
   }
 
-  async GetWidget(id) {
-    const sql = `select *
-                 from Widget
-                 WHERE WidgetId = ?`;
+  UpdateWidget(Id, UpdateValues) {
+    const sql = `
+    UPDATE Widgets 
+    SET`;
+    return "Hello update"
+  }
 
-    const result = await this.SqlClient.PreparedStatement(sql, id);
+  async DeleteWidgets(id) {
+    const sql = `DELETE FROM Widgets WHERE WidgetId = ?`;
+    
+    const result = await this.SqlClient.Delete(sql, id);
+    
+    return result;
+  }
+
+  async GetAllWidgets() {
+    const sqlQuery = `select * from Widgets;`;
+  
+    const read = await this.SqlClient.GetAll(sqlQuery);
+   
+    return read;
+  }
+
+  async GetWidget(id) {
+    const sql = `select * from Widgets WHERE WidgetId = ?`;
+    const Params = [id];
+    
+    const result = await this.SqlClient.GetOne(sql, Params);
 
     return result;
   }

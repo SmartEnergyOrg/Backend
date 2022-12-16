@@ -22,8 +22,8 @@ class SqliteDataContext {
         Position_X INTEGER DEFAULT 0,
         ISACTIVE INTEGER CHECK ( 0 OR 1 ) DEFAULT 1,
         WidgetId INTEGER,
-        FOREIGN KEY (WidgetId) REFERENCES Widget)`;
-    const WidgetTable = `CREATE TABLE IF NOT EXISTS Widget (
+        FOREIGN KEY (WidgetId) REFERENCES Widgets)`;
+    const WidgetTable = `CREATE TABLE IF NOT EXISTS Widgets (
      WidgetId INTEGER PRIMARY KEY,
      DashboardId INTEGER,
      Title TEXT NOT NULL ,
@@ -34,7 +34,7 @@ class SqliteDataContext {
     /*FOREIGN KEY (DashboardId) REFERENCES Dashboard*/
      )`;
     const DashBoardTable = `
-  CREATE TABLE IF NOT EXISTS Dashboard(
+  CREATE TABLE IF NOT EXISTS Dashboards(
       DashboardId INTEGER PRIMARY KEY,
       UserId INTEGER,
       ShowNavbar INTEGER CHECK(0 OR 1) DEFAULT 1
@@ -88,40 +88,78 @@ class SqliteDataContext {
     }
   }
 
-  //Use this method if you want to insert
-  async SingleQuery(Query) {
-    return this.DataSQL.each(Query, [], (err, rows) => {
-      return rows;
-    });
+  //Geef database client terug
+  //Voor custom queries
+  GetDb(){
+    return this.DataSQL;
   }
 
-  async GetSingleResult(Query, Params) {
-    try {
-      if (typeof Query != "string") {
-        throw new Error("Query moet een string zijn.");
-      }
-      const row = await this.DataSQL.get(Query, Params);
-      return row ? row : null;
-    } catch (e) {
-      throw e;
-    }
-  }
+  //Two ways to pass in a query.
+  //1) Via Prepared statements -> SELECT * FROM Widgets WHERE WidgetId = ? / Params => [Id], Id OR 
+  //SELECT * FROM Widgets WHERE WidgetId = $Id -> Params { $Id }
+  //2) Directly -> SELECT FROM Widgets WHERE WidgetId = 1 and params empty [] or {}
 
-  async GetAllResults(Query, Params) {
-    console.log(Query);
-    try {
-      return this.DataSQL.each(Query, Params, (err, row) => {
-        if (err) {
-          console.log("Niets gevonden");
-        }
-
-        const rows = row;
+  //Get all elements.
+  async GetAll(Query, Params){
+    const db = this.GetDb();
+    return new Promise(function(resolve, reject){
+      db.all(Query,Params,(error, rows)=>{
+        if(error) reject(error);
         console.log(rows);
-        return rows ? rows : null;
+        resolve(rows);
       });
-    } catch (e) {
-      throw e;
-    }
+    })
+  }
+
+  //Get one element
+  async GetOne(Query, Params){
+    const db = this.GetDb();
+    return new Promise(function(resolve, reject){
+      db.get(Query, Params, (error, rows)=>{
+        if(error) reject(error);
+        console.log(rows);
+        resolve(rows);
+      });
+    })
+  }
+
+  //Update query
+  async Update(Query, Params){
+    const db = this.GetDb();
+
+    return new Promise(function(resolve, reject){
+      db.run(Query, Params, function(error){
+        if(error) reject(error);
+        console.log(`Last Id is ${this.lastID}`);
+        resolve(this.lastID);
+      });
+    })
+  }
+
+  //Delete a element
+  async Delete(Query, Params){
+    const db = this.GetDb();
+    return new Promise(function(resolve, reject){
+      db.run(Query, Params, (error)=>{
+        if(error) reject(false);
+        console.log(rows);
+        resolve(true);
+      });
+    })
+  }
+
+  async Create(Query, InputValues){
+    const db = this.GetDb();
+    return new Promise(function(resolve, reject){
+      db.run(Query, InputValues, function(err){
+        if(err) throw err;
+
+        console.log(`Id of edited of inserted ${this.lastID}`);
+        //Retrieves last inserted id.
+        resolve(this.lastID);
+      });
+    })
+    
   }
 }
 
