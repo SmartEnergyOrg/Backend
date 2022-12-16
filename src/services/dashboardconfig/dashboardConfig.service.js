@@ -12,22 +12,41 @@ class DashboardConfigService {
   }
 
   //Crud operations widgets
-  async CreateWidget(
-    Title, DashboardId, Time_Period, Type_Graph, Color_Graph, InfluxQuery
-  ) {
+  async CreateWidget(CreationObject) {
     const sql = `
         INSERT INTO Widgets(Title,DashboardId, Time_Period, Type_Graph, Color_Graph, InfluxQuery)
         VALUES (?, ?, ?, ?, ?, ?)`;
-    const params = [ Title,  DashboardId, Time_Period, Type_Graph, Color_Graph, InfluxQuery];
+    const params = [ 
+      CreationObject.Title,  
+      CreationObject.DashboardId, 
+      CreationObject.Time_Period, 
+      CreationObject.Type_Graph, 
+      CreationObject.Color_Graph, 
+      CreationObject.InfluxQuery];
     let result = await this.SqlClient.Create(sql, params);
     return result;
   }
 
-  UpdateWidget(Id, UpdateValues) {
-    const sql = `
+  async UpdateWidget(Id, UpdateValues) {
+    const UpdateQuery = `
     UPDATE Widgets 
-    SET`;
-    return "Hello update"
+    SET Title = ?,
+    DashboardId = ?,
+    Time_Period = ?,
+    Type_Graph = ?,
+    Color_Graph = ?,
+    InfluxQuery = ?
+    WHERE WidgetId = ?`;
+    const params = [
+      UpdateValues.Title, 
+      UpdateValues.DashboardId,
+      UpdateValues.Time_Period,
+      UpdateValues.Type_Graph,
+      UpdateValues.Color_Graph,
+      UpdateValues.InfluxQuery,
+      Id
+    ]
+    return await this.SqlClient.Update(UpdateQuery, params);
   }
 
   async DeleteWidgets(id) {
@@ -54,6 +73,28 @@ class DashboardConfigService {
 
     return result;
   }
+
+  async CreateSettings(CreationValues){
+    const Params = [CreationValues.Position_Y, CreationValues.Position_X, CreationValues.WidgetId];
+
+    const Sql = `INSERT INTO WidgetSettings(Position_Y, Position_X, WidgetId) VALUES(?,?,?)`;
+
+    const createCommand = await this.SqlClient.Create(sql, Params);
+
+    return createCommand;
+  }
+
+  async UpdateSettings(Id, UpdateValues){
+    const Params = [UpdateValues.Position_Y, UpdateValues.Position_X, UpdateValues.ISACTIVE, UpdateValues.WidgetId];
+
+    const Sql = `INSERT INTO WidgetSettings(Position_Y, Position_X, WidgetId) VALUES(?,?,?)`;
+
+    const createCommand = await this.SqlClient.Create(sql, Params);
+
+    return createCommand;
+  }
+
+
 }
 
 module.exports = DashboardConfigService;

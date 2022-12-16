@@ -21,7 +21,7 @@ class SqliteDataContext {
         Position_Y INTEGER DEFAULT 0,
         Position_X INTEGER DEFAULT 0,
         ISACTIVE INTEGER CHECK ( 0 OR 1 ) DEFAULT 1,
-        WidgetId INTEGER,
+        WidgetId INTEGER NOT NULL,
         FOREIGN KEY (WidgetId) REFERENCES Widgets)`;
     const WidgetTable = `CREATE TABLE IF NOT EXISTS Widgets (
      WidgetId INTEGER PRIMARY KEY,
@@ -105,7 +105,6 @@ class SqliteDataContext {
     return new Promise(function(resolve, reject){
       db.all(Query,Params,(error, rows)=>{
         if(error) reject(error);
-        console.log(rows);
         resolve(rows);
       });
     })
@@ -129,9 +128,9 @@ class SqliteDataContext {
 
     return new Promise(function(resolve, reject){
       db.run(Query, Params, function(error){
-        if(error) reject(error);
+        if(error) reject(false);
         console.log(`Last Id is ${this.lastID}`);
-        resolve(this.lastID);
+        resolve(true);
       });
     })
   }
@@ -140,9 +139,8 @@ class SqliteDataContext {
   async Delete(Query, Params){
     const db = this.GetDb();
     return new Promise(function(resolve, reject){
-      db.run(Query, Params, (error)=>{
+      db.run(Query, Params, function(error){
         if(error) reject(false);
-        console.log(rows);
         resolve(true);
       });
     })
