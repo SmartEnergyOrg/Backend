@@ -91,5 +91,5 @@ deleteAllSolarData()
 
 addSolarData().catch((err) => {
   console.log(err);
-  console.log("/nError during write");
+  console.log("\nError during write");
 });
