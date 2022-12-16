@@ -1,8 +1,12 @@
 const sqlLite = require("sqlite3").verbose();
 
+
+//Responsible for the connection with the database and CRUD operations of the database.
 class SqliteDataContext {
   DataSQL;
 
+  //Builds up the tables if it does not exist 
+  //Connects app to a Sqlite database.
   constructor() {
     this.DataSQL = new sqlLite.Database("DashboardConfigDB", (err) => {
       if (err) {
@@ -15,6 +19,7 @@ class SqliteDataContext {
     });
   }
 
+  //Creates all the tables.
   async setupTables() {
     const WidgetSettingTable = `CREATE TABLE IF NOT EXISTS WidgetSettings(
         SettingId INTEGER PRIMARY KEY,
@@ -22,16 +27,16 @@ class SqliteDataContext {
         Position_X INTEGER DEFAULT 0,
         ISACTIVE INTEGER CHECK ( 0 OR 1 ) DEFAULT 1,
         WidgetId INTEGER NOT NULL,
-        FOREIGN KEY (WidgetId) REFERENCES Widgets)`;
+        FOREIGN KEY (WidgetId) REFERENCES Widgets ON DELETE CASCADE
+        )`;
     const WidgetTable = `CREATE TABLE IF NOT EXISTS Widgets (
      WidgetId INTEGER PRIMARY KEY,
-     DashboardId INTEGER,
+     DashboardId INTEGER DEFAULT 0,
      Title TEXT NOT NULL ,
      Time_Period INTEGER NOT NULL,
      Type_Graph INTEGER NOT NULL,
-     Color_Graph TEXT DEFAULT 'Black',
-     InfluxQuery TEXT
-    /*FOREIGN KEY (DashboardId) REFERENCES Dashboard*/
+     Color_Graph TEXT DEFAULT 'Black'
+    /*FOREIGN KEY (DashboardId) REFERENCES Dashboard ON DELETE SET DEFAULT*/
      )`;
     const DashBoardTable = `
   CREATE TABLE IF NOT EXISTS Dashboards(
@@ -53,22 +58,24 @@ class SqliteDataContext {
       Password TEXT NOT NULL,
       Role TEXT DEFAULT 'REGULAR'
   )`;
-    const HistoricDataTable = `
-    CREATE TABLE IF NOT EXISTS HistoricCosts(
-        HistoryId INTEGER PRIMARY KEY,
-        Month INTEGER NOT NULL,
-        Year INTEGER NOT NULL,
-        Costs INTEGER NOT NULL,
-        EnergySource TEXT NOT NULL
-    )`;
+
+  const DatasourceTable = `CREATE TABLE IF NOT EXISTS Graphs(
+    GraphId INTEGER PRIMARY KEY,
+    WidgetId INTEGER NOT NULL,
+    Name TEXT NOT NULL,
+    Query TEXT,
+    Type_Graph TEXT,
+    PowerSource TEXT NOT NULL,
+    FOREIGN KEY (WidgetId) REFERENCES Widgets ON DELETE CASCADE
+  )`
 
     try {
       this.DataSQL.serialize(async () => {
         this.DataSQL.run(UserTable);
         this.DataSQL.run(DashBoardTable);
         this.DataSQL.run(WidgetTable);
-        this.DataSQL.run(HistoricDataTable);
         this.DataSQL.run(WidgetSettingTable);
+        this.DataSQL.run(DatasourceTable);
       });
     } catch (e) {
       throw new Error(e);
@@ -113,6 +120,7 @@ class SqliteDataContext {
   //Get one element
   async GetOne(Query, Params){
     const db = this.GetDb();
+    //Via a promise, is it possible to async await a query
     return new Promise(function(resolve, reject){
       db.get(Query, Params, (error, rows)=>{
         if(error) reject(error);
@@ -125,7 +133,7 @@ class SqliteDataContext {
   //Update query
   async Update(Query, Params){
     const db = this.GetDb();
-
+ //Via a promise, is it possible to async await a query
     return new Promise(function(resolve, reject){
       db.run(Query, Params, function(error){
         if(error) reject(false);
@@ -138,6 +146,8 @@ class SqliteDataContext {
   //Delete a element
   async Delete(Query, Params){
     const db = this.GetDb();
+
+     //Via a promise, is it possible to async await a query
     return new Promise(function(resolve, reject){
       db.run(Query, Params, function(error){
         if(error) reject(false);
@@ -146,12 +156,14 @@ class SqliteDataContext {
     })
   }
 
+  //Create function.
   async Create(Query, InputValues){
     const db = this.GetDb();
+
+     //Via a promise, is it possible to async await a query
     return new Promise(function(resolve, reject){
       db.run(Query, InputValues, function(err){
-        if(err) throw err;
-
+        if(err) reject(0);
         console.log(`Id of edited of inserted ${this.lastID}`);
         //Retrieves last inserted id.
         resolve(this.lastID);
