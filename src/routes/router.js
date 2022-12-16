@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
-const dashboardRoutes = require("./powersources/powersources.routes");
+const powerSourcesRoutes = require("./powersources/powersources.routes");
 
-router.use("/solar", dashboardRoutes);
+router.use("/powersources", powerSourcesRoutes);
 
 module.exports = router;
