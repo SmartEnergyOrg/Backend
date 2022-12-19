@@ -28,4 +28,4 @@ const poll = async (req, res) => {
   }
 };
 
-module.exports = { pollWidget };
+module.exports = { poll };

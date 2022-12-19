@@ -4,7 +4,7 @@ const { InfluxDB, Point } = require("@influxdata/influxdb-client");
 const { DeleteAPI } = require("@influxdata/influxdb-client-apis");
 
 /** Environment variables **/
-const url = `${process.env.INFLUXDB_HOST}:${process.env.INFLUXDB_PORT}`;
+const url = `${process.env.INFLUXDB_HOST || "http://localhost"}:${process.env.INFLUXDB_PORT}`;
 const token = process.env.DOCKER_INFLUXDB_INIT_ADMIN_TOKEN;
 const org = "SmartEnergy";
 const bucket = "SmartEnergy";
@@ -40,6 +40,16 @@ async function deleteAllSolarData() {
     body: {
       start: start.toISOString(),
       stop: stop.toISOString(),
+      predicate: '_measurement="wind"',
+    },
+  });
+
+  await deleteApi.postDelete({
+    org,
+    bucket,
+    body: {
+      start: start.toISOString(),
+      stop: stop.toISOString(),
       predicate: '_measurement="solar"',
     },
   });
@@ -59,15 +69,23 @@ async function addSolarData() {
    **/
   let pointArray = [];
   const currentTime = new Date();
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 1000; i++) {
     const measurement = "solar";
-    const amount = Math.floor(Math.random() * 1000);
+    const solarAmount = Math.floor(Math.random() * 1000);
+    const windAmount = Math.floor(Math.random() * 1000);
+    
     const timestamp = new Date(currentTime - i * MINUTE_IN_MILLISECONDS);
 
+    const windPoint = new Point("wind")
+      .floatField("amount", windAmount)
+      .timestamp(timestamp);
+    console.log(`${windPoint}`);
+
     const point = new Point(measurement)
-      .floatField("amount", amount)
+      .floatField("amount", solarAmount)
       .timestamp(timestamp);
     console.log(`${point}`);
+      pointArray.push(windPoint)
     pointArray.push(point);
   }
   writeApi.writePoints(pointArray);
@@ -83,13 +101,13 @@ async function addSolarData() {
 deleteAllSolarData()
   .then(() => {
     console.log("Sucessfully deleted");
+addSolarData().catch((err) => {
+  console.log(err);
+  console.log("\nError during write");
+});
   })
   .catch((err) => {
     console.log(err);
     console.log("\nError during deletion");
   });
 
-addSolarData().catch((err) => {
-  console.log(err);
-  console.log("\nError during write");
-});
