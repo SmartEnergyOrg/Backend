@@ -12,7 +12,7 @@ const id2 = {
   defaultRange: "3d",
 };
 
-const pollWidget = async (req, res) => {
+const poll = async (req, res) => {
   if (req.params.id == 1) {
     const result = await influxdbService.getDataByWidget(id1);
 
