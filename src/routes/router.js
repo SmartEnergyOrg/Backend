@@ -5,8 +5,5 @@ const widgetRoutes = require("./widgets/widgets.routes");
 
 router.use("/powersources", powerSourcesRoutes);
 router.use("/widgets", widgetRoutes);
-router.get("/", (req, res) => {
-  res.status(200).json({ message: "Hello World!" });
-});
 
 module.exports = router;
