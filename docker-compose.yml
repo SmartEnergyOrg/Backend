@@ -12,6 +12,8 @@ services:
     ports:
       - "12345:3333"
     restart: unless-stopped
+    environment:
+      - INFLUXDB_HOST=http://influx
     depends_on:
       - influxdb
 
