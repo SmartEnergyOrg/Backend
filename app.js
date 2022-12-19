@@ -4,7 +4,11 @@ const router = require("./src/routes/router");
 // const errors = require("./src/helpers/errors");
 
 const express = require("express");
+const { default: Logger } = require("js-logger");
 const app = express();
+
+// // Log messages will be written to the window's console.
+// Logger.useDefaults();
 
 // middleware
 app.use(express.json());
@@ -34,6 +38,8 @@ app.use("*", (err, req, res, next) => {
 
 const port = 3333;
 const start = async () => {
+  // Logger.info("start function called");
+
   try {
     app.listen(port, console.log(`💡 Server is listening for requests`));
   } catch (error) {

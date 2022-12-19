@@ -25,7 +25,8 @@
     "@influxdata/influxdb-client-apis": "^1.33.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "js-logger": "^1.6.1"
   },
   "devDependencies": {
     "eslint": "^8.29.0",
