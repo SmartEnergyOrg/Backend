@@ -3,7 +3,7 @@ require("dotenv").config();
 const { InfluxDB } = require("@influxdata/influxdb-client");
 
 /** Environment variables **/
-const url = `${process.env.INFLUXDB_HOST}:${process.env.INFLUXDB_PORT}`;
+const url = `${process.env.INFLUXDB_HOST || "http://localhost"}:${process.env.INFLUXDB_PORT}`;
 const token = process.env.DOCKER_INFLUXDB_INIT_ADMIN_TOKEN;
 const org = "SmartEnergy";
 const bucket = "SmartEnergy";
