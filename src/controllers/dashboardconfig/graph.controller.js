@@ -9,11 +9,17 @@ const GraphsService = new WidgetGraphService(database);
 const GetOne = async (req, res)=>{
     const Id = req.params.graphId;
 
-    const Graph = await GraphsService.CreateGraph()
+    const Graph = await GraphsService.GetOneGraph(Id);
+
+    res.status(201).json({message: "Grafiek aangemaakt", result: Graph});
 }
 
 const GetAll = async (req, res)=>{
+    const WidgetId = req.params.id;
     
+    const Graph = await GraphsService.GetAllGraphs(WidgetId);
+
+    res.status(201).json({message: "Grafiek aangemaakt", result: Graph});
 }
 
 
