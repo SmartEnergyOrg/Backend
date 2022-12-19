@@ -7,8 +7,9 @@ class SqliteDataContext {
 
   //Builds up the tables if it does not exist 
   //Connects app to a Sqlite database.
-  constructor() {
-    this.DataSQL = new sqlLite.Database("DashboardConfigDB", (err) => {
+  constructor(DatabaseName) {
+    console.log(`Database is connected to ${DatabaseName}. Welcome`);
+    this.DataSQL = new sqlLite.Database(DatabaseName, (err) => {
       if (err) {
         console.log("Database is not connected");
       } else {
@@ -21,14 +22,16 @@ class SqliteDataContext {
 
   //Creates all the tables.
   async setupTables() {
+    const FK_On = "PRAGMA foreign_keys = ON";
     const WidgetSettingTable = `CREATE TABLE IF NOT EXISTS WidgetSettings(
         SettingId INTEGER PRIMARY KEY,
-        Position_Y INTEGER DEFAULT 0,
-        Position_X INTEGER DEFAULT 0,
+        Position INTEGER DEFAULT 0,
         ISACTIVE INTEGER CHECK ( 0 OR 1 ) DEFAULT 1,
         WidgetId INTEGER NOT NULL,
         FOREIGN KEY (WidgetId) REFERENCES Widgets ON DELETE CASCADE
         )`;
+
+        //TODO Foreign key with dashboard needs to be connected.
     const WidgetTable = `CREATE TABLE IF NOT EXISTS Widgets (
      WidgetId INTEGER PRIMARY KEY,
      DashboardId INTEGER DEFAULT 0,
@@ -69,13 +72,17 @@ class SqliteDataContext {
     FOREIGN KEY (WidgetId) REFERENCES Widgets ON DELETE CASCADE
   )`
 
+  const defaultDashboard = `INSERT OR IGNORE INTO Dashboards(DashboardId, UserId) VALUES(0, 0);`
+
     try {
       this.DataSQL.serialize(async () => {
+        this.DataSQL.get(FK_On);
         this.DataSQL.run(UserTable);
         this.DataSQL.run(DashBoardTable);
         this.DataSQL.run(WidgetTable);
         this.DataSQL.run(WidgetSettingTable);
         this.DataSQL.run(DatasourceTable);
+        this.DataSQL.run(defaultDashboard);
       });
     } catch (e) {
       throw new Error(e);
@@ -130,6 +137,11 @@ class SqliteDataContext {
     })
   }
 
+  async JoinResult(Query, Params){
+    //Via a promise, is it possible to async await a query
+    return this.GetAll(Query, Params);
+  }
+
   //Update query
   async Update(Query, Params){
     const db = this.GetDb();
@@ -159,7 +171,6 @@ class SqliteDataContext {
   //Create function.
   async Create(Query, InputValues){
     const db = this.GetDb();
-
      //Via a promise, is it possible to async await a query
     return new Promise(function(resolve, reject){
       db.run(Query, InputValues, function(err){
