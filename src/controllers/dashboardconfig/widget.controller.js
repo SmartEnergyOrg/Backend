@@ -41,7 +41,7 @@ const GetWidgetsOfDashboard = async (req, res)=>{
             Name,
             Query,
             Type_Graph,
-            PowerSource
+            Measurement
         }
     ]
 }
@@ -85,15 +85,14 @@ const DeleteWidget = async (req, res)=>{
 }
 
 /*Schema, at least these attributes must be present.
-{
-    
+{   
     WidgetId,
     DashboardId, 
     Title,
-    Time_Period, 
+    DefaultRange, 
     Type_Graph, 
     Color_Graph
-    Settings:{
+    Settings: {
         SettingId,
         Position,
         ISACTIVE,
@@ -102,17 +101,16 @@ const DeleteWidget = async (req, res)=>{
         {
             GraphId
             Name,
-            Query,
             Type_Graph,
-            PowerSource
+            Measurement
         }
     ]
 }*/
 const UpdateWidget = async (req, res)=>{
     const Id = req.params.id;
-    const WidgetBody = req.body.Widget;
-    const Settings = req.body.Settings;
-    const GraphList = req.body.Graphs;
+    const WidgetBody = req.body;
+    const Settings = WidgetBody.Settings;
+    const GraphList = WidgetBody.Graphs;
 
     //Updates widget
     await widgetService.UpdateWidget(Id, WidgetBody);
@@ -121,10 +119,15 @@ const UpdateWidget = async (req, res)=>{
     await SettingsService.UpdateSettings(Id, Settings);
 
     //Updates all graphsources in this table.
-    await GraphList.forEach(e =>{
-        GraphsService.UpdateGraphsTable(e.GraphId, e);
+    //Deletes all graphs not present in the object.
+    await GraphsService.UpdateDeleteGraphs(GraphList.map(e => e.GraphId));
+
+    //Replaces graphs.
+    await GraphList.forEach(async e =>{
+        //Replaces new values;
+        GraphsService.ReplaceGraph(e.GraphId, Id,e);
     })
 
-    res.status(204).json({message: "Update is completed", result: true});
+    res.status(201).json({message: "Update is completed", result: true});
 }
 module.exports = { GetWidgetsOfDashboard, CreateWidget, DeleteWidget, GetOneWidget, UpdateWidget }

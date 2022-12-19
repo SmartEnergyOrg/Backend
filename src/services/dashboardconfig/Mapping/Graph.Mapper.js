@@ -5,7 +5,7 @@ const MapJoinResultToWidget = (JoinResult, main)=>{
             WidgetId: main.WidgetId,
             DashboardId: main.DashboardId,
             Title: main.Title,
-            Time_Period: main.Time_Period,
+            DefaultRange: main.DefaultRange,
             Type_Graph: main.Type_Graph,
             Color_Graph: main.Color_Graph,
             Graphs: [],
@@ -21,7 +21,7 @@ const MapJoinResultToWidget = (JoinResult, main)=>{
                 Name: widget.Name,
                 Query: widget.Query,
                 Type_Graph: widget.Type_Graph,
-                PowerSource: widget.PowerSource})
+                Measurement: widget.Measurement})
         });
         return Widget;
     } catch (error) {
@@ -31,4 +31,40 @@ const MapJoinResultToWidget = (JoinResult, main)=>{
     
 }
 
-module.exports = { MapJoinResultToWidget };
+
+const MapJoinResultArray = (JoinResult) => {
+    let List = [];
+
+    JoinResult.forEach(widget =>{
+
+        if(List.length == 0 || List[List.length -1].WidgetId != widget.WidgetId){
+            let Widget = {
+                WidgetId: widget.WidgetId, 
+                DashboardId: widget.DashboardId, 
+                Title: widget.Title, 
+                DefaultRange: widget.DefaultRange, 
+                Type_Graph: widget.Type_Graph,
+                Color_Graph: widget.Color_Graph,
+                Settings: {
+                    SettingId: widget.SettingId,
+                    Position: widget.Position,
+                    ISACTIVE: widget.ISACTIVE,
+                    GraphId: widget.GraphId
+                },
+                Graphs: [{
+                    Name: widget.Name,
+                    Type_Graph: widget.Type_Graph,
+                    Measurement: widget.Measurement
+                }]
+                };
+            List.push(Widget);
+        }else if(List[List.length -1].WidgetId == widget.WidgetId){
+            let PickedWidget = List.pop();
+            PickedWidget.Graphs.push({Name: widget.Name, Type_Graph: widget.Type_Graph, Measurement: widget.Measurement});
+            List.push(PickedWidget);
+        } 
+    })
+
+    return List;
+}
+module.exports = { MapJoinResultToWidget, MapJoinResultArray };

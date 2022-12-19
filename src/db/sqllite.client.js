@@ -36,7 +36,7 @@ class SqliteDataContext {
      WidgetId INTEGER PRIMARY KEY,
      DashboardId INTEGER DEFAULT 0,
      Title TEXT NOT NULL ,
-     Time_Period INTEGER NOT NULL,
+     DefaultRange INTEGER NOT NULL,
      Type_Graph INTEGER NOT NULL,
      Color_Graph TEXT DEFAULT 'Black'
     /*FOREIGN KEY (DashboardId) REFERENCES Dashboard ON DELETE SET DEFAULT*/
@@ -66,9 +66,8 @@ class SqliteDataContext {
     GraphId INTEGER PRIMARY KEY,
     WidgetId INTEGER NOT NULL,
     Name TEXT NOT NULL,
-    Query TEXT,
     Type_Graph TEXT,
-    PowerSource TEXT NOT NULL,
+    Measurement TEXT NOT NULL,
     FOREIGN KEY (WidgetId) REFERENCES Widgets ON DELETE CASCADE
   )`
 
@@ -148,7 +147,10 @@ class SqliteDataContext {
  //Via a promise, is it possible to async await a query
     return new Promise(function(resolve, reject){
       db.run(Query, Params, function(error){
-        if(error) reject(false);
+        if(error) {
+          console.log(error);
+          reject(false)
+        }
         console.log(`Last Id is ${this.lastID}`);
         resolve(true);
       });

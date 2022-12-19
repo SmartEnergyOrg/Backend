@@ -27,6 +27,12 @@ constructor(database) {
     
     return await this.SqlClient.Update(Sql, Params);
   }
+
+  //Retrieves setting based on widgetId
+  async GetSettings(Id){
+    const sql = `SELECT * FROM WidgetSettings WHERE WidgetId = ?;`
+    return await this.SqlClient.GetOne(sql, [Id]);
+  }
 }
 
 module.exports = WidgetSettingsService;

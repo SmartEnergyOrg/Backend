@@ -1,5 +1,5 @@
 const { SqliteDataContext } = require("../../db/sqllite.client");
-const { MapJoinResultToWidget } = require("./Mapping/Graph.Mapper");
+const { MapJoinResultToWidget, MapJoinResultArray } = require("./Mapping/Graph.Mapper");
 
 class WidgetService{
     //Uses a sqlite client.
@@ -12,12 +12,13 @@ class WidgetService{
     //Crud operations widgets
     async CreateWidget(CreationObject) {
         const sql = `
-        INSERT INTO Widgets(Title,DashboardId, Time_Period, Type_Graph, Color_Graph)
-        VALUES (?, ?, ?, ?, ?)`;
+        INSERT INTO Widgets(Title, DashboardId, DefaultRange, Type_Graph, Color_Graph)
+        VALUES (?, ?, ?, ?, ?)
+        `;
         const params = [ 
       CreationObject.Title,  
       CreationObject.DashboardId, 
-      CreationObject.Time_Period, 
+      CreationObject.DefaultRange, 
       CreationObject.Type_Graph, 
       CreationObject.Color_Graph];
         return await this.SqlClient.Create(sql, params);
@@ -25,16 +26,19 @@ class WidgetService{
 
     async UpdateWidget(Id, UpdateValues) {
         const UpdateQuery = `
-    UPDATE Widgets SET Title = ?, DashboardId = ?,
-    Time_Period = ?, Type_Graph = ?, Color_Graph = ?,
-    WHERE WidgetId = ?`;
+    UPDATE Widgets 
+    SET Title = ?, 
+    DashboardId = ?,
+    DefaultRange = ?, 
+    Type_Graph = ?, 
+    Color_Graph = ?
+    WHERE WidgetId = ?;`;
         const params = [
       UpdateValues.Title, 
       UpdateValues.DashboardId,
-      UpdateValues.Time_Period,
+      UpdateValues.DefaultRange,
       UpdateValues.Type_Graph,
       UpdateValues.Color_Graph,
-      UpdateValues.InfluxQuery,
       Id
         ]
         return await this.SqlClient.Update(UpdateQuery, params);
@@ -59,7 +63,12 @@ class WidgetService{
         sqlQuery += ` WHERE DashboardId = ?`;
         param.push(DashboardId);
       }
-      return await this.SqlClient.GetAll(sqlQuery, param);
+      const result =  await this.SqlClient.GetAll(sqlQuery, param);
+
+      //Will map results to an object.
+      let newResult = MapJoinResultArray(result);
+
+      return newResult;
     }
 
     //Retrieves a widget with settings and graphs.
