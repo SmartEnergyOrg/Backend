@@ -7,8 +7,8 @@ services:
   node:
     container_name: "statusmonitor_node"
     build: .
-    environment:
-      - INFLUXDB_HOST=http://influx
+    env_file:
+      - .env
     ports:
       - "12345:3333"
     restart: unless-stopped
