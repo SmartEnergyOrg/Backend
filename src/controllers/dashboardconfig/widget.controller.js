@@ -92,7 +92,7 @@ const GetOneWidget = async (req, res) => {
 const DeleteWidget = async (req, res) => {
   const WidgetId = req.params.id;
   const result = await widgetService.DeleteWidgets(WidgetId);
-  res.status(201).json({ message: "Search result", result: result });
+  res.status(200).json({ message: "Search result", result: result });
 };
 
 /*Schema, at least these attributes must be present.
@@ -143,20 +143,36 @@ const UpdateWidget = async (req, res) => {
 };
 
 const Poll = async (req, res) => {
-  //Check if id is number
-  if(isNaN(req.params.id)){
-    res.status(400).json({ message: "Id is missing, or is not a number."});
-    return;
-  }
+  try {
+    //Check if id is number
+    if (isNaN(req.params.id)) {
+      res.status(400).json({ message: "Id is missing, or is not a number." });
+      return;
+    }
 
-  const widget = await widgetService.GetWidget(req.params.id);
-  if (widget == null){
-    res.status(400).json({ message: `Widget with id: ${req.params.id} could not be found.`});
-    return;
-  }
+    const widget = await widgetService.GetWidget(req.params.id);
+    if (widget == null) {
+      res
+        .status(400)
+        .json({
+          message: `Widget with id: ${req.params.id} could not be found.`,
+        });
+      return;
+    }
 
-  const influxdbResponse = await influxdbService.getDataByWidget(widget)
-  res.status(200).json(influxdbResponse);
+    //Handle query overrides
+    {
+      if (typeof req.query.range == "string" && req.query.range.length > 0) {
+        //Custom range is defined
+        widget.DefaultRange = req.query.range;
+      }
+    }
+
+    const influxdbResponse = await influxdbService.getDataByWidget(widget);
+    res.status(200).json(influxdbResponse);
+  } catch (err) {
+    res.status(500).json({ message: "Something unexpected happened!", err });
+  }
 };
 
 module.exports = {

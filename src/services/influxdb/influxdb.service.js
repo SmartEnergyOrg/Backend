@@ -17,26 +17,23 @@ function buildFluxQuery(widget) {
 
   let queryParams = {
     range: null,
-    filter: null
-  }
+    filter: null,
+  };
 
   //Filter Range
   {
-    //TODO remove the following temp code when Widget.DefaultRange is Text instead of number
-    queryParams.range = `|> range(start: -24h)`
+    queryParams.range = `|> range(start: -${widget.DefaultRange})`;
   }
 
   //Construct Filter
   {
     queryParams.filter = `|> filter(fn: (r) => r._measurement == "${widget.Graphs[0].Measurement}"`;
 
-    for(let i = 1; i < widget.Graphs.length; ++i){
+    for (let i = 1; i < widget.Graphs.length; ++i) {
       queryParams.filter += ` or r._measurement == "${widget.Graphs[i].Measurement}"`;
     }
     queryParams.filter += ")";
   }
-
-
 
   const fluxQuery = `from(bucket: "${bucket}")
   ${queryParams.range}
