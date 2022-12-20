@@ -6,7 +6,6 @@ const MapJoinResultToWidget = (JoinResult, main)=>{
             DashboardId: main.DashboardId,
             Title: main.Title,
             DefaultRange: main.DefaultRange,
-            Type_Graph: main.Type_Graph,
             Color_Graph: main.Color_Graph,
             Graphs: [],
             Settings: {
@@ -43,7 +42,6 @@ const MapJoinResultArray = (JoinResult) => {
                 DashboardId: widget.DashboardId, 
                 Title: widget.Title, 
                 DefaultRange: widget.DefaultRange, 
-                Type_Graph: widget.Type_Graph,
                 Color_Graph: widget.Color_Graph,
                 Settings: {
                     SettingId: widget.SettingId,
@@ -60,7 +58,12 @@ const MapJoinResultArray = (JoinResult) => {
             List.push(Widget);
         }else if(List[List.length -1].WidgetId == widget.WidgetId){
             let PickedWidget = List.pop();
-            PickedWidget.Graphs.push({Name: widget.Name, Type_Graph: widget.Type_Graph, Measurement: widget.Measurement});
+            PickedWidget.Graphs.push(
+                {
+                    Name: widget.Name, 
+                    Type_Graph: widget.Type_Graph, 
+                    Measurement: widget.Measurement
+                });
             List.push(PickedWidget);
         } 
     })
