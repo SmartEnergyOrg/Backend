@@ -37,7 +37,6 @@ class SqliteDataContext {
      DashboardId INTEGER DEFAULT 0,
      Title TEXT NOT NULL ,
      DefaultRange INTEGER NOT NULL,
-     Type_Graph INTEGER NOT NULL,
      Color_Graph TEXT DEFAULT 'Black'
     /*FOREIGN KEY (DashboardId) REFERENCES Dashboard ON DELETE SET DEFAULT*/
      )`;

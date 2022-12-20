@@ -12,8 +12,8 @@ class WidgetService{
     //Crud operations widgets
     async CreateWidget(CreationObject) {
         const sql = `
-        INSERT INTO Widgets(Title, DashboardId, DefaultRange, Type_Graph, Color_Graph)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO Widgets(Title, DashboardId, DefaultRange, Color_Graph)
+        VALUES (?, ?, ?, ?)
         `;
         const params = [ 
       CreationObject.Title,  
@@ -30,14 +30,12 @@ class WidgetService{
     SET Title = ?, 
     DashboardId = ?,
     DefaultRange = ?, 
-    Type_Graph = ?, 
     Color_Graph = ?
     WHERE WidgetId = ?;`;
         const params = [
       UpdateValues.Title, 
       UpdateValues.DashboardId,
       UpdateValues.DefaultRange,
-      UpdateValues.Type_Graph,
       UpdateValues.Color_Graph,
       Id
         ]
