@@ -5,20 +5,20 @@ const GraphController = require("../../controllers/dashboardconfig/graph.control
 //Widget
 router.get("", widgetController.GetWidgetsOfDashboard);
 router.get("/:id", widgetController.GetOneWidget);
-router.put("/:id", widgetController.UpdateWidget);
+router.put("/:id",widgetController.CheckUpdateWidget, widgetController.UpdateWidget);
 router.delete("/:id", widgetController.DeleteWidget);
 router.post("", widgetController.CheckFieldsWidget, widgetController.CreateWidget);
 
 //Widget settings
 router.get("/:id/settings", SettingsController.GetSettings);
-router.put("/:id/settings", SettingsController.UpdateSettings);
+router.put("/:id/settings",SettingsController.InputSettings, SettingsController.UpdateSettings);
 
 //Widget graphs.
 router.get("/:id/widgets", GraphController.GetAll);
 router.get("/:id/widgets/:graphId", GraphController.GetOne);
-router.put("/:id/widgets/:graphId", GraphController.Update);
+router.put("/:id/widgets/:graphId", GraphController.CheckInput, GraphController.Update);
 router.delete("/:id/widgets/:graphId", GraphController.Delete);
-router.post("/:id/widgets", GraphController.Create);
+router.post("/:id/widgets", GraphController.CheckInput, GraphController.Create);
 
 //Widget poll.
 router.get("/poll/:id", widgetController.Poll);

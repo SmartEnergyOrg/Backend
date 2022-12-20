@@ -39,10 +39,10 @@ const MapJoinResultArray = (JoinResult) => {
                 Settings: {
                     SettingId: widget.SettingId,
                     Position: widget.Position,
-                    ISACTIVE: widget.ISACTIVE,
-                    GraphId: widget.GraphId
+                    ISACTIVE: widget.ISACTIVE
                 },
                 Graphs: [{
+                    GraphId: widget.GraphId,
                     Name: widget.Name,
                     Type_Graph: widget.Type_Graph,
                     Measurement: widget.Measurement
@@ -53,6 +53,7 @@ const MapJoinResultArray = (JoinResult) => {
             let PickedWidget = List.pop();
             PickedWidget.Graphs.push(
                 {
+                    GraphId: widget.GraphId,
                     Name: widget.Name, 
                     Type_Graph: widget.Type_Graph, 
                     Measurement: widget.Measurement

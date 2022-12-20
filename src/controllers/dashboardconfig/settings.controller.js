@@ -1,10 +1,20 @@
+const assert = require("assert");
 const { SqliteDataContext } = require("../../db/sqllite.client");
+const { CheckSettingsInput } = require("../../services/dashboardconfig/InputValidation.service");
 const WidgetSettingsService = require("../../services/dashboardconfig/SettingsConfig.service");
 
 //Database sqlite3;
 const database = new SqliteDataContext("DashboardConfigDB");
 const SettingsService = new WidgetSettingsService(database);
-
+const InputSettings = async (req, res, next)=>{
+    try {
+        const Settings = req.body;
+        CheckSettingsInput(Settings);
+        next();
+    } catch (error) {
+        res.status(401).json({message: "Input failure", result: error.message});  
+    }
+}
 
 const GetSettings = async (req, res)=>{
     try {
@@ -37,4 +47,4 @@ const UpdateSettings = async (req, res)=>{
 
 }
 
-module.exports = {GetSettings, UpdateSettings};
+module.exports = {GetSettings, UpdateSettings, InputSettings};

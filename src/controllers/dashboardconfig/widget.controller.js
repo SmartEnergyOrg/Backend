@@ -12,6 +12,7 @@ const database = new SqliteDataContext("DashboardConfigDB");
 //InfluxDBService
 const influxdbService = require("../../services/influxdb/influxdb.service");
 const assert = require("assert");
+const { CheckWidgetInput, CheckSettingsInput, CheckGraphInput } = require("../../services/dashboardconfig/InputValidation.service");
 
 //Dependency injectie binnen widgetservice.
 const widgetService = new WidgetService(database);
@@ -24,14 +25,32 @@ const CheckFieldsWidget = async ( req,res, next)=>{
       const Position = req.body.Position;
       const GraphList = req.body.Graphs;
       //Checks if input is valid.
-      assert(typeof WidgetBody.Title == 'string', 'A title must be filled in');
-      assert(typeof WidgetBody.DefaultRange == 'number', 'A range must be filled in');
+      CheckWidgetInput(WidgetBody, GraphList);
+      GraphList.forEach(graph => {
+        CheckGraphInput(graph);
+      });
       assert(typeof Position == 'number', 'Must have a postion');
-      assert(GraphList.length > 0, 'Must have at least one graph');
       next();
   } catch (error) {
       res.status(401).json({message: "Input failure", result: error.message});  
   }
+}
+
+const CheckUpdateWidget =  async ( req,res, next)=>{
+  try {
+    const WidgetBody = req.body;
+    const Settings = req.body.Settings;
+    const GraphList = req.body.Graphs;
+    //Checks if input is valid.
+    CheckWidgetInput(WidgetBody, GraphList);
+    CheckSettingsInput(Settings);
+    GraphList.forEach(graph => {
+      CheckGraphInput(graph);
+    });
+    next();
+} catch (error) {
+    res.status(401).json({message: "Input failure", result: error.message});  
+}
 }
 
 //Haalt dashboards op.
@@ -212,6 +231,7 @@ const Poll = async (req, res) => {
 
 module.exports = {
   CheckFieldsWidget,
+  CheckUpdateWidget,
   GetWidgetsOfDashboard,
   CreateWidget,
   DeleteWidget,
