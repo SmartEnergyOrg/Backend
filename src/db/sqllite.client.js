@@ -129,7 +129,8 @@ class SqliteDataContext {
     return new Promise(function(resolve, reject){
       db.get(Query, Params, (error, rows)=>{
         if(error) reject(error);
-        console.log(rows);
+        
+
         resolve(rows);
       });
     })
@@ -147,7 +148,6 @@ class SqliteDataContext {
     return new Promise(function(resolve, reject){
       db.run(Query, Params, function(error){
         if(error) {
-          console.log(error);
           reject(false)
         }
         //console.log(`Last Id is ${this.lastID}`);
@@ -176,7 +176,7 @@ class SqliteDataContext {
     return new Promise(function(resolve, reject){
       db.run(Query, InputValues, function(err){
         if(err) reject(0);
-        console.log(`Id of edited of inserted ${this.lastID}`);
+        //console.log(`Id of edited of inserted ${this.lastID}`);
         //Retrieves last inserted id.
         resolve(this.lastID);
       });

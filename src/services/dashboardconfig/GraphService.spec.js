@@ -10,7 +10,6 @@ describe('Test graph retrieval', ()=>{
     beforeEach(()=>{
         SqlDb = new SqliteDataContext(":memory:");
         GraphService = new GraphConfigService(SqlDb);
-        console.log("1")
         Database = SqlDb.GetDb();
         Database.serialize(() => {
               SqlDb.setupTables();
@@ -95,9 +94,41 @@ describe('Test graph retrieval', ()=>{
             expect(deleteResult).toEqual(25);
         })
       })
+
+
+      describe('Test update graph', ()=>{
+        test('Test successful update', async ()=>{
+            const UpdateBody = {Name: "Nieuwe graph", Type_Graph: "Circle", Measurement: "m2"};
+            const Id = 26;
+            await GraphService.UpdateGraphsTable(Id, UpdateBody);
+
+            const check = await GraphService.GetOneGraph(Id);
+
+            expect(check.Name).toEqual("Nieuwe graph");
+            expect(check.Type_Graph).toEqual("Circle");
+            expect(check.Measurement).toEqual("m2");
+        })
+      })
+
+      describe('Test Creation', ()=>{
+        test('Test successful creation', async ()=>{
+            const CreationBody = {Name: "Nieuwe graph", Type_Graph: "Circle", Measurement: "m2"};
+            const WidgetId = 2;
+            const createResult = await GraphService.CreateGraph(WidgetId, CreationBody);
+            const Check = await GraphService.GetOneGraph(createResult);
+
+            expect(Check.Name).toEqual("Nieuwe graph");
+            expect(Check.WidgetId).toEqual(2);
+            expect(Check.Type_Graph).toEqual("Circle");
+            expect(Check.Measurement).toEqual("m2");
+
+        })
+      })
     afterEach(async ()=>{
-        await Database.close();
-        console.log('Database voor test dashboard service is gesloten');
+        
+        
     })
-    
+    afterAll(async()=>{
+        await Database.close();
+    })
 })

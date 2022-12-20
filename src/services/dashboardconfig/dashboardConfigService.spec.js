@@ -103,6 +103,5 @@ describe('Test dashboard config service', ()=>{
 
     afterAll(async ()=>{
         await Database.close();
-        console.log('Database voor test dashboard service is gesloten');
     })
 })
