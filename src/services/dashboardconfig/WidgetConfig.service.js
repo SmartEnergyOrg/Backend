@@ -90,7 +90,7 @@ class WidgetService{
       
       //Retrieves one result;
       let Widget = await this.SqlClient.GetOne(SingleQuery, Params);
-      console.log(Widget);
+
       //Retrieves join result
       const result = await this.SqlClient.JoinResult(JoinQuery, Params);
 

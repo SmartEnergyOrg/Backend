@@ -143,33 +143,22 @@ const UpdateWidget = async (req, res) => {
 };
 
 const Poll = async (req, res) => {
-  // The following objects are MOCKS, they can be deleted after the Sqlite logic is finished for this endpoint.
-  const id1 = {
-    id: 1,
-    measurement: "solar",
-    defaultRange: "24h",
-  };
-
-  const id2 = {
-    id: 2,
-    measurement: "wind",
-    defaultRange: "3d",
-  };
-
-  if (req.params.id == 1) {
-    const result = await influxdbService.getDataByWidget(id1);
-
-    res.status(200).json(result);
-  } else if (req.params.id == 2) {
-    const result = await influxdbService.getDataByWidget(id2);
-
-    res.status(200).json(result);
-  } else if (req.params.id == 3) {
-    res.status(200).send("hello world");
-  } else {
-    res.status(400).end();
+  //Check if id is number
+  if(isNaN(req.params.id)){
+    res.status(400).json({ message: "Id is missing, or is not a number."});
+    return;
   }
+
+  const widget = await widgetService.GetWidget(req.params.id);
+  if (widget == null){
+    res.status(400).json({ message: `Widget with id: ${req.params.id} could not be found.`});
+    return;
+  }
+
+  const influxdbResponse = await influxdbService.getDataByWidget(widget)
+  res.status(200).json(influxdbResponse);
 };
+
 module.exports = {
   GetWidgetsOfDashboard,
   CreateWidget,
