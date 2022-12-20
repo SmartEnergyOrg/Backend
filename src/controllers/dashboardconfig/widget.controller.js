@@ -11,11 +11,28 @@ const {
 const database = new SqliteDataContext("DashboardConfigDB");
 //InfluxDBService
 const influxdbService = require("../../services/influxdb/influxdb.service");
+const assert = require("assert");
 
 //Dependency injectie binnen widgetservice.
 const widgetService = new WidgetService(database);
 const SettingsService = new WidgetSettingsService(database);
 const GraphsService = new WidgetGraphService(database);
+
+const CheckFieldsWidget = async ( req,res, next)=>{
+  try {
+      const WidgetBody = req.body.Widget;
+      const Position = req.body.Position;
+      const GraphList = req.body.Graphs;
+      //Checks if input is valid.
+      assert(typeof WidgetBody.Title == 'string', 'A title must be filled in');
+      assert(typeof WidgetBody.DefaultRange == 'number', 'A range must be filled in');
+      assert(typeof Position == 'number', 'Must have a postion');
+      assert(GraphList.length > 0, 'Must have at least one graph');
+      next();
+  } catch (error) {
+      res.status(401).json({message: "Input failure", result: error.message});  
+  }
+}
 
 //Haalt dashboards op.
 const GetWidgetsOfDashboard = async (req, res) => {
@@ -194,6 +211,7 @@ const Poll = async (req, res) => {
 };
 
 module.exports = {
+  CheckFieldsWidget,
   GetWidgetsOfDashboard,
   CreateWidget,
   DeleteWidget,

@@ -8,13 +8,6 @@ const mainData = {
     Title: 'Grafiek blauw',
     DefaultRange: 19,
     Color_Graph: 'Blue',
-    SettingId: 2,
-    Position: 1,
-    ISACTIVE: 1,
-    GraphId: 2,
-    Name: 'Gaskamer',
-    Type_Graph: 'Bar',
-    Measurement: 'Kwh'
   };
 
 const DummyData =[
@@ -142,6 +135,8 @@ describe('Test join result mapper', ()=>{
             "Color_Graph": "Blue", 
             "DashboardId": 0, 
             "DefaultRange": 19, 
+            "Title": "Grafiek blauw",
+            "WidgetId": 2,
             "Graphs": [
                 {
                     "GraphId": 2, 
@@ -157,10 +152,12 @@ describe('Test join result mapper', ()=>{
                     "Query": undefined, 
                     "Type_Graph": "Lijn"
                 }], 
-                "Settings": 
-                {"ISACTIVE": 1, "Position": 1, "SettingId": 2}, 
-                "Title": "Grafiek blauw"
-        , "WidgetId": 2});
+                "Settings": {
+                  "ISACTIVE": 1, 
+                  "Position": 1, 
+                  "SettingId": 2
+                }, 
+              });
     })
     
     test('Map list of join result mapper Widgetresult', ()=>{

@@ -7,7 +7,7 @@ router.get("", widgetController.GetWidgetsOfDashboard);
 router.get("/:id", widgetController.GetOneWidget);
 router.put("/:id", widgetController.UpdateWidget);
 router.delete("/:id", widgetController.DeleteWidget);
-router.post("", widgetController.CreateWidget);
+router.post("", widgetController.CheckFieldsWidget, widgetController.CreateWidget);
 
 //Widget settings
 router.get("/:id/settings", SettingsController.GetSettings);
