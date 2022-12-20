@@ -36,8 +36,7 @@ const GetWidgetsOfDashboard = async (req, res) => {
     Widget: {
         Title,
         DashboardId,
-        Time_Period,
-        Type_Graph,
+        DefaultRange,
         Color_Graph
     }
     Position,
