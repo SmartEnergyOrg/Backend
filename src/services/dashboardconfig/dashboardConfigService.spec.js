@@ -4,19 +4,21 @@ const DashboardConfigService = require("./dashboardConfig.service");
 describe('Test dashboard config service', ()=>{
     var SqlDb;
     var DashboardService;
-
+    var Database;
     beforeAll(async ()=>{
         SqlDb = new SqliteDataContext(":memory:");
         DashboardService = new DashboardConfigService(SqlDb);
     })
 
+
+    //TODO -> Inserts dummy widgets to dashboards.
     beforeEach(()=>{
-      const sql = SqlDb.GetDb();
-        sql.serialize(async () => {
+        Database = SqlDb.GetDb();
+        Database.serialize(async () => {
             SqlDb.setupTables();
-            sql.run("DELETE FROM Dashboards WHERE DashboardId >= 1;");
-            sql.run("INSERT OR IGNORE INTO Dashboards(UserId) VALUES(1);");
-            sql.run("INSERT OR IGNORE INTO Dashboards(UserId) VALUES(2);");
+            Database.run("DELETE FROM Dashboards WHERE DashboardId >= 1;");
+            Database.run("INSERT OR IGNORE INTO Dashboards(UserId) VALUES(1);");
+            Database.run("INSERT OR IGNORE INTO Dashboards(UserId) VALUES(2);");
         })
     })
 
@@ -97,5 +99,10 @@ describe('Test dashboard config service', ()=>{
             expect(result.length).toEqual(0);
             expect(result).toEqual([]);
         })
+    })
+
+    afterAll(async ()=>{
+        await Database.close();
+        console.log('Database voor test dashboard service is gesloten');
     })
 })
