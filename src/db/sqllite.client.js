@@ -13,7 +13,7 @@ class SqliteDataContext {
       if (err) {
         console.log("Database is not connected");
       } else {
-        console.log("Database is connected");
+        //console.log("Database is connected");
         //Will setup tables
         this.setupTables();
       }
@@ -150,7 +150,7 @@ class SqliteDataContext {
           console.log(error);
           reject(false)
         }
-        console.log(`Last Id is ${this.lastID}`);
+        //console.log(`Last Id is ${this.lastID}`);
         resolve(true);
       });
     })
