@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const widgetController = require("../../controllers/dashboardconfig/widget.controller");
-const SettingsController =  require("../../controllers/dashboardconfig/settings.controller");
+const SettingsController = require("../../controllers/dashboardconfig/settings.controller");
 const GraphController = require("../../controllers/dashboardconfig/graph.controller");
 //Widget
 router.get("", widgetController.GetWidgetsOfDashboard);
@@ -20,5 +20,7 @@ router.put("/:id/widgets/:graphId", GraphController.Update);
 router.delete("/:id/widgets/:graphId", GraphController.Delete);
 router.post("/:id/widgets", GraphController.Create);
 
+//Widget poll.
+router.get("/poll/:id", widgetController.Poll);
 
 module.exports = router;
