@@ -36,27 +36,11 @@
 //   });
 // });
 const InfluxDbService = require("../../services/influxdb/influxdb.service");
+const { poll } = require("./widget.controller");
+
 describe("widget controller", () => {
-  test("it should return solar information if ID is correct", async () => {
-    const exampleData = [
-      {
-        result: "_result",
-        table: 0,
-        _start: "2022-12-18T17:09:00.79819052Z",
-        _stop: "2022-12-19T17:09:00.79819052Z",
-        _time: "2022-12-18T21:17:05.213Z",
-        _value: 357,
-        _field: "amount",
-        _measurement: "solar",
-      },
-    ];
+  // TODO: transform into integration tests with supertest
+  test("it should return solar information if ID is correct", async () => {});
 
-    const getDataByWidgetServiceMock = jest
-      .spyOn(InfluxDbService, "getDataByWidget")
-      .mockImplementation(async () => exampleData);
-
-    await InfluxDbService.getDataByWidget(1);
-
-    expect(getDataByWidgetServiceMock).toBeCalledTimes(1);
-  });
+  test("it should return a 400 status code if the ID is invalid", async () => {});
 });
