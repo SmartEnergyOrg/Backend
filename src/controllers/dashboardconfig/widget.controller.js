@@ -49,21 +49,27 @@ const GetWidgetsOfDashboard = async (req, res)=>{
 */
 const CreateWidget = async (req, res)=>{
     //Retrieves
-    const WidgetBody = req.body.Widget;
-    const Position = req.body.Position;
-    const GraphList = req.body.Graphs;
-    //Creates id.
-    const CreatedID = await widgetService.CreateWidget(WidgetBody);
+    try {
+        const WidgetBody = req.body.Widget;
+        const Position = req.body.Position;
+        const GraphList = req.body.Graphs;
+        //Creates id.
+        const CreatedID = await widgetService.CreateWidget(WidgetBody);
 
-    //Create settings widget, based on last created widgetId.
-    const setting = await SettingsService.CreateSettings({Position: Position, WidgetId: CreatedID})
-    //Creates the needed graphs with the database.
-    await GraphList.forEach(graphs => {
-       GraphsService.CreateGraph(CreatedID, graphs);
-    });
+        //Create settings widget, based on last created widgetId.
+        const setting = await SettingsService.CreateSettings({Position: Position, WidgetId: CreatedID})
+        //Creates the needed graphs with the database.
+        await GraphList.forEach(graphs => {
+            GraphsService.CreateGraph(CreatedID, graphs);
+        });
+        res.status(201).json({message: "Creation widget succeeded", result: CreatedID})
+    } catch (error) {
+        res.status(404).json({message: error, result: false});
+    }
+    
 
 
-    res.status(201).json({message: "Creation widget succeeded", result: CreatedID})
+    
 }
 
 //Gets one widget
