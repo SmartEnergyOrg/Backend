@@ -13,7 +13,7 @@ class SqliteDataContext {
       if (err) {
         console.log("Database is not connected");
       } else {
-        console.log("Database is connected");
+        //console.log("Database is connected");
         //Will setup tables
         this.setupTables();
       }
@@ -36,7 +36,7 @@ class SqliteDataContext {
      WidgetId INTEGER PRIMARY KEY,
      DashboardId INTEGER DEFAULT 0,
      Title TEXT NOT NULL ,
-     DefaultRange INTEGER NOT NULL,
+     DefaultRange TEXT NOT NULL,
      Color_Graph TEXT DEFAULT 'Black'
     /*FOREIGN KEY (DashboardId) REFERENCES Dashboard ON DELETE SET DEFAULT*/
      )`;
@@ -150,7 +150,7 @@ class SqliteDataContext {
           console.log(error);
           reject(false)
         }
-        console.log(`Last Id is ${this.lastID}`);
+        //console.log(`Last Id is ${this.lastID}`);
         resolve(true);
       });
     })
