@@ -19,7 +19,6 @@ class WidgetService{
       CreationObject.Title,  
       CreationObject.DashboardId, 
       CreationObject.DefaultRange, 
-      CreationObject.Type_Graph, 
       CreationObject.Color_Graph];
         return await this.SqlClient.Create(sql, params);
     }
