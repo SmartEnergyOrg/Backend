@@ -1,10 +1,13 @@
 const router = require("express").Router();
 
-const dashboardRoutes = require("./powersources/powersources.routes");
 const dashboardConfigRoutes = require("./dashboardconfig/dashboard.routing");
+const powerSourcesRoutes = require("./powersources/powersources.routes");
+const widgetRoutes = require("./widgets/widgets.routes");
 const widgetConfigRoutes = require("./dashboardconfig/widget.routing");
 
-router.use("/solar", dashboardRoutes);
+router.use("/powersources", powerSourcesRoutes);
+router.use("/widgets", widgetRoutes);
 router.use("/dashboards", dashboardConfigRoutes);
-router.use("/widgets", widgetConfigRoutes);
+router.use("/widgetsconfig", widgetConfigRoutes);
+
 module.exports = router;
