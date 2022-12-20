@@ -19,15 +19,20 @@ const GraphsService = new WidgetGraphService(database);
 
 //Haalt dashboards op.
 const GetWidgetsOfDashboard = async (req, res) => {
-  console.log("All widgets started");
+  try {
+    console.log("All widgets started");
 
-  //const DashboardId = req.body.DashboardId;
-  const DashboardId = 0;
+    //const DashboardId = req.body.DashboardId;
+    const DashboardId = 0;
+  
+    //Gets all dashboards.
+    const result = await widgetService.GetAllWidgets(DashboardId);
+    console.log("All widgets ended");
+    res.status(200).json({ message: "Widgets are retrieved", result: result , succeeded: true});    
+  } catch (error) {
+    res.status(400).json({ message: "Widgets are not retrieved", result: error, succeeded: false });   
+  }
 
-  //Gets all dashboards.
-  const result = await widgetService.GetAllWidgets(DashboardId);
-  console.log("All widgets ended");
-  res.status(200).json({ message: "Everything is alright", result: result });
 };
 
 //Creates a widget
@@ -71,28 +76,37 @@ const CreateWidget = async (req, res) => {
     });
     res
       .status(201)
-      .json({ message: "Creation widget succeeded", result: CreatedID });
+      .json({ message: "Creation widget succeeded", result: CreatedID, succeeded: true });
   } catch (error) {
-    res.status(404).json({ message: error, result: false });
+    res.status(404).json({ message: error, succeeded: false });
   }
 };
 
 //Gets one widget
 const GetOneWidget = async (req, res) => {
-  console.log(req.params);
-  const WidgetId = req.params.id;
+  try {
+    console.log(req.params);
+    const WidgetId = req.params.id;
+  
+    let Widget = await widgetService.GetWidget(WidgetId);
+  
+    res.status(201).json({ message: "Search result", result: Widget });
+  } catch (error) {
+    res.status(401).json({ message: "Search has failed", result: false, error });
+  }
 
-  let Widget = await widgetService.GetWidget(WidgetId);
-
-  console.log("Read is over");
-  res.status(201).json({ message: "Search result", result: Widget });
 };
 
 //Deletes widget
 const DeleteWidget = async (req, res) => {
-  const WidgetId = req.params.id;
-  const result = await widgetService.DeleteWidgets(WidgetId);
-  res.status(200).json({ message: "Search result", result: result });
+  try {
+    const WidgetId = req.params.id;
+    const result = await widgetService.DeleteWidgets(WidgetId);
+    res.status(200).json({ message: "Deletion has succeeded result", result: true });   
+  } catch (error) {
+    res.status(401).json({ message: "Deletion has failed", result: false, error });
+  }
+
 };
 
 /*Schema, at least these attributes must be present.
@@ -118,28 +132,32 @@ const DeleteWidget = async (req, res) => {
     ]
 }*/
 const UpdateWidget = async (req, res) => {
-  const Id = req.params.id;
-  const WidgetBody = req.body;
-  const Settings = WidgetBody.Settings;
-  const GraphList = WidgetBody.Graphs;
-
-  //Updates widget
-  await widgetService.UpdateWidget(Id, WidgetBody);
-
-  //Updates the settings
-  await SettingsService.UpdateSettings(Id, Settings);
-
-  //Updates all graphsources in this table.
-  //Deletes all graphs not present in the object.
-  await GraphsService.UpdateDeleteGraphs(GraphList.map((e) => e.GraphId));
-
-  //Replaces graphs.
-  await GraphList.forEach(async (e) => {
-    //Replaces new values;
-    GraphsService.ReplaceGraph(e.GraphId, Id, e);
-  });
-
-  res.status(201).json({ message: "Update is completed", result: true });
+  try {
+    const Id = req.params.id;
+    const WidgetBody = req.body;
+    const Settings = WidgetBody.Settings;
+    const GraphList = WidgetBody.Graphs;
+  
+    //Updates widget
+    await widgetService.UpdateWidget(Id, WidgetBody);
+  
+    //Updates the settings
+    await SettingsService.UpdateSettings(Id, Settings);
+  
+    //Updates all graphsources in this table.
+    //Deletes all graphs not present in the object.
+    await GraphsService.UpdateDeleteGraphs(GraphList.map((e) => e.GraphId));
+  
+    //Replaces graphs.
+    await GraphList.forEach(async (e) => {
+      //Replaces new values;
+      GraphsService.ReplaceGraph(e.GraphId, Id, e);
+    });
+  
+    res.status(201).json({ message: "Update is completed", result: true });
+  } catch (error) {
+    res.status(401).json({ message: "Update has failed", result: false, error });
+  }
 };
 
 const Poll = async (req, res) => {

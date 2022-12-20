@@ -7,14 +7,20 @@ const SettingsService = new WidgetSettingsService(database);
 
 
 const GetSettings = async (req, res)=>{
-    const WidgetId = req.params.id;
+    try {
+        const WidgetId = req.params.id;
 
-    const settings = await SettingsService.GetSettings(WidgetId);
+        const settings = await SettingsService.GetSettings(WidgetId);
+    
+        res.status(201).json({message: "Settings retrieved", result: settings, succeeded: true});
+    } catch (error) {
+        res.status(401).json({message: "Settings retrieval has failed", result: error, succeeded: false});  
+    }
 
-    res.status(201).json({message: "Settings retrieved", result: settings});
 }
 
 const UpdateSettings = async (req, res)=>{
+    try {
     //Picks widgetId from url params
     const WidgetId = req.params.id;
     //Picks update body.
@@ -24,7 +30,11 @@ const UpdateSettings = async (req, res)=>{
     const settings = await SettingsService.UpdateSettings(WidgetId, NewSettings);
 
     //Returns response
-    res.status(201).json({message: "Settings retrieved", result: settings});
+    res.status(201).json({message: "Settings retrieved", result: settings, succeeded: true});        
+    } catch (error) {
+        res.status(401).json({message: "Settings update has failed", result: error, succeeded: false});    
+    }
+
 }
 
 module.exports = {GetSettings, UpdateSettings};
