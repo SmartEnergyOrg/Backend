@@ -80,18 +80,20 @@ describe('Test widget CRUD operations', ()=>{
                      "DefaultRange": "24h",
                      "Graphs": [
                        {
+                         "GraphId": 1,
                          "Measurement": "m3",
                          "Name": "Een grafiek over gasgeneratie",
                          "Type_Graph": null,
                        },
                        {
+                         "GraphId": 2,
                          "Measurement": "m3",
                          "Name": "Een grafiek over gasverbruik",
                          "Type_Graph": null,
                        },
                      ],
                      "Settings": {
-                       "GraphId": 1,
+                       
                        "ISACTIVE": 1,
                        "Position": 1,
                        "SettingId": 1,
@@ -106,13 +108,14 @@ describe('Test widget CRUD operations', ()=>{
                          "DefaultRange": "48h",
                          "Graphs":  [
                             {
-                             "Measurement": "m3",
-                             "Name": "Een grafiek over windgeneratie",
-                             "Type_Graph": null,
+                              "GraphId": 3, 
+                              "Measurement": "m3",
+                              "Name": "Een grafiek over windgeneratie",
+                              "Type_Graph": null,
                            },
                          ],
                          "Settings":  {
-                           "GraphId": 3,
+                           
                            "ISACTIVE": 1,
                            "Position": 2,
                            "SettingId": 2,
