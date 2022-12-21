@@ -27,12 +27,12 @@ const deleteSettings = 'DELETE FROM WidgetSettings';
 const deleteGraph = 'DELETE FROM Graphs';
 
 
-describe('Creation widget', function(){
+describe('CRUD Widgets', function(){
     let Datab;
     before(async (done)=>{
           const sql = new SqliteDataContext("DashboardConfigDB");
           Datab = sql.DataSQL;
-          Datab.serialize(()=>{
+          await Datab.serialize(()=>{
             Datab.run(UserInsert);
             Datab.run(WidgetInsert);
             Datab.run(GraphInsert);
@@ -46,11 +46,12 @@ describe('Creation widget', function(){
     });
       
     after(async (done)=>{
-          Datab.serialize(()=>{
+          await Datab.serialize(async ()=>{
             Datab.run(deleteQueryUser);
             Datab.run(deleteQueryWidget);
             Datab.run(deleteGraph);
-              done();
+            Datab.run(deleteSettings);
+            done();
           });
     });
 
@@ -161,201 +162,133 @@ describe('Creation widget', function(){
             done();
           });
     })
-})
-
-describe('Update widget', function(){
-
-    let Datab;
-        before(async (done)=>{
-          const sql = new SqliteDataContext("DashboardConfigDB");
-          Datab = sql.DataSQL;
-          Datab.serialize(()=>{
-            Datab.run(UserInsert);
-            Datab.run(WidgetInsert);         
-            Datab.run(GraphInsert);            
-            Datab.run(SettingsInsert);
-            done();
-          });
-        });
-      
-        after(async (done)=>{
-          Datab.serialize(()=>{
-            Datab.run(deleteQueryUser);
-            Datab.run(deleteQueryWidget);
-            Datab.run(deleteGraph);
-              done();
-          });
-        });
     it('Lack of graphs should give a warning', function(done){
-        chai.request(server)
-        .put('/api/widgetsconfig/1')
-        .send({
-            
-            Title: "Nieuwe widget", 
-            DashboardId: 0, 
-            DefaultRange: "16h", 
-            Color_Graph: "Red", 
-            Frequence: 40000, 
-            Settings:{
-                Position: 1,
-                ISACTIVE: 1,
-                SettingId: 1
-            }
-            ,
-            Graphs:[]
-          })
-        .end((err, res) => {
-            const response = res.body;
-            expect(response.message).equals("Input failure");
-            expect(response.result).equals("Must have at least one graph");
-            done();
-          });
-    })
+      chai.request(server)
+      .put('/api/widgetsconfig/1')
+      .send({
+          
+          Title: "Nieuwe widget", 
+          DashboardId: 0, 
+          DefaultRange: "16h", 
+          Color_Graph: "Red", 
+          Frequence: 40000, 
+          Settings:{
+              Position: 1,
+              ISACTIVE: 1,
+              SettingId: 1
+          }
+          ,
+          Graphs:[]
+        })
+      .end((err, res) => {
+          const response = res.body;
+          expect(response.message).equals("Input failure");
+          expect(response.result).equals("Must have at least one graph");
+          done();
+        });
+  })
 
-    it('Lack of text fields should give a warning', function(done){
-        chai.request(server)
-        .put('/api/widgetsconfig/1')
-        .send({
-            Title: "Nieuwe widget", 
-            DashboardId: 0, 
-            DefaultRange: "16h", 
-            Color_Graph: "Red", 
-            Frequence: 40000, 
-            Settings:{
-                Position: 1,
-                SettingId: 1
-            }
-            ,
-            Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type_Graph: "Lijn"}]
-          })
-        .end((err, res) => {
-            const response = res.body;
-            expect(response.message).equals("Input failure");
-            expect(response.result).equals("ISACTIVE needs to be filled in");
-            done();
-          });
-    })
+  it('Lack of text fields should give a warning', function(done){
+      chai.request(server)
+      .put('/api/widgetsconfig/1')
+      .send({
+          Title: "Nieuwe widget", 
+          DashboardId: 0, 
+          DefaultRange: "16h", 
+          Color_Graph: "Red", 
+          Frequence: 40000, 
+          Settings:{
+              Position: 1,
+              SettingId: 1
+          }
+          ,
+          Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type_Graph: "Lijn"}]
+        })
+      .end((err, res) => {
+          const response = res.body;
+          expect(response.message).equals("Input failure");
+          expect(response.result).equals("ISACTIVE needs to be filled in");
+          done();
+        });
+  })
 
-    it('No field given should give a warning', function(done){
-        chai.request(server)
-        .put('/api/widgetsconfig/1')
-        .send({
-            
-            Title: "Nieuwe widget", 
-            DashboardId: 0, 
-            Color_Graph: "Red", 
-            Frequence: 40000, 
-            Settings:{
-                Position: 1,
-                SettingId: 1
-            }
-            ,
-            Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type_Graph: "Lijn"}]
-          })
-        .end((err, res) => {
-            const response = res.body;
-            expect(response.message).equals("Input failure");
-            expect(response.result).equals("A range must be filled in");
-            done();
-          });
-    })
+  it('No field given should give a warning', function(done){
+      chai.request(server)
+      .put('/api/widgetsconfig/1')
+      .send({
+          
+          Title: "Nieuwe widget", 
+          DashboardId: 0, 
+          Color_Graph: "Red", 
+          Frequence: 40000, 
+          Settings:{
+              Position: 1,
+              SettingId: 1
+          }
+          ,
+          Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type_Graph: "Lijn"}]
+        })
+      .end((err, res) => {
+          const response = res.body;
+          expect(response.message).equals("Input failure");
+          expect(response.result).equals("A range must be filled in");
+          done();
+        });
+  })
 
-    it('Widget should be succesfully updated', function(done){
-        chai.request(server)
-        .put('/api/widgetsconfig/1')
-        .send({
-            Title: "Nieuwe widget", 
-            DashboardId: 0, 
-            DefaultRange: "24h",
-            Color_Graph: "Red", 
-            Frequence: 40000, 
-            Settings:{
-                Position: 1,
-                SettingId: 1,
-                ISACTIVE: 1
-            }
-            ,
-            Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type_Graph: "Lijn"}]
-          })
-        .end((err, res) => {
-            const response = res.body;
-            expect(response.message).equals("Update is completed");
-            expect(response.result).equals(true);
-            done();
-          });
-    })
-})
+  it('Widget should be succesfully updated', function(done){
+      chai.request(server)
+      .put('/api/widgetsconfig/1')
+      .send({
+          Title: "Nieuwe widget", 
+          DashboardId: 0, 
+          DefaultRange: "24h",
+          Color_Graph: "Red", 
+          Frequence: 40000, 
+          Settings:{
+              Position: 1,
+              SettingId: 1,
+              ISACTIVE: 1
+          }
+          ,
+          Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type_Graph: "Lijn"}]
+        })
+      .end((err, res) => {
+          const response = res.body;
+          expect(response.message).equals("Update is completed");
+          expect(response.result).equals(true);
+          done();
+        });
+  })
 
-describe('Deletion widget', function(){
-
-    let Datab;
-    before(async (done)=>{
-        const sql = new SqliteDataContext("DashboardConfigDB");
-        Datab = sql.DataSQL;
-        Datab.serialize(()=>{
-            Datab.run(UserInsert);
-            Datab.run(WidgetInsert);
-            done();
-        });   
-    });
-      
-    after(async (done)=>{
-        Datab.serialize(()=>{
-        Datab.run(deleteQueryUser);
-        Datab.run(deleteQueryWidget);
+  it('Widget should be given based on widgetId', function(done){
+    chai.request(server)
+    .get('/api/widgetsconfig/2')
+    .end((err, res) => {
+        const response = res.body;
+        expect(response.message).equals("Search result");
         done();
       });
-    });
-    it('Widget should be succesfully deleted', function(done){
-        chai.request(server)
-        .delete('/api/widgetsconfig/1')
-        .end((err, res) => {
-            const response = res.body;
-            expect(response.message).equals("Deletion has succeeded result");
-            expect(response.result).equals(true);
-            done();
-          });
-    })
 })
 
-describe('Read widget', function(){
-    let Datab;
-        before(async (done)=>{
-          const sql = new SqliteDataContext("DashboardConfigDB");
-          Datab = sql.DataSQL;
-          Datab.serialize(()=>{
-            Datab.run(UserInsert);
-            Datab.run(WidgetInsert);
-            Datab.run(WidgetInsert2);
-            done();
-          });
-           
-        });
-      
-        after(async (done)=>{
-          Datab.serialize(()=>{
-            Datab.run(deleteQueryUser);
-            Datab.run(deleteQueryWidget);
-            done();
-          });
-        });
-    it('Widget should be given based on widgetId', function(done){
-        chai.request(server)
-        .get('/api/widgetsconfig/1')
-        .end((err, res) => {
-            const response = res.body;
-            expect(response.message).equals("Search result");
-            done();
-          });
-    })
+it('Gives all widgets', function(done){
+    chai.request(server)
+    .get('/api/widgetsconfig')
+    .end((err, res) => {
+        const response = res.body;
+        expect(response.message).equals("Widgets are retrieved");
+        done();
+      });
+})
 
-    it('Gives all widgets', function(done){
-        chai.request(server)
-        .get('/api/widgetsconfig')
-        .end((err, res) => {
-            const response = res.body;
-            expect(response.message).equals("Widgets are retrieved");
-            done();
-          });
-    })
+it('Widget should be succesfully deleted', function(done){
+  chai.request(server)
+  .delete('/api/widgetsconfig/1')
+  .end((err, res) => {
+      const response = res.body;
+      expect(response.message).equals("Deletion has succeeded result");
+      expect(response.result).equals(true);
+      done();
+    });
+})
 })
