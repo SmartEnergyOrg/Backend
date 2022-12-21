@@ -36,6 +36,7 @@ const MapJoinResultArray = (JoinResult) => {
                 Title: widget.Title, 
                 DefaultRange: widget.DefaultRange, 
                 Color_Graph: widget.Color_Graph,
+                Frequence: widget.Frequence,
                 Settings: {
                     SettingId: widget.SettingId,
                     Position: widget.Position,

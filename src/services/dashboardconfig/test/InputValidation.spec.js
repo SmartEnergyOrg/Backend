@@ -1,5 +1,5 @@
 const { AssertionError } = require("assert");
-const { CheckSettingsInput, CheckWidgetInput, CheckGraphInput } = require("./InputValidation.service")
+const { CheckSettingsInput, CheckWidgetInput, CheckGraphInput } = require("../InputValidation.service")
 
 
 describe('Test inputvalidation of entities', ()=>{

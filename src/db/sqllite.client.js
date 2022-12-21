@@ -37,7 +37,8 @@ class SqliteDataContext {
      DashboardId INTEGER DEFAULT 0,
      Title TEXT NOT NULL ,
      DefaultRange TEXT NOT NULL,
-     Color_Graph TEXT DEFAULT 'Black'
+     Color_Graph TEXT DEFAULT 'Black',
+     Frequence INTEGER DEFAULT 3600 NOT NULL
     /*FOREIGN KEY (DashboardId) REFERENCES Dashboard ON DELETE SET DEFAULT*/
      )`;
     const DashBoardTable = `

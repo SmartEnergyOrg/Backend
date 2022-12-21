@@ -1,6 +1,6 @@
-const { SqliteDataContext } = require("../../db/sqllite.client");
-const DashboardConfigService = require("./dashboardConfig.service");
-const GraphConfigService = require("./GraphConfig.service");
+const { SqliteDataContext } = require("../../../db/sqllite.client");
+const DashboardConfigService = require("../dashboardConfig.service");
+const GraphConfigService = require("../GraphConfig.service");
 
 describe('Test graph retrieval', ()=>{
     var SqlDb;

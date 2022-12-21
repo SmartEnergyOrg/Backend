@@ -1,5 +1,5 @@
-const { SqliteDataContext } = require("../../db/sqllite.client");
-const WidgetService = require("./WidgetConfig.service");
+const { SqliteDataContext } = require("../../../db/sqllite.client");
+const WidgetService = require("../WidgetConfig.service");
 
 
 describe('Test widget CRUD operations', ()=>{
@@ -12,8 +12,8 @@ describe('Test widget CRUD operations', ()=>{
         Database = SqlDb.GetDb();
         Database.serialize(() => {
               SqlDb.setupTables();
-              Database.run("REPLACE INTO Widgets(WidgetId, Title, DefaultRange, Color_Graph) VALUES(1, 'Widget voor gasverbruik', '24h', 'Blue');");
-              Database.run("REPLACE INTO Widgets(WidgetId, Title, DefaultRange, Color_Graph) VALUES(2, 'Widget voor kolenverbruik', '48h', 'Red');");
+              Database.run("REPLACE INTO Widgets(WidgetId, Title, DefaultRange, Color_Graph, Frequence) VALUES(1, 'Widget voor gasverbruik', '24h', 'Blue', 40000);");
+              Database.run("REPLACE INTO Widgets(WidgetId, Title, DefaultRange, Color_Graph, Frequence) VALUES(2, 'Widget voor kolenverbruik', '48h', 'Red', 40000);");
               Database.run('REPLACE INTO  WidgetSettings (SettingId, Position, ISACTIVE, WidgetId) VALUES(1, 1, 1, 1)');
               Database.run('REPLACE INTO  WidgetSettings (SettingId, Position, ISACTIVE, WidgetId) VALUES(2, 2, 1, 2)');
 
@@ -27,7 +27,13 @@ describe('Test widget CRUD operations', ()=>{
 
       describe('Create widgets', ()=>{
         test('Create widget', async ()=>{
-            const createBody  = {Title: "Nieuwe widget", DashboardId: 0, DefaultRange: "16h", Color_Graph: "Red"};
+            const createBody  = {
+              Title: "Nieuwe widget", 
+              DashboardId: 0, 
+              DefaultRange: "16h", 
+              Color_Graph: "Red", 
+              Frequence: 40000
+            };
 
             const result = await widgetService.CreateWidget(createBody);
             
@@ -38,7 +44,7 @@ describe('Test widget CRUD operations', ()=>{
 
       describe('Update widgets', ()=>{
         test('Update widget', async ()=>{
-            const updateBody  = {Title: "Gewijzigde widget", DashboardId: 0, DefaultRange: "48h", Color_Graph: "Green"};
+            const updateBody  = {Title: "Gewijzigde widget", DashboardId: 0, DefaultRange: "48h", Color_Graph: "Green", Frequence: 3000};
 
             const result = await widgetService.UpdateWidget(1, updateBody);
             const Check = await widgetService.GetWidget(1);
@@ -47,6 +53,7 @@ describe('Test widget CRUD operations', ()=>{
             expect(Check.Title).toEqual("Gewijzigde widget");
             expect(Check.DefaultRange).toEqual("48h");
             expect(Check.Color_Graph).toEqual("Green");
+            expect(Check.Frequence).toEqual(3000);
         })
       })
 
@@ -60,6 +67,7 @@ describe('Test widget CRUD operations', ()=>{
             expect(Check.Color_Graph).toEqual("Blue");
             expect(Check.DefaultRange).toEqual("24h");
             expect(Check.WidgetId).toEqual(1);
+            expect(Check.Frequence).toEqual(40000);
             expect(Check.Settings).toEqual({ ISACTIVE: 1,Position: 1, SettingId: 1});
             expect(Check.Graphs).toEqual([
                 {"GraphId": 1, "Measurement": "m3", "Name": "Een grafiek over gasgeneratie", "Query": undefined, "Type_Graph": null}, 
@@ -78,6 +86,7 @@ describe('Test widget CRUD operations', ()=>{
                      "Color_Graph": "Blue",
                      "DashboardId": 0,
                      "DefaultRange": "24h",
+                     "Frequence" : 40000,
                      "Graphs": [
                        {
                          "GraphId": 1,
@@ -106,6 +115,7 @@ describe('Test widget CRUD operations', ()=>{
                          "Color_Graph": "Red",
                          "DashboardId": 0,
                          "DefaultRange": "48h",
+                         "Frequence" : 40000,
                          "Graphs":  [
                             {
                               "GraphId": 3, 

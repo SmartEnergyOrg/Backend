@@ -1,5 +1,5 @@
-const { SqliteDataContext } = require("../../db/sqllite.client");
-const WidgetSettingsService = require("./SettingsConfig.service");
+const { SqliteDataContext } = require("../../../db/sqllite.client");
+const WidgetSettingsService = require("../SettingsConfig.service");
 
 describe('Test Settings retrieval', ()=>{
     var SqlDb;

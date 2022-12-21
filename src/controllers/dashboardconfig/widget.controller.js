@@ -78,7 +78,8 @@ const GetWidgetsOfDashboard = async (req, res) => {
         Title,
         DashboardId,
         DefaultRange,
-        Color_Graph
+        Color_Graph,
+        Frequence
     }
     Position,
     Graphs: [
@@ -152,7 +153,8 @@ const DeleteWidget = async (req, res) => {
     Title,
     DefaultRange,
     Type_Graph,
-    Color_Graph
+    Color_Graph,
+    Frequence,
     Settings: {
         SettingId,
         Position,
