@@ -28,6 +28,7 @@ const Input = {
             //Checks if input is valid.
             assert(typeof Widget.Title == 'string', 'A title must be filled in');
             assert(typeof Widget.DefaultRange == 'string', 'A range must be filled in');
+            assert(typeof Widget.Frequence == 'number', 'Frequence must be filled in');
             assert(GraphsList.length > 0, 'Must have at least one graph');
             return true;
         } catch (error) {

@@ -37,14 +37,19 @@ describe('Test inputvalidation of entities', ()=>{
             expect(() => CheckWidgetInput(Widget, list)).toThrow(AssertionError);
         })
 
-        test('No graphlist', ()=>{
+        test('No frequence', ()=>{
             const Widget = {Title: "Nothing", DefaultRange: "Range"};
             const list = [];
             expect(() => CheckWidgetInput(Widget, list)).toThrow(AssertionError);
         })
 
+        test('No graphlist', ()=>{
+            const Widget = {Title: "Nothing", DefaultRange: "Range", Frequence: 400};
+            const list = [];
+            expect(() => CheckWidgetInput(Widget, list)).toThrow(AssertionError);
+        })
         test('Complete list', ()=>{
-            const Widget = {Title: "Nothing", DefaultRange: "Range"};
+            const Widget = {Title: "Nothing", DefaultRange: "Range",  Frequence: 400};
             const list = [{Obj: 1}]
             expect(CheckWidgetInput(Widget, list)).toEqual(true);
         })
