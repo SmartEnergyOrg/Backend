@@ -49,7 +49,7 @@ class WidgetService{
     async DeleteWidgets(id) {
       const sql = `DELETE FROM Widgets WHERE WidgetId = ?`;
     
-      return await this.SqlClient.Delete(sql, id);
+      return await this.SqlClient.Delete(sql, [id]);
     }
 
     //It will get all widgets, with the necessery graphs and settings.

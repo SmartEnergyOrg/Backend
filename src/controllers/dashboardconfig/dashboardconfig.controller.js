@@ -29,7 +29,7 @@ const GetAllDashboards = async (req, res)=>{
 //Gets a dashboard based on id
 const GetOneDashboard = async (req, res)=>{
     try {
-        const DashboardId = req.params.dashboardId;
+        const DashboardId = req.params.id;
 
         const result = await dashboardService.GetOneDashboard(DashboardId);
 
@@ -47,7 +47,7 @@ const GetOneDashboard = async (req, res)=>{
 //Updates dashboard
 const UpdatesDashboard = async (req, res)=>{
     try {
-        const DashboardId = req.params.dashboardId;
+        const DashboardId = req.params.id;
         const DashboardBody = req.body;
         //const UserId = req.headers.UserId;
 

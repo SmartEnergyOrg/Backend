@@ -14,11 +14,11 @@ router.get("/:id/settings", SettingsController.GetSettings);
 router.put("/:id/settings",SettingsController.InputSettings, SettingsController.UpdateSettings);
 
 //Widget graphs.
-router.get("/:id/widgets", GraphController.GetAll);
-router.get("/:id/widgets/:graphId", GraphController.GetOne);
-router.put("/:id/widgets/:graphId", GraphController.CheckInput, GraphController.Update);
-router.delete("/:id/widgets/:graphId", GraphController.Delete);
-router.post("/:id/widgets", GraphController.CheckInput, GraphController.Create);
+router.get("/:id/graphs", GraphController.GetAll);
+router.get("/:id/graphs/:graphId", GraphController.GetOne);
+router.put("/:id/graphs/:graphId", GraphController.CheckInput, GraphController.Update);
+router.delete("/:id/graphs/:graphId", GraphController.Delete);
+router.post("/:id/graphs", GraphController.CheckInput, GraphController.Create);
 
 //Widget poll.
 router.get("/poll/:id", widgetController.Poll);

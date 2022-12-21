@@ -5,8 +5,8 @@ const Input = {
     CheckGraphInput(Graph){
         try {
             assert(typeof Graph.Measurement == 'string', 'Measurement needs to be filled in');
-            assert(typeof Graph.Name == 'string', 'Measurement needs to be filled in');
-            assert(typeof Graph.Type_Graph == 'string', 'Measurement needs to be filled in');
+            assert(typeof Graph.Name == 'string', 'Name needs to be filled in');
+            assert(typeof Graph.Type_Graph == 'string', 'Type_Graph needs to be filled in');
             return true;
         } catch (error) {
             throw error;

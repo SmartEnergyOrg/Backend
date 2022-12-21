@@ -126,7 +126,7 @@ const GetOneWidget = async (req, res) => {
     const WidgetId = req.params.id;
   
     let Widget = await widgetService.GetWidget(WidgetId);
-  
+    
     res.status(201).json({ message: "Search result", result: Widget });
   } catch (error) {
     res.status(401).json({ message: "Search has failed", result: false, error });
