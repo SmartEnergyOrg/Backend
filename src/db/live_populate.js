@@ -72,7 +72,7 @@ var error = false;
     addData().catch((err) => {
       console.log(err);
       console.log("\nError during write");
-      error = false;
+      error = true;
     });
   }
 };
