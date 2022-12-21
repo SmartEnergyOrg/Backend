@@ -6,13 +6,14 @@ describe('Test dashboard config service', ()=>{
     var DashboardService;
     var Database;
     beforeAll(async ()=>{
-        SqlDb = new SqliteDataContext(":memory:");
-        DashboardService = new DashboardConfigService(SqlDb);
+        
     })
 
 
     //TODO -> Inserts dummy widgets to dashboards.
     beforeEach(()=>{
+        SqlDb = new SqliteDataContext(":memory:");
+        DashboardService = new DashboardConfigService(SqlDb);
         Database = SqlDb.GetDb();
         Database.serialize(async () => {
             SqlDb.setupTables();
@@ -36,17 +37,32 @@ describe('Test dashboard config service', ()=>{
             console.log(await DashboardService.GetDashboards());
             const Dashboard = await DashboardService.GetOneDashboard(0);
             expect(result).toEqual(true);
-            expect(Dashboard).toEqual({"DashboardId": 0, "ShowNavbar": 1, "UserId": 0});
+            expect(Dashboard).toEqual({
+                "DashboardId": 0, 
+                "ShowNavbar": 1, 
+                "UserId": 0, 
+                "IdleTariff": 0,
+                "PeakTariff": 0,
+                "PeakTariffOn": 0,
+                "ShowWeather": 0
+            });
         })
     })
 
     describe('Update of dashboard', ()=>{
         test('Successful update of dashboard', async ()=>{
-            const UpdatedBody = { ShowNavbar: 0};
+            const UpdatedBody = { ShowNavbar: 0, PeakTariffOn: true, ShowWeather: true, IdleTariff: 19, PeakTariff: 21};
 
             const result =  await DashboardService.UpdateDashboard("", 1, UpdatedBody);
+            const Dashboard = await DashboardService.GetOneDashboard(1);
 
             expect(result).toEqual(true);
+
+            expect(Dashboard.ShowNavbar).toEqual(0);
+            expect(Dashboard.PeakTariffOn).toEqual(1);
+            expect(Dashboard.ShowWeather).toEqual(1);
+            expect(Dashboard.IdleTariff).toEqual(19);
+            expect(Dashboard.PeakTariff).toEqual(21);
         })
     })
 
@@ -54,10 +70,22 @@ describe('Test dashboard config service', ()=>{
         test('Successful creation of new dashboard', async ()=>{
             //TODO If a authentication system is used. A extra user needs to be created in the beforeAll methods.
             const UserId = 1;
+            const CreationBody = { ShowNavbar: 0, PeakTariffOn: true, ShowWeather: true, IdleTariff: 19, PeakTariff: 21};
 
             const result = await DashboardService.CreateDashboard(UserId);
-            
+
+            //Checks if dashboard is present in the database
+            const Dashboard = await DashboardService.GetOneDashboard(result);
             expect(result).toEqual(3);
+
+            expect(Dashboard.DashboardId).toEqual(3);
+            expect(Dashboard.UserId).toEqual(1);
+            expect(Dashboard.ShowNavbar).toEqual(1);
+            expect(Dashboard.PeakTariffOn).toEqual(0);
+            expect(Dashboard.ShowWeather).toEqual(0);
+            expect(Dashboard.IdleTariff).toEqual(0);
+            expect(Dashboard.PeakTariff).toEqual(0);
+
         })
     })
 
@@ -67,7 +95,13 @@ describe('Test dashboard config service', ()=>{
 
             const result = await DashboardService.GetOneDashboard(DashboardId);
 
-            expect(result).toEqual({DashboardId: 1, UserId: 1, ShowNavbar: 1});
+            expect(result).toEqual({
+                DashboardId: 1, UserId: 1, ShowNavbar: 1, 
+                "IdleTariff": 0,
+                "PeakTariff": 0,
+                "PeakTariffOn": 0,
+                "ShowWeather": 0
+            });
         })
 
         test('Successful retrieval of all dashboards without parameters', async ()=>{
@@ -76,9 +110,21 @@ describe('Test dashboard config service', ()=>{
 
             expect(result.length).toEqual(3);
             expect(result).toEqual([
-                {ShowNavbar: 1, UserId: 0, DashboardId: 0},
-                {ShowNavbar: 1, UserId: 1, DashboardId: 1},
-                {ShowNavbar: 1, UserId: 2, DashboardId: 2}
+                {ShowNavbar: 1, UserId: 0, DashboardId: 0, 
+                    "IdleTariff": 0,
+                    "PeakTariff": 0,
+                    "PeakTariffOn": 0,
+                    "ShowWeather": 0},
+                {ShowNavbar: 1, UserId: 1, DashboardId: 1, 
+                    "IdleTariff": 0,
+                    "PeakTariff": 0,
+                    "PeakTariffOn": 0,
+                    "ShowWeather": 0},
+                {ShowNavbar: 1, UserId: 2, DashboardId: 2, 
+                    "IdleTariff": 0,
+                    "PeakTariff": 0,
+                    "PeakTariffOn": 0,
+                    "ShowWeather": 0}
             ]);
         })
 
@@ -88,7 +134,11 @@ describe('Test dashboard config service', ()=>{
             const result = await DashboardService.GetDashboards(UserId);
 
             expect(result.length).toEqual(1);
-            expect(result).toEqual([{ShowNavbar: 1, UserId: 1, DashboardId: 1}]);
+            expect(result).toEqual([{ShowNavbar: 1, UserId: 1, DashboardId: 1, 
+                "IdleTariff": 0,
+                "PeakTariff": 0,
+                "PeakTariffOn": 0,
+                "ShowWeather": 0}]);
         })
 
         test('Successful retrieval of all dashboards without results', async ()=>{
@@ -101,7 +151,7 @@ describe('Test dashboard config service', ()=>{
         })
     })
 
-    afterAll(async ()=>{
+    afterEach(async ()=>{
         await Database.close();
     })
 })

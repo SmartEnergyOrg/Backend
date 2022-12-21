@@ -45,7 +45,11 @@ class SqliteDataContext {
   CREATE TABLE IF NOT EXISTS Dashboards(
       DashboardId INTEGER PRIMARY KEY,
       UserId INTEGER,
-      ShowNavbar INTEGER CHECK(0 OR 1) DEFAULT 1
+      ShowNavbar INTEGER CHECK(0 OR 1) DEFAULT 1,
+      ShowWeather INTEGER CHECK(0 OR 1) DEFAULT 0,
+      PeakTariffOn INTEGER CHECK(0 OR 1) DEFAULT 0,
+      PeakTariff INTEGER DEFAULT 0,
+      IdleTariff INTEGER DEFAULT 0
       /*FOREIGN KEY (UserId) REFERENCES Users*/
   )`;
     const UserTable = `
