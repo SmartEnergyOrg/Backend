@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "jest --detectOpenHandles",
+    "test": "npm run testServices & npm run testControllers",
+    "testServices": "jest /*.spec.js",
     "testControllers": "mocha src/controllers/tests/**/* --exit",
     "lint": "eslint .",
     "populate": "node ./src/db/populate.js"
