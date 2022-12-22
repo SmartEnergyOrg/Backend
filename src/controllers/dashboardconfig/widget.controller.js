@@ -1,4 +1,4 @@
-const { SqliteDataContext } = require("../../db/sqllite.client");
+const { SqliteDataContext } = require("../../db/sqlite.client");
 const DashboardConfigService = require("../../services/dashboardconfig/dashboardConfig.service");
 const WidgetSettingsService = require("../../services/dashboardconfig/SettingsConfig.service");
 const WidgetService = require("../../services/dashboardconfig/WidgetConfig.service");
@@ -12,31 +12,35 @@ const database = new SqliteDataContext("DashboardConfigDB");
 //InfluxDBService
 const influxdbService = require("../../services/influxdb/influxdb.service");
 const assert = require("assert");
-const { CheckWidgetInput, CheckSettingsInput, CheckGraphInput } = require("../../services/dashboardconfig/InputValidation.service");
+const {
+  CheckWidgetInput,
+  CheckSettingsInput,
+  CheckGraphInput,
+} = require("../../services/dashboardconfig/InputValidation.service");
 
 //Dependency injectie binnen widgetservice.
 const widgetService = new WidgetService(database);
 const SettingsService = new WidgetSettingsService(database);
 const GraphsService = new WidgetGraphService(database);
 
-const CheckFieldsWidget = async ( req,res, next)=>{
+const CheckFieldsWidget = async (req, res, next) => {
   try {
-      const WidgetBody = req.body.Widget;
-      const Position = req.body.Position;
-      const GraphList = req.body.Graphs;
-      //Checks if input is valid.
-      CheckWidgetInput(WidgetBody, GraphList);
-      GraphList.forEach(graph => {
-        CheckGraphInput(graph);
-      });
-      assert(typeof Position == 'number', 'Must have a postion');
-      next();
+    const WidgetBody = req.body.Widget;
+    const Position = req.body.Position;
+    const GraphList = req.body.Graphs;
+    //Checks if input is valid.
+    CheckWidgetInput(WidgetBody, GraphList);
+    GraphList.forEach((graph) => {
+      CheckGraphInput(graph);
+    });
+    assert(typeof Position == "number", "Must have a postion");
+    next();
   } catch (error) {
-      res.status(401).json({message: "Input failure", result: error.message});  
+    res.status(401).json({ message: "Input failure", result: error.message });
   }
-}
+};
 
-const CheckUpdateWidget =  async ( req,res, next)=>{
+const CheckUpdateWidget = async (req, res, next) => {
   try {
     const WidgetBody = req.body;
     const Settings = req.body.Settings;
@@ -44,14 +48,14 @@ const CheckUpdateWidget =  async ( req,res, next)=>{
     //Checks if input is valid.
     CheckWidgetInput(WidgetBody, GraphList);
     CheckSettingsInput(Settings);
-    GraphList.forEach(graph => {
+    GraphList.forEach((graph) => {
       CheckGraphInput(graph);
     });
     next();
-} catch (error) {
-    res.status(401).json({message: "Input failure", result: error.message});  
-}
-}
+  } catch (error) {
+    res.status(401).json({ message: "Input failure", result: error.message });
+  }
+};
 
 //Haalt dashboards op.
 const GetWidgetsOfDashboard = async (req, res) => {
@@ -60,15 +64,26 @@ const GetWidgetsOfDashboard = async (req, res) => {
 
     //const DashboardId = req.body.DashboardId;
     const DashboardId = 0;
-  
+
     //Gets all dashboards.
     const result = await widgetService.GetAllWidgets(DashboardId);
     console.log("All widgets ended");
-    res.status(200).json({ message: "Widgets are retrieved", result: result , succeeded: true});    
+    res
+      .status(200)
+      .json({
+        message: "Widgets are retrieved",
+        result: result,
+        succeeded: true,
+      });
   } catch (error) {
-    res.status(400).json({ message: "Widgets are not retrieved", result: error, succeeded: false });   
+    res
+      .status(400)
+      .json({
+        message: "Widgets are not retrieved",
+        result: error,
+        succeeded: false,
+      });
   }
-
 };
 
 //Creates a widget
@@ -113,7 +128,11 @@ const CreateWidget = async (req, res) => {
     });
     res
       .status(201)
-      .json({ message: "Creation widget succeeded", result: CreatedID, succeeded: true });
+      .json({
+        message: "Creation widget succeeded",
+        result: CreatedID,
+        succeeded: true,
+      });
   } catch (error) {
     res.status(404).json({ message: error, succeeded: false });
   }
@@ -124,14 +143,15 @@ const GetOneWidget = async (req, res) => {
   try {
     console.log(req.params);
     const WidgetId = req.params.id;
-  
+
     let Widget = await widgetService.GetWidget(WidgetId);
-    
+
     res.status(201).json({ message: "Search result", result: Widget });
   } catch (error) {
-    res.status(401).json({ message: "Search has failed", result: false, error });
+    res
+      .status(401)
+      .json({ message: "Search has failed", result: false, error });
   }
-
 };
 
 //Deletes widget
@@ -139,11 +159,14 @@ const DeleteWidget = async (req, res) => {
   try {
     const WidgetId = req.params.id;
     const result = await widgetService.DeleteWidgets(WidgetId);
-    res.status(200).json({ message: "Deletion has succeeded result", result: true });   
+    res
+      .status(200)
+      .json({ message: "Deletion has succeeded result", result: true });
   } catch (error) {
-    res.status(401).json({ message: "Deletion has failed", result: false, error });
+    res
+      .status(401)
+      .json({ message: "Deletion has failed", result: false, error });
   }
-
 };
 
 /*Schema, at least these attributes must be present.
@@ -175,26 +198,28 @@ const UpdateWidget = async (req, res) => {
     const WidgetBody = req.body;
     const Settings = WidgetBody.Settings;
     const GraphList = WidgetBody.Graphs;
-  
+
     //Updates widget
     await widgetService.UpdateWidget(Id, WidgetBody);
-  
+
     //Updates the settings
     await SettingsService.UpdateSettings(Id, Settings);
-  
+
     //Updates all graphsources in this table.
     //Deletes all graphs not present in the object.
     await GraphsService.UpdateDeleteGraphs(GraphList.map((e) => e.GraphId));
-  
+
     //Replaces graphs.
     await GraphList.forEach(async (e) => {
       //Replaces new values;
       GraphsService.ReplaceGraph(e.GraphId, Id, e);
     });
-  
+
     res.status(201).json({ message: "Update is completed", result: true });
   } catch (error) {
-    res.status(401).json({ message: "Update has failed", result: false, error });
+    res
+      .status(401)
+      .json({ message: "Update has failed", result: false, error });
   }
 };
 
@@ -208,11 +233,9 @@ const Poll = async (req, res) => {
 
     const widget = await widgetService.GetWidget(req.params.id);
     if (widget == null) {
-      res
-        .status(400)
-        .json({
-          message: `Widget with id: ${req.params.id} could not be found.`,
-        });
+      res.status(400).json({
+        message: `Widget with id: ${req.params.id} could not be found.`,
+      });
       return;
     }
 

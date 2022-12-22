@@ -1,14 +1,15 @@
-const { SqliteDataContext } = require("../../db/sqllite.client");
+const { SqliteDataContext } = require("../../db/sqlite.client");
 
-class WidgetSettingsService{
-    //Uses a sqlite client.
-SqlClient;
-  
-constructor(database) {
+class WidgetSettingsService {
+  //Uses a sqlite client.
+  SqlClient;
+
+  constructor(database) {
     this.SqlClient = database;
-}
-    //Settings of widget operations
-  async CreateSettings(CreationValues){
+  }
+
+  //Settings of widget operations
+  async CreateSettings(CreationValues) {
     const Params = [CreationValues.Position, CreationValues.WidgetId];
 
     const Sql = `INSERT INTO WidgetSettings(Position, WidgetId) VALUES(?,?)`;
@@ -17,20 +18,21 @@ constructor(database) {
   }
 
   //Updates a widgetSetting entity.
-  async UpdateSettings(Id, UpdateValues){
+  async UpdateSettings(Id, UpdateValues) {
     const Params = [UpdateValues.Position, UpdateValues.ISACTIVE, Id];
 
-    const Sql =`
-    UPDATE WidgetSettings 
-    SET Position = ?, ISACTIVE = ?
-    WHERE WidgetId = ?;`;
-    
+    const Sql = `
+      UPDATE WidgetSettings
+      SET Position = ?,
+          ISACTIVE = ?
+      WHERE WidgetId = ?;`;
+
     return await this.SqlClient.Update(Sql, Params);
   }
 
   //Retrieves setting based on widgetId
-  async GetSettings(Id){
-    const sql = `SELECT * FROM WidgetSettings WHERE WidgetId = ?;`
+  async GetSettings(Id) {
+    const sql = `SELECT * FROM WidgetSettings WHERE WidgetId = ?;`;
     return await this.SqlClient.GetOne(sql, [Id]);
   }
 }

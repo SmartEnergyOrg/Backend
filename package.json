@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "mocha ./src/**/*",
+    "mocha-test": "mocha ./src/__tests__/**/*.test.js",
+    "jest-test": "jest ./src/__tests__/**/*.spec.js",
     "lint": "eslint .",
     "populate": "node ./src/db/populate.js",
     "live_populate": "node ./src/db/live_populate.js"
@@ -27,6 +28,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "jest": "^29.3.1",
     "js-logger": "^1.6.1",
     "sqlite3": "^5.1.4"
   },

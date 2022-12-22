@@ -4,13 +4,14 @@ const server = require("../../../app");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
-const { SqliteDataContext } = require("../../db/sqllite.client");
+const { SqliteDataContext } = require("../../db/sqlite.client");
 const { before, after } = require("mocha");
 
 chai.should();
 chai.use(chaiHttp);
-const UserInsert = `REPLACE INTO Users(UserId, FirstName, 
-  LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) 
+const UserInsert = `REPLACE
+INTO Users(UserId, FirstName,
+  LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password)
   VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
 describe("Read dashboards", function () {
   it("Should give a list of dashboards back", function (done) {
@@ -25,7 +26,7 @@ describe("Read dashboards", function () {
       });
   });
 
-  it("Should get one dashboard back", (done)=>{
+  it("Should get one dashboard back", (done) => {
     chai
       .request(server)
       .get("/api/dashboards/0")
@@ -33,17 +34,17 @@ describe("Read dashboards", function () {
         const response = res.body;
         expect(response.message).equals("Everything is alright");
         expect(response.result.DashboardId).equals(0);
-        expect(response.result.UserId).equals(0)
-        expect(response.result.ShowNavbar).equals(1)
-        expect(response.result.ShowWeather).equals(0)
-        expect(response.result.PeakTariffOn).equals(0)
-        expect(response.result.PeakTariff).equals(0)
-        expect(response.result.IdleTariff).equals(0)
+        expect(response.result.UserId).equals(0);
+        expect(response.result.ShowNavbar).equals(1);
+        expect(response.result.ShowWeather).equals(0);
+        expect(response.result.PeakTariffOn).equals(0);
+        expect(response.result.PeakTariff).equals(0);
+        expect(response.result.IdleTariff).equals(0);
         done();
       });
-  })
+  });
 
-  it("Should send error back if nothing is found", (done)=>{
+  it("Should send error back if nothing is found", (done) => {
     chai
       .request(server)
       .get("/api/dashboards/9000")
@@ -53,35 +54,36 @@ describe("Read dashboards", function () {
         expect(response.result).equals(false);
         done();
       });
-  })
+  });
 });
-
 
 describe("Create dashboard", function () {
   let Datab;
-  before(async (done)=>{
+  before(async (done) => {
     const sql = new SqliteDataContext("DashboardConfigDB");
     Datab = sql.DataSQL;
-    Datab.serialize(()=>{
+    Datab.serialize(() => {
       Datab.run(UserInsert);
-        done();
+      done();
     });
-     
   });
 
-  after(async (done)=>{
-    Datab.serialize(()=>{
-      Datab.run(`DELETE FROM Users;`);
-      Datab.run(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
-        done();
+  after(async (done) => {
+    Datab.serialize(() => {
+      Datab.run(`DELETE
+                 FROM Users;`);
+      Datab.run(`DELETE
+                 FROM Dashboards
+                 WHERE DashboardId != 0;`);
+      done();
     });
-  })
+  });
 
   it("Create dashboard", function (done) {
     chai
       .request(server)
       .post("/api/dashboards")
-      .send({UserId: 2})
+      .send({ UserId: 2 })
       .end((err, res) => {
         const response = res.body;
         expect(response.message).equals("Everything is alright");
@@ -102,27 +104,27 @@ describe("Create dashboard", function () {
         done();
       });
   });*/
-
 });
 
-
-describe('Update dashboard', function(){
+describe("Update dashboard", function () {
   let Datab;
-  before(async (done)=>{
+  before(async (done) => {
     const sql = new SqliteDataContext("DashboardConfigDB");
     Datab = sql.DataSQL;
-    Datab.serialize(()=>{
+    Datab.serialize(() => {
       Datab.run(UserInsert);
-        done();
+      done();
     });
-     
   });
 
-  after(async (done)=>{
-    Datab.serialize(()=>{
-      Datab.run(`DELETE FROM Users;`);
-      Datab.run(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
-        done();
+  after(async (done) => {
+    Datab.serialize(() => {
+      Datab.run(`DELETE
+                 FROM Users;`);
+      Datab.run(`DELETE
+                 FROM Dashboards
+                 WHERE DashboardId != 0;`);
+      done();
     });
   });
 
@@ -131,12 +133,12 @@ describe('Update dashboard', function(){
       .request(server)
       .put("/api/dashboards/2")
       .send({
-        UserId: 1, 
-        ShowNavbar: 0, 
-        PeakTariffOn: 1, 
-        ShowWeather: 0, 
-        IdleTariff: 5, 
-        PeakTariff: 5
+        UserId: 1,
+        ShowNavbar: 0,
+        PeakTariffOn: 1,
+        ShowWeather: 0,
+        IdleTariff: 5,
+        PeakTariff: 5,
       })
       .end((err, res) => {
         const response = res.body;
@@ -152,11 +154,11 @@ describe('Update dashboard', function(){
       .request(server)
       .put("/api/dashboards/211")
       .send({
-        UserId: 1, 
-        ShowNavbar: 0, 
-        PeakTariffOn: 1, 
-        ShowWeather: 0, 
-        IdleTariff: 5, 
+        UserId: 1,
+        ShowNavbar: 0,
+        PeakTariffOn: 1,
+        ShowWeather: 0,
+        IdleTariff: 5,
         PeakTariff: 5
       })
       .end((err, res) => {
@@ -167,25 +169,27 @@ describe('Update dashboard', function(){
       });
   });
   */
-})
+});
 
-describe('Delete dashboard', function(){
+describe("Delete dashboard", function () {
   let Datab;
-  before(async (done)=>{
+  before(async (done) => {
     const sql = new SqliteDataContext("DashboardConfigDB");
     Datab = sql.DataSQL;
-    Datab.serialize(()=>{
+    Datab.serialize(() => {
       Datab.run(UserInsert);
-        done();
+      done();
     });
-     
   });
 
-  after(async (done)=>{
-    Datab.serialize(()=>{
-      Datab.run(`DELETE FROM Users;`);
-      Datab.run(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
-        done();
+  after(async (done) => {
+    Datab.serialize(() => {
+      Datab.run(`DELETE
+                 FROM Users;`);
+      Datab.run(`DELETE
+                 FROM Dashboards
+                 WHERE DashboardId != 0;`);
+      done();
     });
   });
 
@@ -200,4 +204,4 @@ describe('Delete dashboard', function(){
         done();
       });
   });
-})
+});
