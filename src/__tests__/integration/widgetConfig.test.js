@@ -6,6 +6,7 @@ const chaiHttp = require("chai-http");
 const { expect } = require("chai");
 const { SqliteDataContext } = require("../../db/sqllite.client");
 const { before, after } = require("mocha");
+const { InstanceOfDB } = require("../../db/databaseInstance");
 
 chai.should();
 chai.use(chaiHttp);
@@ -27,24 +28,22 @@ const deleteGraph = 'DELETE FROM Graphs';
 
 describe('CRUD Widgets', function(){
     let Datab;
-    before(async (done)=>{
-        Datab = new SqliteDataContext("DashboardConfigDB");
-        Datab.Create(UserInsert);
-        Datab.Create(WidgetInsert);
-        Datab.Create(WidgetInsert2);
-        Datab.Create(GraphInsert);
-        Datab.Create(GraphInsert2);
-        Datab.Create(SettingsInsert);
-        Datab.Create(SettingsInsert2);
-        done(); 
+    before(async ()=>{
+        Datab = InstanceOfDB();
+        await Datab.Create(UserInsert);
+        await Datab.Create(WidgetInsert);
+        await Datab.Create(WidgetInsert2);
+        await Datab.Create(GraphInsert);
+        await Datab.Create(GraphInsert2);
+        await Datab.Create(SettingsInsert);
+        await Datab.Create(SettingsInsert2);
     });
       
-    after(async (done)=>{      
-      Datab.Delete(deleteGraph);
-      Datab.Delete(deleteSettings);
-      Datab.Delete(deleteQueryWidget);
-      Datab.Delete(deleteQueryUser);
-      done();
+    after(async ()=>{      
+      await Datab.Delete(deleteGraph);
+      await Datab.Delete(deleteSettings);
+      await Datab.Delete(deleteQueryWidget);
+      await Datab.Delete(deleteQueryUser);
     });
 
     it('Lack of graphs should give a warning', function(done){
@@ -255,10 +254,11 @@ describe('CRUD Widgets', function(){
 
   it('Widget should be given based on widgetId', function(done){
     chai.request(server)
-    .get('/api/widgetsconfig/2')
+    .get('/api/widgetsconfig/1')
     .end((err, res) => {
         const response = res.body;
         expect(response.message).equals("Search result");
+        expect(response.result.WidgetId).equals(1);
         done();
       });
 })
@@ -269,6 +269,7 @@ it('Gives all widgets', function(done){
     .end((err, res) => {
         const response = res.body;
         expect(response.message).equals("Widgets are retrieved");
+        expect(response.result.length).equals(1);
         done();
       });
 })

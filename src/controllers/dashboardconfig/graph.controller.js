@@ -1,10 +1,9 @@
-const assert = require("assert");
-const { SqliteDataContext } = require("../../db/sqllite.client");
+const { InstanceOfDB } = require("../../db/databaseInstance");
 const WidgetGraphService = require("../../services/dashboardconfig/GraphConfig.service");
 const { CheckGraphInput } = require("../../services/dashboardconfig/InputValidation.service");
 
 //Database sqlite3;
-const database = new SqliteDataContext("DashboardConfigDB");
+const database = InstanceOfDB();
 const GraphsService = new WidgetGraphService(database);
 const CheckInput = async (req, res, next)=>{
     try {

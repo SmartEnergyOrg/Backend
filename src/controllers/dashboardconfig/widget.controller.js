@@ -3,13 +3,15 @@ const DashboardConfigService = require("../../services/dashboardconfig/dashboard
 const WidgetSettingsService = require("../../services/dashboardconfig/SettingsConfig.service");
 const WidgetService = require("../../services/dashboardconfig/WidgetConfig.service");
 const WidgetGraphService = require("../../services/dashboardconfig/GraphConfig.service");
-
-//Database sqlite3;
-const database = new SqliteDataContext("DashboardConfigDB");
-//InfluxDBService
-const influxdbService = require("../../services/influxdb/influxdb.service");
 const assert = require("assert");
 const { CheckWidgetInput, CheckSettingsInput, CheckGraphInput } = require("../../services/dashboardconfig/InputValidation.service");
+const { InstanceOfDB } = require("../../db/databaseInstance");
+
+//Database sqlite3;
+const database = InstanceOfDB();
+//InfluxDBService
+const influxdbService = require("../../services/influxdb/influxdb.service");
+
 
 //Dependency injectie binnen widgetservice.
 const widgetService = new WidgetService(database);

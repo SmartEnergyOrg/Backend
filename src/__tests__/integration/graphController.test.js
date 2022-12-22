@@ -6,6 +6,7 @@ const chaiHttp = require("chai-http");
 const { expect } = require("chai");
 const { SqliteDataContext } = require("../../db/sqllite.client");
 const { before, after } = require("mocha");
+const { InstanceOfDB } = require("../../db/databaseInstance");
 
 chai.should();
 chai.use(chaiHttp);
@@ -22,7 +23,7 @@ const deleteGraph = 'DELETE FROM Graphs';
     describe("Create graphs test", function () {
         let Datab;
         before(async (done)=>{
-          Datab = new SqliteDataContext("DashboardConfigDB");
+          Datab = InstanceOfDB();
           Datab.Create(UserInsert);
           Datab.Create(WidgetInsert);
           Datab.Create(GraphInsert);
@@ -77,7 +78,7 @@ const deleteGraph = 'DELETE FROM Graphs';
     describe("Update graphs test", function () {
       let Datab;
       before(async (done)=>{
-        Datab = new SqliteDataContext("DashboardConfigDB");
+        Datab = InstanceOfDB();
         Datab.Create(UserInsert);
         Datab.Create(WidgetInsert);
         Datab.Create(GraphInsert);
@@ -119,7 +120,7 @@ const deleteGraph = 'DELETE FROM Graphs';
     describe("Delete graphs test", function () {
       let Datab;
       before(async (done)=>{
-        Datab = new SqliteDataContext("DashboardConfigDB");
+        Datab = InstanceOfDB();
         Datab.Create(UserInsert);
         Datab.Create(WidgetInsert);
         Datab.Create(GraphInsert);
@@ -146,19 +147,17 @@ const deleteGraph = 'DELETE FROM Graphs';
 
 describe('Read graphs', function(){
   let Datab;
-  before(async (done)=>{
-    Datab = new SqliteDataContext("DashboardConfigDB");
-    Datab.Create(UserInsert);
-    Datab.Create(WidgetInsert);
-    Datab.Create(GraphInsert);
-    done();
+  before(async ()=>{
+    Datab = InstanceOfDB();
+    await Datab.Create(UserInsert);
+    await Datab.Create(WidgetInsert);
+    await Datab.Create(GraphInsert);
   });
 
-  after(async (done)=>{
-    Datab.Delete(deleteGraph);
-    Datab.Delete(deleteQueryWidget);
-    Datab.Delete(deleteQueryUser);
-    done();
+  after(async ()=>{
+    await Datab.Delete(deleteGraph);
+    await Datab.Delete(deleteQueryWidget);
+    await Datab.Delete(deleteQueryUser);
   });
 
   it('Gives all graph', function(done){
