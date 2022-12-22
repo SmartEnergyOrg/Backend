@@ -22,24 +22,18 @@ const deleteGraph = 'DELETE FROM Graphs';
     describe("Create graphs test", function () {
         let Datab;
         before(async (done)=>{
-          const sql = new SqliteDataContext("DashboardConfigDB");
-          Datab = sql.DataSQL;
-          Datab.serialize(()=>{
-            Datab.run(UserInsert);
-            Datab.run(WidgetInsert);
-            Datab.run(GraphInsert);
-            done();
-          });
-           
+          Datab = new SqliteDataContext("DashboardConfigDB");
+          Datab.Create(UserInsert);
+          Datab.Create(WidgetInsert);
+          Datab.Create(GraphInsert);
+          done();
         });
       
         after(async (done)=>{
-          Datab.serialize(()=>{
-            Datab.run(deleteQueryUser);
-            Datab.run(deleteQueryWidget);
-            Datab.run(deleteGraph);
-              done();
-          });
+          Datab.Delete(deleteQueryUser);
+          Datab.Delete(deleteQueryWidget);
+          Datab.Delete(deleteGraph);
+          done();
         });
 
 

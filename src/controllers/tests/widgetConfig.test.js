@@ -6,6 +6,7 @@ const chaiHttp = require("chai-http");
 const { expect } = require("chai");
 const { SqliteDataContext } = require("../../db/sqllite.client");
 const { before, after } = require("mocha");
+const WidgetService = require("../../services/dashboardconfig/WidgetConfig.service");
 
 chai.should();
 chai.use(chaiHttp);
@@ -30,29 +31,24 @@ const deleteGraph = 'DELETE FROM Graphs';
 describe('CRUD Widgets', function(){
     let Datab;
     before(async (done)=>{
-          const sql = new SqliteDataContext("DashboardConfigDB");
-          Datab = sql.DataSQL;
-          await Datab.serialize(()=>{
-            Datab.run(UserInsert);
-            Datab.run(WidgetInsert);
-            Datab.run(GraphInsert);
-            Datab.run(SettingsInsert);
-            Datab.run(SettingsInsert2);
-            Datab.run(WidgetInsert2);
-            Datab.run(GraphInsert2);
-            done();
-          });
-           
+       Datab = new SqliteDataContext("DashboardConfigDB");
+       Datab.Create(UserInsert);
+       Datab.Create(WidgetInsert);
+       Datab.Create(GraphInsert);
+       Datab.Create(SettingsInsert);
+       Datab.Create(SettingsInsert2);
+       Datab.Create(WidgetInsert2);
+       Datab.Create(GraphInsert2);
+      done();
     });
       
     after(async (done)=>{
-          await Datab.serialize(async ()=>{
-            Datab.run(deleteQueryUser);
-            Datab.run(deleteQueryWidget);
-            Datab.run(deleteGraph);
-            Datab.run(deleteSettings);
-            done();
-          });
+
+        Datab.Delete(deleteQueryUser);
+        Datab.Delete(deleteQueryWidget);
+        Datab.Delete(deleteGraph);
+        Datab.Delete(deleteSettings);
+        done();
     });
 
     it('Lack of graphs should give a warning', function(done){

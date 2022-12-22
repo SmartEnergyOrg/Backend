@@ -17,24 +17,18 @@ const UserInsert = `REPLACE INTO Users(UserId, FirstName,
 describe('Test update of widgetSettings', ()=>{
     let Datab;
     before(async (done)=>{
-      const sql = new SqliteDataContext("DashboardConfigDB");
-      Datab = sql.DataSQL;
-      Datab.serialize(()=>{
-        Datab.run(UserInsert);
-        Datab.run(WidgetInsert);
-        Datab.run(SettingsInsert);
-        done();
-      });
-       
+      Datab = new SqliteDataContext("DashboardConfigDB");
+      Datab.Create(UserInsert);
+      Datab.Create(WidgetInsert);
+      Datab.Create(SettingsInsert);
+      done();
     });
   
     after(async (done)=>{
-      Datab.serialize(()=>{
-        Datab.run(`DELETE FROM Users;`);
-        Datab.run(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
-        Datab.run(`DELETE FROM Widgets;`);
-          done();
-      });
+      Datab.Delete(`DELETE FROM Users;`);
+      Datab.Delete(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
+      Datab.Delete(`DELETE FROM Widgets;`);
+      done();
     });
 
     it('Test empty ISACTIVE', function(done){
@@ -77,27 +71,21 @@ describe('Test update of widgetSettings', ()=>{
 
 
 describe('Test read of widgetSettings', ()=>{
-    let Datab;
-    before(async (done)=>{
-      const sql = new SqliteDataContext("DashboardConfigDB");
-      Datab = sql.DataSQL;
-      Datab.serialize(()=>{
-        Datab.run(UserInsert);
-        Datab.run(WidgetInsert);
-        Datab.run(SettingsInsert);
-        done();
-      });
-       
-    });
-  
-    after(async (done)=>{
-      Datab.serialize(()=>{
-        Datab.run(`DELETE FROM Users;`);
-        Datab.run(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
-        Datab.run(`DELETE FROM Widgets;`);
-          done();
-      });
-    });
+  let Datab;
+  before(async (done)=>{
+    Datab = new SqliteDataContext("DashboardConfigDB");
+    Datab.Create(UserInsert);
+    Datab.Create(WidgetInsert);
+    Datab.Create(SettingsInsert);
+    done();
+  });
+
+  after(async (done)=>{
+    Datab.Delete(`DELETE FROM Users;`);
+    Datab.Delete(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
+    Datab.Delete(`DELETE FROM Widgets;`);
+    done();
+  });
 
     it('Successful retrieval of settings', function(done){
         chai.request(server)
