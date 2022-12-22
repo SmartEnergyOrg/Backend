@@ -1,5 +1,3 @@
-const { SqliteDataContext } = require("../db/sqllite.client");
-
 class GraphConfigService{
     //Uses a sqlite client.
 SqlClient;

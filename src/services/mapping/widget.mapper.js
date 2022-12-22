@@ -34,7 +34,7 @@ const MapWidgetToObject = (widget) => {
     IsActive: !!widget.ISACTIVE,
     Graphs: widget.Graphs
   };
-
+  console.log(Widget);
   return Widget
 }
 

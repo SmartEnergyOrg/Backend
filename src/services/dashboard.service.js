@@ -1,6 +1,3 @@
-const { SqliteDataContext } = require("../db/sqllite.client");
-
-
 //Responsible with the querying of data operations of various tables.
 class DashboardService {
   //Uses a sqlite client.

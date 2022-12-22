@@ -101,7 +101,7 @@ describe('CRUD Widgets', function(){
               ISACTIVE: 1
             }
             ,
-            Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type_Graph: "Lijn"}]
+            Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type: "Lijn"}]
           })
           .end((err, res) => {
             const response = res.body;

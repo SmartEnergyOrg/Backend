@@ -89,7 +89,7 @@ class WidgetService {
     }
 
     const result = await this.SqlClient.GetAll(Query, param);
-
+    console.log(result);
     return MapWidgetsToArray(result);
   }
 
@@ -122,7 +122,7 @@ class WidgetService {
     ];
 
     let Widget = await this.SqlClient.GetOne(Query, Params);
-
+    console.log(Widget);
     return MapWidgetToObject(Widget);;
   }
 }
