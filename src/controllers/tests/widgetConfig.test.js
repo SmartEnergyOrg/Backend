@@ -43,7 +43,6 @@ describe('CRUD Widgets', function(){
     });
       
     after(async (done)=>{
-
         Datab.Delete(deleteQueryUser);
         Datab.Delete(deleteQueryWidget);
         Datab.Delete(deleteGraph);

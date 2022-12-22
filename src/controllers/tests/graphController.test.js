@@ -75,26 +75,21 @@ const deleteGraph = 'DELETE FROM Graphs';
     })
 
     describe("Update graphs test", function () {
+      let Datab;
         before(async (done)=>{
-            const sql = new SqliteDataContext("DashboardConfigDB");
-            Datab = sql.DataSQL;
-            Datab.serialize(()=>{
-              Datab.run(UserInsert);
-              Datab.run(WidgetInsert);
-              Datab.run(GraphInsert);
-              done();
-            });
-             
-          });
-        
-          after(async (done)=>{
-            Datab.serialize(()=>{
-              Datab.run(deleteQueryUser);
-              Datab.run(deleteQueryWidget);
-              Datab.run(deleteGraph);
-                done();
-            });
-          });
+          Datab = new SqliteDataContext("DashboardConfigDB");
+          Datab.Create(UserInsert);
+          Datab.Create(WidgetInsert);
+          Datab.Create(GraphInsert);
+          done();
+        });
+      
+        after(async (done)=>{
+          Datab.Delete(deleteQueryUser);
+          Datab.Delete(deleteQueryWidget);
+          Datab.Delete(deleteGraph);
+          done();
+        });
 
         it('Invalid input should give asertion error.', function(done){
             chai.request(server)
@@ -122,25 +117,21 @@ const deleteGraph = 'DELETE FROM Graphs';
     })
 
     describe("Delete graphs test", function () {
-        before(async (done)=>{
-            const sql = new SqliteDataContext("DashboardConfigDB");
-            Datab = sql.DataSQL;
-            Datab.serialize(()=>{
-              Datab.run(UserInsert);
-              Datab.run(WidgetInsert);
-              Datab.run(GraphInsert);
-              done();
-            });
-             
-          });
-        
-          after(async (done)=>{
-            Datab.serialize(()=>{
-              Datab.run(deleteQueryUser);
-              Datab.run(deleteQueryWidget);
-                done();
-            });
-          });
+      let Datab;
+      before(async (done)=>{
+        Datab = new SqliteDataContext("DashboardConfigDB");
+        Datab.Create(UserInsert);
+        Datab.Create(WidgetInsert);
+        Datab.Create(GraphInsert);
+        done();
+      });
+    
+      after(async (done)=>{
+        Datab.Delete(deleteQueryUser);
+        Datab.Delete(deleteQueryWidget);
+        Datab.Delete(deleteGraph);
+        done();
+      });
         it('Successful deletion of graph should give positive message.', function(done){
             chai.request(server)
             .delete('/api/widgetsconfig/1/graphs/1')
@@ -154,25 +145,20 @@ const deleteGraph = 'DELETE FROM Graphs';
     })
 
 describe('Read graphs', function(){
+  let Datab;
   before(async (done)=>{
-    const sql = new SqliteDataContext("DashboardConfigDB");
-    Datab = sql.DataSQL;
-    Datab.serialize(()=>{
-      Datab.run(UserInsert);
-      Datab.run(WidgetInsert);
-      Datab.run(GraphInsert);
-      done();
-    });
-     
+    Datab = new SqliteDataContext("DashboardConfigDB");
+    Datab.Create(UserInsert);
+    Datab.Create(WidgetInsert);
+    Datab.Create(GraphInsert);
+    done();
   });
 
   after(async (done)=>{
-    Datab.serialize(()=>{
-      Datab.run(deleteQueryUser);
-      Datab.run(deleteGraph);
-      Datab.run(deleteQueryWidget);
-        done();
-    });
+    Datab.Delete(deleteQueryUser);
+    Datab.Delete(deleteQueryWidget);
+    Datab.Delete(deleteGraph);
+    done();
   });
 
   it('Gives all graph', function(done){
