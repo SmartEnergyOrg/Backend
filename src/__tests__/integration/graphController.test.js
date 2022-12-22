@@ -4,8 +4,8 @@ const server = require("../../../app");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
-const { SqliteDataContext } = require("../../db/sqllite.client");
 const { before, after } = require("mocha");
+const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
 
 chai.should();
 chai.use(chaiHttp);
@@ -22,24 +22,18 @@ const deleteGraph = 'DELETE FROM Graphs';
     describe("Create graphs test", function () {
         let Datab;
         before(async (done)=>{
-          const sql = new SqliteDataContext("DashboardConfigDB");
-          Datab = sql.DataSQL;
-          Datab.serialize(()=>{
-            Datab.run(UserInsert);
-            Datab.run(WidgetInsert);
-            Datab.run(GraphInsert);
-            done();
-          });
-           
+          Datab = DatabaseInstance();
+          Datab.Create(UserInsert);
+          Datab.Create(WidgetInsert);
+          Datab.Create(GraphInsert);
+          done();
         });
       
         after(async (done)=>{
-          Datab.serialize(()=>{
-            Datab.run(deleteQueryUser);
-            Datab.run(deleteQueryWidget);
-            Datab.run(deleteGraph);
-              done();
-          });
+          Datab.Delete(deleteQueryUser);
+          Datab.Delete(deleteQueryWidget);
+          Datab.Delete(deleteGraph);
+          done();
         });
 
 
@@ -81,26 +75,21 @@ const deleteGraph = 'DELETE FROM Graphs';
     })
 
     describe("Update graphs test", function () {
-        before(async (done)=>{
-            const sql = new SqliteDataContext("DashboardConfigDB");
-            Datab = sql.DataSQL;
-            Datab.serialize(()=>{
-              Datab.run(UserInsert);
-              Datab.run(WidgetInsert);
-              Datab.run(GraphInsert);
-              done();
-            });
-             
-          });
-        
-          after(async (done)=>{
-            Datab.serialize(()=>{
-              Datab.run(deleteQueryUser);
-              Datab.run(deleteQueryWidget);
-              Datab.run(deleteGraph);
-                done();
-            });
-          });
+      let Datab;
+      before(async (done)=>{
+        Datab = DatabaseInstance();
+        Datab.Create(UserInsert);
+        Datab.Create(WidgetInsert);
+        Datab.Create(GraphInsert);
+        done();
+      });
+    
+      after(async (done)=>{
+        Datab.Delete(deleteQueryUser);
+        Datab.Delete(deleteQueryWidget);
+        Datab.Delete(deleteGraph);
+        done();
+      });
 
         it('Invalid input should give asertion error.', function(done){
             chai.request(server)
@@ -128,25 +117,21 @@ const deleteGraph = 'DELETE FROM Graphs';
     })
 
     describe("Delete graphs test", function () {
-        before(async (done)=>{
-            const sql = new SqliteDataContext("DashboardConfigDB");
-            Datab = sql.DataSQL;
-            Datab.serialize(()=>{
-              Datab.run(UserInsert);
-              Datab.run(WidgetInsert);
-              Datab.run(GraphInsert);
-              done();
-            });
-             
-          });
-        
-          after(async (done)=>{
-            Datab.serialize(()=>{
-              Datab.run(deleteQueryUser);
-              Datab.run(deleteQueryWidget);
-                done();
-            });
-          });
+      let Datab;
+      before(async (done)=>{
+        Datab = DatabaseInstance();
+        Datab.Create(UserInsert);
+        Datab.Create(WidgetInsert);
+        Datab.Create(GraphInsert);
+        done();
+      });
+    
+      after(async (done)=>{
+        Datab.Delete(deleteQueryUser);
+        Datab.Delete(deleteQueryWidget);
+        Datab.Delete(deleteGraph);
+        done();
+      });
         it('Successful deletion of graph should give positive message.', function(done){
             chai.request(server)
             .delete('/api/widgetsconfig/1/graphs/1')
@@ -160,25 +145,18 @@ const deleteGraph = 'DELETE FROM Graphs';
     })
 
 describe('Read graphs', function(){
-  before(async (done)=>{
-    const sql = new SqliteDataContext("DashboardConfigDB");
-    Datab = sql.DataSQL;
-    Datab.serialize(()=>{
-      Datab.run(UserInsert);
-      Datab.run(WidgetInsert);
-      Datab.run(GraphInsert);
-      done();
-    });
-     
+  let Datab;
+  before(async ()=>{
+    Datab = DatabaseInstance();
+    await Datab.Create(UserInsert);
+    await Datab.Create(WidgetInsert);
+    await Datab.Create(GraphInsert);
   });
 
-  after(async (done)=>{
-    Datab.serialize(()=>{
-      Datab.run(deleteQueryUser);
-      Datab.run(deleteGraph);
-      Datab.run(deleteQueryWidget);
-        done();
-    });
+  after(async ()=>{
+    await Datab.Delete(deleteGraph);
+    await Datab.Delete(deleteQueryWidget);
+    await Datab.Delete(deleteQueryUser);
   });
 
   it('Gives all graph', function(done){

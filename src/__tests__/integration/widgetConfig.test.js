@@ -6,6 +6,7 @@ const chaiHttp = require("chai-http");
 const { expect } = require("chai");
 const { SqliteDataContext } = require("../../db/sqllite.client");
 const { before, after } = require("mocha");
+const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
 
 chai.should();
 chai.use(chaiHttp);
@@ -18,9 +19,7 @@ const GraphInsert2 = "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type_Gra
 const SettingsInsert = 'REPLACE INTO  WidgetSettings (SettingId, Position, ISACTIVE, WidgetId) VALUES(1, 1, 1, 1)';
 const SettingsInsert2 = 'REPLACE INTO  WidgetSettings (SettingId, Position, ISACTIVE, WidgetId) VALUES(2, 1, 1, 2)';
 
-const UserInsert = `REPLACE INTO Users(UserId, FirstName, 
-    LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) 
-    VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
+const UserInsert = `REPLACE INTO Users(UserId, FirstName, LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
 const deleteQueryUser = `DELETE FROM Users;`;
 const deleteQueryWidget = `DELETE FROM Widgets;`;
 const deleteSettings = 'DELETE FROM WidgetSettings';
@@ -29,30 +28,22 @@ const deleteGraph = 'DELETE FROM Graphs';
 
 describe('CRUD Widgets', function(){
     let Datab;
-    before(async (done)=>{
-          const sql = new SqliteDataContext("DashboardConfigDB");
-          Datab = sql.DataSQL;
-          await Datab.serialize(()=>{
-            Datab.run(UserInsert);
-            Datab.run(WidgetInsert);
-            Datab.run(GraphInsert);
-            Datab.run(SettingsInsert);
-            Datab.run(SettingsInsert2);
-            Datab.run(WidgetInsert2);
-            Datab.run(GraphInsert2);
-            done();
-          });
-           
+    before(async ()=>{
+        Datab = DatabaseInstance();
+        await Datab.Create(UserInsert);
+        await Datab.Create(WidgetInsert);
+        await Datab.Create(WidgetInsert2);
+        await Datab.Create(GraphInsert);
+        await Datab.Create(GraphInsert2);
+        await Datab.Create(SettingsInsert);
+        await Datab.Create(SettingsInsert2);
     });
       
-    after(async (done)=>{
-          await Datab.serialize(async ()=>{
-            Datab.run(deleteQueryUser);
-            Datab.run(deleteQueryWidget);
-            Datab.run(deleteGraph);
-            Datab.run(deleteSettings);
-            done();
-          });
+    after(async ()=>{      
+      await Datab.Delete(deleteGraph);
+      await Datab.Delete(deleteSettings);
+      await Datab.Delete(deleteQueryWidget);
+      await Datab.Delete(deleteQueryUser);
     });
 
     it('Lack of graphs should give a warning', function(done){
@@ -263,10 +254,11 @@ describe('CRUD Widgets', function(){
 
   it('Widget should be given based on widgetId', function(done){
     chai.request(server)
-    .get('/api/widgetsconfig/2')
+    .get('/api/widgetsconfig/1')
     .end((err, res) => {
         const response = res.body;
         expect(response.message).equals("Search result");
+        expect(response.result.WidgetId).equals(1);
         done();
       });
 })
@@ -277,6 +269,7 @@ it('Gives all widgets', function(done){
     .end((err, res) => {
         const response = res.body;
         expect(response.message).equals("Widgets are retrieved");
+        expect(response.result.length).equals(1);
         done();
       });
 })

@@ -1,18 +1,16 @@
-const { SqliteDataContext } = require("../../db/sqllite.client");
-const DashboardConfigService = require("../../services/dashboardconfig/dashboardConfig.service");
 const WidgetSettingsService = require("../../services/dashboardconfig/SettingsConfig.service");
 const WidgetService = require("../../services/dashboardconfig/WidgetConfig.service");
 const WidgetGraphService = require("../../services/dashboardconfig/GraphConfig.service");
-const {
-  MapToWidget,
-  MapJoinResultToWidget,
-} = require("../../services/dashboardconfig/Mapping/Graph.Mapper");
-//Database sqlite3;
-const database = new SqliteDataContext("DashboardConfigDB");
-//InfluxDBService
-const influxdbService = require("../../services/influxdb/influxdb.service");
 const assert = require("assert");
 const { CheckWidgetInput, CheckSettingsInput, CheckGraphInput } = require("../../services/dashboardconfig/InputValidation.service");
+const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
+
+//Database sqlite3;
+const database = DatabaseInstance();
+//InfluxDBService
+const influxdbService = require("../../services/influxdb/influxdb.service");
+
+
 
 //Dependency injectie binnen widgetservice.
 const widgetService = new WidgetService(database);

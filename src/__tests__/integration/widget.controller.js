@@ -8,7 +8,7 @@ chai.should();
 chai.use(chaiHttp);
 
 describe("widgetController", function () {
-  it("should return information if ID is 1", function (done) {
+  it.skip("should return information if ID is 1", function (done) {
     chai
       .request(server)
       .get("/api/widgets/poll/1")
