@@ -1,11 +1,9 @@
 const sqlLite = require("sqlite3").verbose();
 
-
-//Responsible for the connection with the database and CRUD operations of the database.
 class SqliteDataContext {
   DataSQL;
 
-  //Builds up the tables if it does not exist 
+  //Builds up the tables if it does not exist
   //Connects app to a Sqlite database.
   constructor(DatabaseName) {
     console.log(`Database is connected to ${DatabaseName}. Welcome`);
@@ -13,8 +11,7 @@ class SqliteDataContext {
       if (err) {
         console.log("Database is not connected");
       } else {
-        //console.log("Database is connected");
-        //Will setup tables
+        console.log("Setup SQLLite database")
         this.setupTables();
       }
     });
@@ -23,69 +20,68 @@ class SqliteDataContext {
   //Creates all the tables.
   async setupTables() {
     const FK_On = "PRAGMA foreign_keys = ON";
-    const WidgetSettingTable = `CREATE TABLE IF NOT EXISTS WidgetSettings(
-        SettingId INTEGER PRIMARY KEY,
-        Position INTEGER DEFAULT 0,
+
+    const WidgetTable = `
+      CREATE TABLE IF NOT EXISTS Widgets (
+        WidgetId INTEGER PRIMARY KEY,
+        DashboardId INTEGER DEFAULT 0,
+        Title TEXT NOT NULL,
+        Range TEXT NOT NULL,
+        Frequence INTEGER DEFAULT 3600 NOT NULL,
         ISACTIVE INTEGER CHECK ( 0 OR 1 ) DEFAULT 1,
-        WidgetId INTEGER NOT NULL,
-        FOREIGN KEY (WidgetId) REFERENCES Widgets ON DELETE CASCADE
-        )`;
+        Position INTEGER DEFAULT 0
+      )
+    `;
 
-        //TODO Foreign key with dashboard needs to be connected.
-    const WidgetTable = `CREATE TABLE IF NOT EXISTS Widgets (
-     WidgetId INTEGER PRIMARY KEY,
-     DashboardId INTEGER DEFAULT 0,
-     Title TEXT NOT NULL ,
-     DefaultRange TEXT NOT NULL,
-     Color_Graph TEXT DEFAULT 'Black',
-     Frequence INTEGER DEFAULT 3600 NOT NULL
-    /*FOREIGN KEY (DashboardId) REFERENCES Dashboard ON DELETE SET DEFAULT*/
-     )`;
     const DashBoardTable = `
-  CREATE TABLE IF NOT EXISTS Dashboards(
-      DashboardId INTEGER PRIMARY KEY,
-      UserId INTEGER,
-      ShowNavbar INTEGER CHECK(0 OR 1) DEFAULT 1,
-      ShowWeather INTEGER CHECK(0 OR 1) DEFAULT 0,
-      PeakTariffOn INTEGER CHECK(0 OR 1) DEFAULT 0,
-      PeakTariff INTEGER DEFAULT 0,
-      IdleTariff INTEGER DEFAULT 0
-      /*FOREIGN KEY (UserId) REFERENCES Users*/
-  )`;
+      CREATE TABLE IF NOT EXISTS Dashboards (
+        DashboardId INTEGER PRIMARY KEY,
+        UserId INTEGER NOT NULL,
+        ShowNavbar INTEGER CHECK(0 OR 1) DEFAULT 1,
+        ShowWeather INTEGER CHECK(0 OR 1) DEFAULT 0,
+        PeakTariffOn INTEGER CHECK(0 OR 1) DEFAULT 0,
+        PeakTariff INTEGER DEFAULT 0,
+        NormalTariff INTEGER DEFAULT 0
+      )
+    `;
+
     const UserTable = `
-  CREATE TABLE IF NOT EXISTS Users(
-      UserId INTEGER PRIMARY KEY,
-      FirstName TEXT NOT NULL,
-      LastName TEXT NOT NULL,
-      Street TEXT NOT NULL,
-      HomeNr TEXT NOT NULL,
-      PostalCode TEXT NOT NULL,
-      Country TEXT NOT NULL,
-      Emailadres TEXT NOT NULL,
-      Password TEXT NOT NULL,
-      Role TEXT DEFAULT 'REGULAR'
-  )`;
+      CREATE TABLE IF NOT EXISTS Users (
+        UserId INTEGER PRIMARY KEY,
+        FirstName TEXT NOT NULL,
+        LastName TEXT NOT NULL,
+        Street TEXT NOT NULL,
+        HomeNr TEXT NOT NULL,
+        PostalCode TEXT NOT NULL,
+        Country TEXT NOT NULL,
+        Emailadres TEXT NOT NULL,
+        Password TEXT NOT NULL,
+        Role TEXT DEFAULT 'REGULAR'
+      )
+    `;
 
-  const DatasourceTable = `CREATE TABLE IF NOT EXISTS Graphs(
-    GraphId INTEGER PRIMARY KEY,
-    WidgetId INTEGER NOT NULL,
-    Name TEXT NOT NULL,
-    Type_Graph TEXT,
-    Measurement TEXT NOT NULL,
-    FOREIGN KEY (WidgetId) REFERENCES Widgets ON DELETE CASCADE
-  )`
+    const GraphTable = `
+      CREATE TABLE IF NOT EXISTS Graphs (
+        GraphId INTEGER PRIMARY KEY,
+        WidgetId INTEGER NOT NULL,
+        Name TEXT NOT NULL,
+        Measurement TEXT NOT NULL,
+        Type TEXT NOT NULL,
+        Color TEXT DEFAULT "#000000",
+        FOREIGN KEY (WidgetId) REFERENCES Widgets ON DELETE CASCADE
+      )
+    `;
 
-  const defaultDashboard = `INSERT OR IGNORE INTO Dashboards(DashboardId, UserId) VALUES(0, 0);`
+    const defaultDashboard = `INSERT OR IGNORE INTO Dashboards(DashboardId, UserId) VALUES(0, 0);`
 
     try {
       this.DataSQL.serialize(async () => {
-        this.DataSQL.get(FK_On);
-        this.DataSQL.run(UserTable);
-        this.DataSQL.run(DashBoardTable);
-        this.DataSQL.run(WidgetTable);
-        this.DataSQL.run(WidgetSettingTable);
-        this.DataSQL.run(DatasourceTable);
-        this.DataSQL.run(defaultDashboard);
+        this.DataSQL.get(FK_On);            // Enable foreign key
+        this.DataSQL.run(UserTable);        // Add user table
+        this.DataSQL.run(DashBoardTable);   // Add dashboard table
+        this.DataSQL.run(WidgetTable);      // Add widget table
+        this.DataSQL.run(GraphTable);       // Add graph table
+        this.DataSQL.run(defaultDashboard); // Create default dashboard
       });
     } catch (e) {
       throw new Error(e);
@@ -105,55 +101,61 @@ class SqliteDataContext {
     }
   }
 
-  //Geef database client terug
-  //Voor custom queries
-  GetDb(){
+  // get db client (custom queries)
+  GetDb() {
     return this.DataSQL;
   }
 
   //Two ways to pass in a query.
-  //1) Via Prepared statements -> SELECT * FROM Widgets WHERE WidgetId = ? / Params => [Id], Id OR 
+  //1) Via Prepared statements -> SELECT * FROM Widgets WHERE WidgetId = ? / Params => [Id], Id OR
   //SELECT * FROM Widgets WHERE WidgetId = $Id -> Params { $Id }
   //2) Directly -> SELECT FROM Widgets WHERE WidgetId = 1 and params empty [] or {}
 
   //Get all elements.
-  async GetAll(Query, Params){
+  async GetAll(Query, Params) {
     const db = this.GetDb();
-    return new Promise(function(resolve, reject){
-      db.all(Query,Params,(error, rows)=>{
-        if(error) reject(error);
+    return new Promise(function (resolve, reject) {
+      db.all(Query, Params, (err, rows) => {
+        if (err) {
+          reject(0);
+          console.log(err)
+        }
+
         resolve(rows);
       });
     })
   }
 
   //Get one element
-  async GetOne(Query, Params){
+  async GetOne(Query, Params) {
     const db = this.GetDb();
     //Via a promise, is it possible to async await a query
-    return new Promise(function(resolve, reject){
-      db.get(Query, Params, (error, rows)=>{
-        if(error) reject(error);
-        
+    return new Promise(function (resolve, reject) {
+      db.get(Query, Params, (err, rows) => {
+        if (err) {
+          reject(0);
+          console.log(err)
+        }
 
         resolve(rows);
       });
     })
   }
 
-  async JoinResult(Query, Params){
+  async JoinResult(Query, Params) {
     //Via a promise, is it possible to async await a query
     return this.GetAll(Query, Params);
   }
 
   //Update query
-  async Update(Query, Params){
+  async Update(Query, Params) {
     const db = this.GetDb();
- //Via a promise, is it possible to async await a query
-    return new Promise(function(resolve, reject){
-      db.run(Query, Params, function(error){
-        if(error) {
-          reject(false)
+    //Via a promise, is it possible to async await a query
+    return new Promise(function (resolve, reject) {
+      db.run(Query, Params, function (err) {
+        if (err) {
+          reject(0);
+          console.log(err)
         }
         //console.log(`Last Id is ${this.lastID}`);
         resolve(true);
@@ -162,31 +164,36 @@ class SqliteDataContext {
   }
 
   //Delete a element
-  async Delete(Query, Params){
+  async Delete(Query, Params) {
     const db = this.GetDb();
 
-     //Via a promise, is it possible to async await a query
-    return new Promise(function(resolve, reject){
-      db.run(Query, Params, function(error){
-        if(error) reject(false);
+    //Via a promise, is it possible to async await a query
+    return new Promise(function (resolve, reject) {
+      db.run(Query, Params, function (err) {
+        if (err) {
+          reject(0);
+          console.log(err)
+        }
         resolve(true);
       });
     })
   }
 
   //Create function.
-  async Create(Query, InputValues){
+  async Create(Query, InputValues) {
     const db = this.GetDb();
-     //Via a promise, is it possible to async await a query
-    return new Promise(function(resolve, reject){
-      db.run(Query, InputValues, function(err){
-        if(err) reject(0);
-        //console.log(`Id of edited of inserted ${this.lastID}`);
-        //Retrieves last inserted id.
+    //Via a promise, is it possible to async await a query
+    return new Promise(function (resolve, reject) {
+      console.log(Query)
+      db.run(Query, InputValues, function (err) {
+        if (err) {
+          reject(0);
+          console.log(err)
+        }
         resolve(this.lastID);
       });
     })
-    
+
   }
 }
 

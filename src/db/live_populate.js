@@ -38,7 +38,7 @@ async function addData() {
     const measurement = "solar";
     const solarAmount = Math.floor(Math.random() * 1000);
     const windAmount = Math.floor(Math.random() * 1000);
-    
+
     const timestamp = new Date(currentTime);
 
     const windPoint = new Point("wind")

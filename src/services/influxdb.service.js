@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const queryApi = require("../../db/client");
+const queryApi = require("../db/influx.client");
 const bucket = process.env.INFLUXDB_BUCKET ?? "SmartEnergy";
 
 async function getDataByWidget(widget) {
@@ -22,7 +22,7 @@ function buildFluxQuery(widget) {
 
   //Filter Range
   {
-    queryParams.range = `|> range(start: -${widget.DefaultRange})`;
+    queryParams.range = `|> range(start: -${widget.Range})`;
   }
 
   //Construct Filter

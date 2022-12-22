@@ -73,7 +73,7 @@ async function addSolarData() {
     const measurement = "solar";
     const solarAmount = Math.floor(Math.random() * 1000);
     const windAmount = Math.floor(Math.random() * 1000);
-    
+
     const timestamp = new Date(currentTime - i * MINUTE_IN_MILLISECONDS);
 
     const windPoint = new Point("wind")
@@ -85,7 +85,7 @@ async function addSolarData() {
       .floatField("amount", solarAmount)
       .timestamp(timestamp);
     console.log(`${point}`);
-      pointArray.push(windPoint)
+    pointArray.push(windPoint)
     pointArray.push(point);
   }
   writeApi.writePoints(pointArray);
@@ -101,10 +101,10 @@ async function addSolarData() {
 deleteAllSolarData()
   .then(() => {
     console.log("Sucessfully deleted");
-addSolarData().catch((err) => {
-  console.log(err);
-  console.log("\nError during write");
-});
+    addSolarData().catch((err) => {
+      console.log(err);
+      console.log("\nError during write");
+    });
   })
   .catch((err) => {
     console.log(err);

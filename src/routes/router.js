@@ -1,9 +1,9 @@
 const router = require("express").Router();
 
-const dashboardConfigRoutes = require("./dashboardconfig/dashboard.routing");
-const widgetConfigRoutes = require("./dashboardconfig/widget.routing");
+const dashboardConfigRoutes = require("./dashboard.routing");
+const widgetConfigRoutes = require("./widget.routing");
 
 router.use("/dashboards", dashboardConfigRoutes);
-router.use("/widgetsconfig", widgetConfigRoutes);
+router.use("/widgets", widgetConfigRoutes);
 
 module.exports = router;
