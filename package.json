@@ -6,9 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "npm run testServices & npm run testControllers",
-    "testServices": "jest /*.spec.js",
-    "testControllers": "mocha src/controllers/tests/**/* --exit",
+    "test": "mocha ./src/**/*",
     "lint": "eslint .",
     "populate": "node ./src/db/populate.js",
     "live_populate": "node ./src/db/live_populate.js"
