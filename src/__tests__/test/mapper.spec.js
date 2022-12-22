@@ -1,4 +1,4 @@
-const { MapJoinResultToWidget, MapJoinResultArray } = require('../Mapping/Graph.Mapper');
+const { MapJoinResultToWidget, MapJoinResultArray } = require('../../services/dashboardconfig/Graph.Mapper');
 function Sum(One , Two){
     return One + Two;
 }

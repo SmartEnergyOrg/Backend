@@ -3,10 +3,7 @@ const DashboardConfigService = require("../../services/dashboardconfig/dashboard
 const WidgetSettingsService = require("../../services/dashboardconfig/SettingsConfig.service");
 const WidgetService = require("../../services/dashboardconfig/WidgetConfig.service");
 const WidgetGraphService = require("../../services/dashboardconfig/GraphConfig.service");
-const {
-  MapToWidget,
-  MapJoinResultToWidget,
-} = require("../../services/dashboardconfig/Mapping/Graph.Mapper");
+
 //Database sqlite3;
 const database = new SqliteDataContext("DashboardConfigDB");
 //InfluxDBService

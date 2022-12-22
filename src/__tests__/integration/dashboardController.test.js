@@ -60,21 +60,15 @@ describe("Read dashboards", function () {
 describe("Create dashboard", function () {
   let Datab;
   before(async (done)=>{
-    const sql = new SqliteDataContext("DashboardConfigDB");
-    Datab = sql.DataSQL;
-    Datab.serialize(()=>{
-      Datab.run(UserInsert);
-        done();
-    });
-     
+    Datab = new SqliteDataContext("DashboardConfigDB");
+    Datab.Create(UserInsert);
+    done();
   });
 
   after(async (done)=>{
-    Datab.serialize(()=>{
-      Datab.run(`DELETE FROM Users;`);
-      Datab.run(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
-        done();
-    });
+    Datab.Delete(`DELETE FROM Users;`);
+    Datab.Delete(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
+    done();
   })
 
   it("Create dashboard", function (done) {
@@ -109,21 +103,15 @@ describe("Create dashboard", function () {
 describe('Update dashboard', function(){
   let Datab;
   before(async (done)=>{
-    const sql = new SqliteDataContext("DashboardConfigDB");
-    Datab = sql.DataSQL;
-    Datab.serialize(()=>{
-      Datab.run(UserInsert);
-        done();
-    });
-     
+    Datab = new SqliteDataContext("DashboardConfigDB");
+    Datab.Create(UserInsert);
+    done();
   });
 
   after(async (done)=>{
-    Datab.serialize(()=>{
-      Datab.run(`DELETE FROM Users;`);
-      Datab.run(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
-        done();
-    });
+    Datab.Delete(`DELETE FROM Users;`);
+    Datab.Delete(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
+    done();
   });
 
   it("Should update a dashboard.", function (done) {
@@ -172,23 +160,17 @@ describe('Update dashboard', function(){
 describe('Delete dashboard', function(){
   let Datab;
   before(async (done)=>{
-    const sql = new SqliteDataContext("DashboardConfigDB");
-    Datab = sql.DataSQL;
-    Datab.serialize(()=>{
-      Datab.run(UserInsert);
-        done();
-    });
-     
+    Datab = new SqliteDataContext("DashboardConfigDB");
+    Datab.Create(UserInsert);
+    done();  
   });
 
   after(async (done)=>{
-    Datab.serialize(()=>{
-      Datab.run(`DELETE FROM Users;`);
-      Datab.run(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
-        done();
-    });
+    Datab.Delete(`DELETE FROM Users;`);
+    Datab.Delete(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
+    done();
   });
-
+  
   it("Should delete dashboard with the right Id.", function (done) {
     chai
       .request(server)

@@ -1,5 +1,5 @@
 const { SqliteDataContext } = require("../../db/sqllite.client");
-const { MapJoinResultToWidget, MapJoinResultArray } = require("./Mapping/Graph.Mapper");
+const { MapJoinResultToWidget, MapJoinResultArray } = require("./Graph.Mapper");
 
 class WidgetService{
     //Uses a sqlite client.

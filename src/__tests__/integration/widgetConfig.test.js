@@ -18,9 +18,7 @@ const GraphInsert2 = "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type_Gra
 const SettingsInsert = 'REPLACE INTO  WidgetSettings (SettingId, Position, ISACTIVE, WidgetId) VALUES(1, 1, 1, 1)';
 const SettingsInsert2 = 'REPLACE INTO  WidgetSettings (SettingId, Position, ISACTIVE, WidgetId) VALUES(2, 1, 1, 2)';
 
-const UserInsert = `REPLACE INTO Users(UserId, FirstName, 
-    LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) 
-    VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
+const UserInsert = `REPLACE INTO Users(UserId, FirstName, LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
 const deleteQueryUser = `DELETE FROM Users;`;
 const deleteQueryWidget = `DELETE FROM Widgets;`;
 const deleteSettings = 'DELETE FROM WidgetSettings';
@@ -30,29 +28,23 @@ const deleteGraph = 'DELETE FROM Graphs';
 describe('CRUD Widgets', function(){
     let Datab;
     before(async (done)=>{
-          const sql = new SqliteDataContext("DashboardConfigDB");
-          Datab = sql.DataSQL;
-          await Datab.serialize(()=>{
-            Datab.run(UserInsert);
-            Datab.run(WidgetInsert);
-            Datab.run(GraphInsert);
-            Datab.run(SettingsInsert);
-            Datab.run(SettingsInsert2);
-            Datab.run(WidgetInsert2);
-            Datab.run(GraphInsert2);
-            done();
-          });
-           
+        Datab = new SqliteDataContext("DashboardConfigDB");
+        Datab.Create(UserInsert);
+        Datab.Create(WidgetInsert);
+        Datab.Create(WidgetInsert2);
+        Datab.Create(GraphInsert);
+        Datab.Create(GraphInsert2);
+        Datab.Create(SettingsInsert);
+        Datab.Create(SettingsInsert2);
+        done(); 
     });
       
-    after(async (done)=>{
-          await Datab.serialize(async ()=>{
-            Datab.run(deleteQueryUser);
-            Datab.run(deleteQueryWidget);
-            Datab.run(deleteGraph);
-            Datab.run(deleteSettings);
-            done();
-          });
+    after(async (done)=>{      
+      Datab.Delete(deleteGraph);
+      Datab.Delete(deleteSettings);
+      Datab.Delete(deleteQueryWidget);
+      Datab.Delete(deleteQueryUser);
+      done();
     });
 
     it('Lack of graphs should give a warning', function(done){
