@@ -2,9 +2,10 @@ const { SqliteDataContext } = require("../db/sqllite.client");
 const WidgetService = require("../services/widget.service");
 const WidgetGraphService = require("../services/graph.service");
 const { CheckWidgetInput, CheckGraphInput } = require("../services/input-validation.service");
+const { DatabaseInstance } = require("../db/InstanceOfDatabase");
 
 // sqlite service
-const database = new SqliteDataContext("DashboardConfigDB");
+const database = DatabaseInstance();
 
 // dependency injection
 const widgetService = new WidgetService(database);
@@ -14,11 +15,10 @@ const GraphsService = new WidgetGraphService(database);
 const validate = async (req, res, next) => {
   try {
     const WidgetBody = req.body.Widget;
-    const Position = req.body.Position;
     const GraphList = req.body.Graphs;
-    const ISACTIVE = req.body.ISACTIVE || 1;
+    const ISACTIVE = req.body.Widget.ISACTIVE || 1;
 
-    CheckWidgetInput(WidgetBody, GraphList, Position, ISACTIVE);
+    CheckWidgetInput(WidgetBody, GraphList, ISACTIVE);
 
     GraphList.forEach(graph => {
       CheckGraphInput(graph);
@@ -88,8 +88,8 @@ const Delete = async (req, res) => {
 const Update = async (req, res) => {
   try {
     const WidgetId = req.params.id;
-    const WidgetBody = req.body;
-    const GraphList = WidgetBody.Graphs;
+    const WidgetBody = req.body.Widget;
+    const GraphList = req.body.Graphs;
 
     // update widget
     await widgetService.Update(WidgetId, WidgetBody);
@@ -101,7 +101,7 @@ const Update = async (req, res) => {
     // replaces graphs
     await GraphList.forEach(async (e) => {
       // update with new values
-      GraphsService.Replace(e.GraphId, Id, e);
+      GraphsService.Replace(e.GraphId, WidgetId, e);
     });
 
     res.status(201).json({ message: "Update is completed", result: true });

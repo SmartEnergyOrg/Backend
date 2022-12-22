@@ -23,14 +23,14 @@ class DashboardService {
     SET ShowNavbar = ?,
     PeakTariffOn = ?,
     ShowWeather = ?,
-    IdleTariff = ?,
+    NormalTariff = ?,
     PeakTariff = ?
     WHERE DashboardId = ?;`
     const params = [
       UpdateValues.ShowNavbar,
       UpdateValues.PeakTariffOn,
       UpdateValues.ShowWeather,
-      UpdateValues.IdleTariff,
+      UpdateValues.NormalTariff,
       UpdateValues.PeakTariff,
       DashboardId]
     return await this.SqlClient.Update(sql, params);

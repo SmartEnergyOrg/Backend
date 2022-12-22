@@ -32,7 +32,9 @@ class WidgetService {
       SET Title = ?,
       DashboardId = ?,
       Range = ?,
-      Frequence = ?
+      Frequence = ?,
+      ISACTIVE = ?,
+      Position = ?
       WHERE WidgetId = ?;
     `;
 
@@ -41,6 +43,8 @@ class WidgetService {
       UpdateValues.DashboardId,
       UpdateValues.Range,
       UpdateValues.Frequence,
+      UpdateValues.ISACTIVE,
+      UpdateValues.Position,
       Id
     ];
     return await this.SqlClient.Update(UpdateQuery, params);

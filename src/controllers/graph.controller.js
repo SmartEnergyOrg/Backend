@@ -1,9 +1,10 @@
+const { DatabaseInstance } = require("../db/InstanceOfDatabase");
 const { SqliteDataContext } = require("../db/sqllite.client");
 const WidgetGraphService = require("../services/graph.service");
 const { CheckGraphInput } = require("../services/input-validation.service");
 
 // sqlite service
-const database = new SqliteDataContext("DashboardConfigDB");
+const database = DatabaseInstance();
 
 // dependeny injeciton in service
 const GraphsService = new WidgetGraphService(database);

@@ -23,18 +23,18 @@ async Create(WidgetId, Datasource){
 
   //Updates graph entity
   async Update(DatasourceId, Datasource){
-    const param = [ Datasource.Name, Datasource.Type_Graph, Datasource.Measurement, DatasourceId];
+    const param = [ Datasource.Name, Datasource.Type, Datasource.Measurement,Datasource.Color, DatasourceId];
     const query = `
     UPDATE Graphs
-    SET Name = ?, Type_Graph = ?, Measurement = ?
+    SET Name = ?, Type = ?, Measurement = ?, Color = ?
     WHERE GraphId = ?;`
 
     return await this.SqlClient.Update(query, param);
   }
 
   async Replace(GraphId, WidgetId, Datasource){
-    const sql = `REPLACE INTO Graphs(GraphId, WidgetId, Name, Type_Graph, Measurement) VALUES(?,?,?,?,?)`;
-    const param = [GraphId, WidgetId, Datasource.Name, Datasource.Type_Graph, Datasource.Measurement];
+    const sql = `REPLACE INTO Graphs(GraphId, WidgetId, Name, Type, Measurement, Color) VALUES(?,?,?,?,?,?)`;
+    const param = [GraphId, WidgetId, Datasource.Name, Datasource.Type, Datasource.Measurement, Datasource.Color];
     return await this.SqlClient.Create(sql, param)
   }
 

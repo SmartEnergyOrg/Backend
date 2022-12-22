@@ -38,7 +38,7 @@ describe("Read dashboards", function () {
         expect(response.result.ShowWeather).equals(0)
         expect(response.result.PeakTariffOn).equals(0)
         expect(response.result.PeakTariff).equals(0)
-        expect(response.result.IdleTariff).equals(0)
+        expect(response.result.NormalTariff).equals(0)
         done();
       });
   })
@@ -123,8 +123,8 @@ describe('Update dashboard', function(){
         ShowNavbar: 0, 
         PeakTariffOn: 1, 
         ShowWeather: 0, 
-        IdleTariff: 5, 
-        PeakTariff: 5
+        PeakTariff: 5, 
+        NormalTariff: 5
       })
       .end((err, res) => {
         const response = res.body;
