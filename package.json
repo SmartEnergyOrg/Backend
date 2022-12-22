@@ -10,7 +10,8 @@
     "testServices": "jest /*.spec.js",
     "testControllers": "mocha src/controllers/tests/**/* --exit",
     "lint": "eslint .",
-    "populate": "node ./src/db/populate.js"
+    "populate": "node ./src/db/populate.js",
+    "live_populate": "node ./src/db/live_populate.js"
   },
   "repository": {
     "type": "git",
