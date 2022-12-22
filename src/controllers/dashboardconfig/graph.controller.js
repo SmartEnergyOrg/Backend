@@ -1,9 +1,9 @@
-const { InstanceOfDB } = require("../../db/databaseInstance");
+const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
 const WidgetGraphService = require("../../services/dashboardconfig/GraphConfig.service");
 const { CheckGraphInput } = require("../../services/dashboardconfig/InputValidation.service");
 
 //Database sqlite3;
-const database = InstanceOfDB();
+const database = DatabaseInstance();
 const GraphsService = new WidgetGraphService(database);
 const CheckInput = async (req, res, next)=>{
     try {

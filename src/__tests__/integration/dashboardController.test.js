@@ -4,9 +4,8 @@ const server = require("../../../app");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
-const { SqliteDataContext } = require("../../db/sqllite.client");
 const { before, after } = require("mocha");
-const { InstanceOfDB } = require("../../db/databaseInstance");
+const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
 
 chai.should();
 chai.use(chaiHttp);
@@ -61,7 +60,7 @@ describe("Read dashboards", function () {
 describe("Create dashboard", function () {
   let Datab;
   before(async (done)=>{
-    Datab = InstanceOfDB();
+    Datab = DatabaseInstance();
     Datab.Create(UserInsert);
     done();
   });
@@ -104,7 +103,7 @@ describe("Create dashboard", function () {
 describe('Update dashboard', function(){
   let Datab;
   before(async (done)=>{
-    Datab = InstanceOfDB();
+    Datab = DatabaseInstance();
     Datab.Create(UserInsert);
     done();
   });
@@ -161,7 +160,7 @@ describe('Update dashboard', function(){
 describe('Delete dashboard', function(){
   let Datab;
   before(async (done)=>{
-    Datab = InstanceOfDB();
+    Datab = DatabaseInstance();
     Datab.Create(UserInsert);
     done();  
   });

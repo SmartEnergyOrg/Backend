@@ -1,11 +1,9 @@
-const assert = require("assert");
-const { InstanceOfDB } = require("../../db/databaseInstance");
-const { SqliteDataContext } = require("../../db/sqllite.client");
+const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
 const { CheckSettingsInput } = require("../../services/dashboardconfig/InputValidation.service");
 const WidgetSettingsService = require("../../services/dashboardconfig/SettingsConfig.service");
 
 //Database sqlite3;
-const database = InstanceOfDB();
+const database = DatabaseInstance();
 const SettingsService = new WidgetSettingsService(database);
 const InputSettings = async (req, res, next)=>{
     try {

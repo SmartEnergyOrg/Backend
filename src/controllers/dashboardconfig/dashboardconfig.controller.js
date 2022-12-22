@@ -1,9 +1,9 @@
-const { InstanceOfDB } = require("../../db/databaseInstance");
+const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
 const DashboardConfigService = require("../../services/dashboardconfig/dashboardConfig.service");
 const WidgetSettingsService = require("../../services/dashboardconfig/SettingsConfig.service");
 
 //Database sqlite3;
-const database = InstanceOfDB();
+const database = DatabaseInstance();
 
 //Dependeny injectie in service.
 const dashboardService = new DashboardConfigService(database);

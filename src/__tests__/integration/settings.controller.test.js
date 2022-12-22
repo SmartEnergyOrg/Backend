@@ -4,9 +4,8 @@ const server = require("../../../app");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
-const { SqliteDataContext } = require("../../db/sqllite.client");
 const { before, after } = require("mocha");
-const { InstanceOfDB } = require("../../db/databaseInstance");
+const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
 
 chai.should();
 chai.use(chaiHttp);
@@ -18,7 +17,7 @@ const UserInsert = `REPLACE INTO Users(UserId, FirstName,
 describe('Test update of widgetSettings', ()=>{
     let Datab;
     before(async (done)=>{
-      Datab = InstanceOfDB();
+      Datab = DatabaseInstance();
       Datab.Create(UserInsert);
       Datab.Create(WidgetInsert);
       Datab.Create(SettingsInsert);
@@ -74,7 +73,7 @@ describe('Test update of widgetSettings', ()=>{
 describe('Test read of widgetSettings', ()=>{
     let Datab;
     before(async (done)=>{
-      const sql = InstanceOfDB();
+      const sql = DatabaseInstance();
       Datab = sql.DataSQL;
       Datab.serialize(()=>{
         Datab.run(UserInsert);
