@@ -6,9 +6,6 @@ const { CheckWidgetInput, CheckGraphInput } = require("../services/input-validat
 // sqlite service
 const database = new SqliteDataContext("DashboardConfigDB");
 
-// influx service
-const influxdbService = require("../services/influxdb.service");
-
 // dependency injection
 const widgetService = new WidgetService(database);
 const GraphsService = new WidgetGraphService(database);

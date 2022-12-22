@@ -4,8 +4,8 @@ const server = require("../../../app");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
-const { SqliteDataContext } = require("../../db/sqllite.client");
 const { before, after } = require("mocha");
+const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
 
 chai.should();
 chai.use(chaiHttp);
@@ -17,24 +17,18 @@ const UserInsert = `REPLACE INTO Users(UserId, FirstName,
 describe('Test update of widgetSettings', ()=>{
     let Datab;
     before(async (done)=>{
-      const sql = new SqliteDataContext("DashboardConfigDB");
-      Datab = sql.DataSQL;
-      Datab.serialize(()=>{
-        Datab.run(UserInsert);
-        Datab.run(WidgetInsert);
-        Datab.run(SettingsInsert);
-        done();
-      });
-       
+      Datab = DatabaseInstance();
+      Datab.Create(UserInsert);
+      Datab.Create(WidgetInsert);
+      Datab.Create(SettingsInsert);
+      done();
     });
   
     after(async (done)=>{
-      Datab.serialize(()=>{
-        Datab.run(`DELETE FROM Users;`);
-        Datab.run(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
-        Datab.run(`DELETE FROM Widgets;`);
-          done();
-      });
+      Datab.Delete(`DELETE FROM Users;`);
+      Datab.Delete(`DELETE FROM Dashboards WHERE DashboardId != 0;`);
+      Datab.Delete(`DELETE FROM Widgets;`);
+      done();
     });
 
     it('Test empty ISACTIVE', function(done){
@@ -79,7 +73,7 @@ describe('Test update of widgetSettings', ()=>{
 describe('Test read of widgetSettings', ()=>{
     let Datab;
     before(async (done)=>{
-      const sql = new SqliteDataContext("DashboardConfigDB");
+      const sql = DatabaseInstance();
       Datab = sql.DataSQL;
       Datab.serialize(()=>{
         Datab.run(UserInsert);

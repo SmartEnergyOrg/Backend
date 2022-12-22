@@ -1,5 +1,5 @@
-const { SqliteDataContext } = require("../../../db/sqllite.client");
-const WidgetService = require("../WidgetConfig.service");
+const { SqliteDataContext } = require("../../db/sqllite.client");
+const WidgetService = require("../../services/dashboardconfig/WidgetConfig.service");
 
 
 describe('Test widget CRUD operations', ()=>{
