@@ -18,8 +18,21 @@ class DashboardConfigService {
 
   async UpdateDashboard(UserId, DashboardId, UpdateValues){
     //const sql = `UPDATE Dashboards SET ShowNavbar = ? WHERE UserId = ? AND DashboardId = ?;`
-    const sql = `UPDATE Dashboards SET ShowNavbar = ? WHERE AND DashboardId = ?;`
-    const params = [UpdateValues.ShowNavbar, DashboardId]
+    const sql = `
+    UPDATE Dashboards 
+    SET ShowNavbar = ?,
+    PeakTariffOn = ?,
+    ShowWeather = ?, 
+    IdleTariff = ?, 
+    PeakTariff = ?  
+    WHERE DashboardId = ?;`
+    const params = [
+      UpdateValues.ShowNavbar, 
+      UpdateValues.PeakTariffOn, 
+      UpdateValues.ShowWeather, 
+      UpdateValues.IdleTariff, 
+      UpdateValues.PeakTariff, 
+      DashboardId]
     return await this.SqlClient.Update(sql, params);
   }
 

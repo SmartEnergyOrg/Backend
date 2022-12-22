@@ -13,7 +13,7 @@ class SqliteDataContext {
       if (err) {
         console.log("Database is not connected");
       } else {
-        console.log("Database is connected");
+        //console.log("Database is connected");
         //Will setup tables
         this.setupTables();
       }
@@ -36,15 +36,20 @@ class SqliteDataContext {
      WidgetId INTEGER PRIMARY KEY,
      DashboardId INTEGER DEFAULT 0,
      Title TEXT NOT NULL ,
-     DefaultRange INTEGER NOT NULL,
-     Color_Graph TEXT DEFAULT 'Black'
+     DefaultRange TEXT NOT NULL,
+     Color_Graph TEXT DEFAULT 'Black',
+     Frequence INTEGER DEFAULT 3600 NOT NULL
     /*FOREIGN KEY (DashboardId) REFERENCES Dashboard ON DELETE SET DEFAULT*/
      )`;
     const DashBoardTable = `
   CREATE TABLE IF NOT EXISTS Dashboards(
       DashboardId INTEGER PRIMARY KEY,
       UserId INTEGER,
-      ShowNavbar INTEGER CHECK(0 OR 1) DEFAULT 1
+      ShowNavbar INTEGER CHECK(0 OR 1) DEFAULT 1,
+      ShowWeather INTEGER CHECK(0 OR 1) DEFAULT 0,
+      PeakTariffOn INTEGER CHECK(0 OR 1) DEFAULT 0,
+      PeakTariff INTEGER DEFAULT 0,
+      IdleTariff INTEGER DEFAULT 0
       /*FOREIGN KEY (UserId) REFERENCES Users*/
   )`;
     const UserTable = `
@@ -129,7 +134,8 @@ class SqliteDataContext {
     return new Promise(function(resolve, reject){
       db.get(Query, Params, (error, rows)=>{
         if(error) reject(error);
-        console.log(rows);
+        
+
         resolve(rows);
       });
     })
@@ -147,10 +153,9 @@ class SqliteDataContext {
     return new Promise(function(resolve, reject){
       db.run(Query, Params, function(error){
         if(error) {
-          console.log(error);
           reject(false)
         }
-        console.log(`Last Id is ${this.lastID}`);
+        //console.log(`Last Id is ${this.lastID}`);
         resolve(true);
       });
     })
@@ -176,7 +181,7 @@ class SqliteDataContext {
     return new Promise(function(resolve, reject){
       db.run(Query, InputValues, function(err){
         if(err) reject(0);
-        console.log(`Id of edited of inserted ${this.lastID}`);
+        //console.log(`Id of edited of inserted ${this.lastID}`);
         //Retrieves last inserted id.
         resolve(this.lastID);
       });

@@ -9,12 +9,16 @@ constructor(database) {
 }
 //Creates a graph entity
 async CreateGraph(WidgetId, Datasource){
+  try {
     const param = [WidgetId, Datasource.Name, Datasource.Type_Graph, Datasource.Measurement];
     const query = `INSERT INTO Graphs(WidgetId, Name, Type_Graph, Measurement) VALUES(?,?,?,?)`
     
     const result = await this.SqlClient.Create(query, param);
 
     return result != 0 ? result : null;
+  } catch (error) {
+    throw new Error("Creation mistake");
+  }
   }
 
   //Updates graph entity
