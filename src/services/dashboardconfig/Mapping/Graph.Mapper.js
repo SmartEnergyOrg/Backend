@@ -1,28 +1,21 @@
 
 const MapJoinResultToWidget = (JoinResult, main)=>{
     try {
-        let Widget = { 
-            WidgetId: main.WidgetId,
-            DashboardId: main.DashboardId,
-            Title: main.Title,
-            DefaultRange: main.DefaultRange,
-            Color_Graph: main.Color_Graph,
-            Graphs: [],
-            Settings: {
-                SettingId: JoinResult[0].SettingId,
-                Position: JoinResult[0].Position,
-                ISACTIVE: JoinResult[0].ISACTIVE
-            } };
-        
-            JoinResult.forEach(widget => {
-            Widget.Graphs.push({
+        main.Graphs = [];
+        main.Settings ={
+            SettingId: JoinResult[0].SettingId,
+            Position: JoinResult[0].Position,
+            ISACTIVE: JoinResult[0].ISACTIVE
+        };
+        JoinResult.forEach(widget => {
+            main.Graphs.push({
                 GraphId:widget.GraphId,
                 Name: widget.Name,
                 Query: widget.Query,
                 Type_Graph: widget.Type_Graph,
                 Measurement: widget.Measurement})
-        });
-        return Widget;
+        })
+        return main;
     } catch (error) {
         //Als er niks gevonden is.
         return null;
@@ -43,13 +36,14 @@ const MapJoinResultArray = (JoinResult) => {
                 Title: widget.Title, 
                 DefaultRange: widget.DefaultRange, 
                 Color_Graph: widget.Color_Graph,
+                Frequence: widget.Frequence,
                 Settings: {
                     SettingId: widget.SettingId,
                     Position: widget.Position,
-                    ISACTIVE: widget.ISACTIVE,
-                    GraphId: widget.GraphId
+                    ISACTIVE: widget.ISACTIVE
                 },
                 Graphs: [{
+                    GraphId: widget.GraphId,
                     Name: widget.Name,
                     Type_Graph: widget.Type_Graph,
                     Measurement: widget.Measurement
@@ -60,6 +54,7 @@ const MapJoinResultArray = (JoinResult) => {
             let PickedWidget = List.pop();
             PickedWidget.Graphs.push(
                 {
+                    GraphId: widget.GraphId,
                     Name: widget.Name, 
                     Type_Graph: widget.Type_Graph, 
                     Measurement: widget.Measurement

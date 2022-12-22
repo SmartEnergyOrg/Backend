@@ -37,14 +37,7 @@ app.use("*", (err, req, res, next) => {
 });
 
 const port = 3333;
-const start = async () => {
-  // Logger.info("start function called");
 
-  try {
-    app.listen(port, console.log(`💡 Server is listening for requests`));
-  } catch (error) {
-    console.log(error);
-  }
-};
+app.listen(port, console.log(`💡 Server is listening for requests`));
 
-start();
+module.exports = app;

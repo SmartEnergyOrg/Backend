@@ -12,14 +12,16 @@ class WidgetService{
     //Crud operations widgets
     async CreateWidget(CreationObject) {
         const sql = `
-        INSERT INTO Widgets(Title, DashboardId, DefaultRange, Color_Graph)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO Widgets(Title, DashboardId, DefaultRange, Color_Graph, Frequence)
+        VALUES (?, ?, ?, ?, ?)
         `;
         const params = [ 
       CreationObject.Title,  
       CreationObject.DashboardId, 
       CreationObject.DefaultRange, 
-      CreationObject.Color_Graph];
+      CreationObject.Color_Graph,
+      CreationObject.Frequence
+    ];
         return await this.SqlClient.Create(sql, params);
     }
 
@@ -29,13 +31,15 @@ class WidgetService{
     SET Title = ?, 
     DashboardId = ?,
     DefaultRange = ?, 
-    Color_Graph = ?
+    Color_Graph = ?,
+    Frequence = ?
     WHERE WidgetId = ?;`;
         const params = [
       UpdateValues.Title, 
       UpdateValues.DashboardId,
       UpdateValues.DefaultRange,
       UpdateValues.Color_Graph,
+      UpdateValues.Frequence,
       Id
         ]
         return await this.SqlClient.Update(UpdateQuery, params);
@@ -45,7 +49,7 @@ class WidgetService{
     async DeleteWidgets(id) {
       const sql = `DELETE FROM Widgets WHERE WidgetId = ?`;
     
-      return await this.SqlClient.Delete(sql, id);
+      return await this.SqlClient.Delete(sql, [id]);
     }
 
     //It will get all widgets, with the necessery graphs and settings.

@@ -1,4 +1,4 @@
-const { MapJoinResultToWidget, MapJoinResultArray } = require('./Graph.Mapper');
+const { MapJoinResultToWidget, MapJoinResultArray } = require('../Mapping/Graph.Mapper');
 function Sum(One , Two){
     return One + Two;
 }
@@ -8,13 +8,7 @@ const mainData = {
     Title: 'Grafiek blauw',
     DefaultRange: 19,
     Color_Graph: 'Blue',
-    SettingId: 2,
-    Position: 1,
-    ISACTIVE: 1,
-    GraphId: 2,
-    Name: 'Gaskamer',
-    Type_Graph: 'Bar',
-    Measurement: 'Kwh'
+    Frequence: 40000,
   };
 
 const DummyData =[
@@ -30,7 +24,8 @@ const DummyData =[
         GraphId: 2,
         Name: 'Gaskamer',
         Type_Graph: 'Bar',
-        Measurement: 'Kwh'
+        Measurement: 'Kwh',
+        Frequence: 40000,
     },
     {
       WidgetId: 2,
@@ -44,7 +39,8 @@ const DummyData =[
       GraphId: 3,
       Name: 'Oliekamer',
       Type_Graph: 'Lijn',
-      Measurement: 'Kwh'
+      Measurement: 'Kwh',
+      Frequence: 40000,
     },
   ];
 
@@ -61,7 +57,8 @@ const JoinResult =  [
       GraphId: 1,
       Name: 'Gaskamer',
       Type_Graph: 'Bar',
-      Measurement: 'Kwh'
+      Measurement: 'Kwh',
+      Frequence: 40000
     },
     {
       WidgetId: 2,
@@ -75,7 +72,8 @@ const JoinResult =  [
       GraphId: 2,
       Name: 'Gaskamer',
       Type_Graph: 'Bar',
-      Measurement: 'Kwh'
+      Measurement: 'Kwh',
+      Frequence: 40000
     },
     {
       WidgetId: 2,
@@ -89,7 +87,8 @@ const JoinResult =  [
       GraphId: 3,
       Name: 'Oliekamer',
       Type_Graph: 'Lijn',
-      Measurement: 'Kwh'
+      Measurement: 'Kwh',
+      Frequence: 40000,
     },
     {
       WidgetId: 3,
@@ -103,7 +102,8 @@ const JoinResult =  [
       GraphId: 4,
       Name: 'Gaskamer',
       Type_Graph: 'Bar',
-      Measurement: 'Kwh'
+      Measurement: 'Kwh',
+      Frequence: 40000,
     },
     {
       WidgetId: 3,
@@ -117,7 +117,8 @@ const JoinResult =  [
       GraphId: 5,
       Name: 'Oliekamer',
       Type_Graph: 'Lijn',
-      Measurement: 'Kwh'
+      Measurement: 'Kwh',
+      Frequence: 40000,
     },
     {
       WidgetId: 3,
@@ -131,7 +132,8 @@ const JoinResult =  [
       GraphId: 6,
       Name: 'Windkamer',
       Type_Graph: 'Cirkel',
-      Measurement: 'Kwh'
+      Measurement: 'Kwh',
+      Frequence: 40000,
     }
   ]
 
@@ -142,6 +144,9 @@ describe('Test join result mapper', ()=>{
             "Color_Graph": "Blue", 
             "DashboardId": 0, 
             "DefaultRange": 19, 
+            "Title": "Grafiek blauw",
+            "WidgetId": 2,
+            "Frequence": 40000,
             "Graphs": [
                 {
                     "GraphId": 2, 
@@ -157,10 +162,12 @@ describe('Test join result mapper', ()=>{
                     "Query": undefined, 
                     "Type_Graph": "Lijn"
                 }], 
-                "Settings": 
-                {"ISACTIVE": 1, "Position": 1, "SettingId": 2}, 
-                "Title": "Grafiek blauw"
-        , "WidgetId": 2});
+                "Settings": {
+                  "ISACTIVE": 1, 
+                  "Position": 1, 
+                  "SettingId": 2
+                }, 
+              });
     })
     
     test('Map list of join result mapper Widgetresult', ()=>{
