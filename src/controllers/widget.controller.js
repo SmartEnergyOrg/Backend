@@ -132,11 +132,24 @@ const Poll = async (req, res) => {
       return;
     }
 
+
+    //TODO remove this when the type of Range is back to string.
+    //This also includes a default for steps, this can still be overwritten with query params
+    {
+      widget.Range = "24h";
+      widget.Steps = "30m";
+    }
+
     //Handle query overrides
     {
       if (typeof req.query.range == "string" && req.query.range.length > 0) {
         //Custom range is defined
-        widget.DefaultRange = req.query.range;
+        widget.Range = req.query.range;
+      }
+
+      if(typeof req.query.steps == "string" && req.query.steps.length > 0){
+        //Custom steps is defined
+        widget.Steps = req.query.steps;
       }
     }
 
