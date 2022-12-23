@@ -32,7 +32,9 @@ class WidgetService {
       SET Title = ?,
       DashboardId = ?,
       Range = ?,
-      Frequence = ?
+      Frequence = ?,
+      ISACTIVE = ?,
+      Position = ?
       WHERE WidgetId = ?;
     `;
 
@@ -41,6 +43,8 @@ class WidgetService {
       UpdateValues.DashboardId,
       UpdateValues.Range,
       UpdateValues.Frequence,
+      UpdateValues.ISACTIVE,
+      UpdateValues.Position,
       Id
     ];
     return await this.SqlClient.Update(UpdateQuery, params);
@@ -85,7 +89,7 @@ class WidgetService {
     }
 
     const result = await this.SqlClient.GetAll(Query, param);
-
+    console.log(result);
     return MapWidgetsToArray(result);
   }
 
@@ -118,7 +122,7 @@ class WidgetService {
     ];
 
     let Widget = await this.SqlClient.GetOne(Query, Params);
-
+    console.log(Widget);
     return MapWidgetToObject(Widget);;
   }
 }

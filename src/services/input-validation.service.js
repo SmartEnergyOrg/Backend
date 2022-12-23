@@ -1,7 +1,7 @@
 const assert = require("assert");
 
 const Input = {
-  CheckWidgetInput(Widget, GraphsList, Position, ISACTIVE) {
+  CheckWidgetInput(Widget, GraphsList, ISACTIVE) {
     try {
       assert(typeof Widget.Title == 'string', 'A title must be filled in');
       assert(typeof Widget.Range == 'number', 'A range must be filled in');

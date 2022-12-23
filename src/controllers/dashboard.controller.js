@@ -1,8 +1,9 @@
+const { DatabaseInstance } = require("../db/InstanceOfDatabase");
 const { SqliteDataContext } = require("../db/sqllite.client");
 const DashboardService = require("../services/dashboard.service");
 
 // sqlite service
-const database = new SqliteDataContext("DashboardConfigDB");
+const database = DatabaseInstance();
 
 // dependeny injection in service
 const dashboardService = new DashboardService(database);

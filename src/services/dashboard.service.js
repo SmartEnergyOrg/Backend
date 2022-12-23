@@ -1,6 +1,3 @@
-const { SqliteDataContext } = require("../db/sqllite.client");
-
-
 //Responsible with the querying of data operations of various tables.
 class DashboardService {
   //Uses a sqlite client.
@@ -23,14 +20,14 @@ class DashboardService {
     SET ShowNavbar = ?,
     PeakTariffOn = ?,
     ShowWeather = ?,
-    IdleTariff = ?,
+    NormalTariff = ?,
     PeakTariff = ?
     WHERE DashboardId = ?;`
     const params = [
       UpdateValues.ShowNavbar,
       UpdateValues.PeakTariffOn,
       UpdateValues.ShowWeather,
-      UpdateValues.IdleTariff,
+      UpdateValues.NormalTariff,
       UpdateValues.PeakTariff,
       DashboardId]
     return await this.SqlClient.Update(sql, params);

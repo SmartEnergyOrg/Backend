@@ -188,8 +188,8 @@ class SqliteDataContext {
       db.run(Query, InputValues, function (err) {
         if (err) {
           reject(0);
-          console.log(err)
         }
+
         resolve(this.lastID);
       });
     })

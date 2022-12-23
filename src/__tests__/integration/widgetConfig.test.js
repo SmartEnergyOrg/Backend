@@ -5,24 +5,21 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
 const { SqliteDataContext } = require("../../db/sqllite.client");
-const { before, after } = require("mocha");
+const { before, after, beforeEach, afterEach } = require("mocha");
 const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
 
 chai.should();
 chai.use(chaiHttp);
 
 //Queries
-const WidgetInsert = "REPLACE INTO  Widgets(WidgetId, DashboardId, Title, DefaultRange, Color_Graph) VALUES(1, 0, 'Widget voor gasverbruik', '24h', 'Blue');"
-const GraphInsert = "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type_Graph, GraphId) VALUES(1, 'Voorbeeld', 'kwh', 'lijn', 1)"
-const WidgetInsert2 = "REPLACE INTO  Widgets(WidgetId, DashboardId, Title, DefaultRange, Color_Graph) VALUES(2, 0, 'Widget voor gasverbruik', '24h', 'Blue');"
-const GraphInsert2 = "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type_Graph, GraphId) VALUES(2, 'Voorbeeld', 'kwh', 'lijn', 2)"
-const SettingsInsert = 'REPLACE INTO  WidgetSettings (SettingId, Position, ISACTIVE, WidgetId) VALUES(1, 1, 1, 1)';
-const SettingsInsert2 = 'REPLACE INTO  WidgetSettings (SettingId, Position, ISACTIVE, WidgetId) VALUES(2, 1, 1, 2)';
+const WidgetInsert = "REPLACE INTO  Widgets(WidgetId, DashboardId, Title, Range, Frequence, ISACTIVE, Position) VALUES(1, 0, 'Widget voor gasverbruik', '24h', 3600, 1, 1);"
+const GraphInsert = "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type, Color) VALUES(1, 'Voorbeeld', 'kwh', 'lijn', '#000001')"
+const WidgetInsert2 = "REPLACE INTO  Widgets(WidgetId, DashboardId, Title, Range, Frequence, ISACTIVE, Position) VALUES(2, 0, 'Widget voor gasverbruik', '24h', 3600, 1, 1);"
+const GraphInsert2 = "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type, Color) VALUES(2, 'Voorbeeld', 'kwh', 'lijn', '#000001')";
 
 const UserInsert = `REPLACE INTO Users(UserId, FirstName, LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
 const deleteQueryUser = `DELETE FROM Users;`;
 const deleteQueryWidget = `DELETE FROM Widgets;`;
-const deleteSettings = 'DELETE FROM WidgetSettings';
 const deleteGraph = 'DELETE FROM Graphs';
 
 
@@ -35,29 +32,159 @@ describe('CRUD Widgets', function(){
         await Datab.Create(WidgetInsert2);
         await Datab.Create(GraphInsert);
         await Datab.Create(GraphInsert2);
-        await Datab.Create(SettingsInsert);
-        await Datab.Create(SettingsInsert2);
     });
       
     after(async ()=>{      
       await Datab.Delete(deleteGraph);
-      await Datab.Delete(deleteSettings);
       await Datab.Delete(deleteQueryWidget);
       await Datab.Delete(deleteQueryUser);
     });
 
-    it('Lack of graphs should give a warning', function(done){
+    
+
+    describe('Test update of widgets', ()=>{
+        it('A widget without graphs, should give a assertion error.', function(done){
         chai.request(server)
-        .post('/api/widgetsconfig')
+        .put('/api/widgets/1')
+        .send({
+          Widget:{
+            Title: "Nieuwe widget", 
+            DashboardId: 0, 
+            Range: "16h", 
+            Color_Graph: "Red", 
+            Frequence: 40000, 
+            Position: 1,
+            ISACTIVE: 1,
+            SettingId: 1
+          },
+          Graphs:[]
+        })
+        .end((err, res) => {
+            const response = res.body;
+            expect(response.message).equals("Input failure");
+            expect(response.result).equals("Must have at least one graph");
+            done();
+          });
+        })
+  
+        it('No title should give a assertion error', function(done){
+        chai.request(server)
+        .put('/api/widgets/1')
+        .send({
+            Widget:{
+              DashboardId: 0, 
+              Range: "16h", 
+              Frequence: 40000, 
+              Position: 1,
+              ISACTIVE: 1
+            }
+            ,
+            Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type: "Lijn", Color: "#00000"}]
+          })
+        .end((err, res) => {
+            const response = res.body;
+            expect(response.message).equals("Input failure");
+            expect(response.result).equals("A title must be filled in");
+            done();
+          });
+        })
+        
+        it('No field given should give a warning', function(done){
+          chai.request(server)
+          .put('/api/widgets/1')
+          .send({
+            Widget:{
+              Title: "Nieuwe widget", 
+              DashboardId: 0, 
+              Frequence: 40000, 
+              Position: 1,
+              ISACTIVE: 1
+            }
+            ,
+            Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type: "Lijn"}]
+          })
+          .end((err, res) => {
+            const response = res.body;
+            expect(response.message).equals("Input failure");
+            expect(response.result).equals("A range must be filled in");
+            done();
+          });
+        })
+        
+        it('Widget should be succesfully updated', function(done){
+          chai.request(server)
+          .put('/api/widgets/1')
+          .send({
+            Widget:{
+              Title: "Succesvolle update widget", 
+              DashboardId: 0, 
+              Range: "24h",
+              Frequence: 40000, 
+              Position: 1,
+              ISACTIVE: 1
+            }
+            ,
+            Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type: "Lijn", Color: "#000000"}]
+          })
+          .end((err, res) => {
+            const response = res.body;
+            expect(response.message).equals("Update is completed");
+            expect(response.result).equals(true);
+            done();
+          });
+        })
+    })
+    
+    describe('Read widget test', ()=>{
+      it('Widget should be given based on widgetId', function(done){
+        chai.request(server)
+        .get('/api/widgets/1')
+        .end((err, res) => {
+            const response = res.body;
+            expect(response.message).equals("Search result");
+            expect(response.result.WidgetId).equals(1);
+            done();
+          });
+      })
+    
+      it('Gives all widgets', function(done){
+        chai.request(server)
+        .get('/api/widgets')
+        .end((err, res) => {
+            const response = res.body;
+            expect(response.message).equals("Widgets are retrieved");
+            expect(response.result.length).equals(2);
+            done();
+          });
+      })
+    })
+
+
+    describe('Deletion widget test', () =>{
+      it('Widget should be succesfully deleted', function(done){
+        chai.request(server)
+        .delete('/api/widgets/1')
+        .end((err, res) => {
+            const response = res.body;
+            expect(response.message).equals("Deletion has succeeded result");
+            expect(response.result).equals(true);
+            done();
+          });
+        })
+    })
+    describe('Test input creation of widget', ()=>{
+        it('Lack of graphs should give a warning', function(done){
+        chai.request(server)
+        .post('/api/widgets')
         .send({
             Widget:{
                 Title: "Nieuwe widget", 
                 DashboardId: 0, 
-                DefaultRange: "16h", 
-                Color_Graph: "Red", 
-                Frequence: 40000 
+                Range: "16h", 
+                Frequence: 40000,
+                Position: 1,
+                ISACTIVE: 1
             },
-            Position: 1,
             Graphs:[]
           })
         .end((err, res) => {
@@ -66,19 +193,20 @@ describe('CRUD Widgets', function(){
             expect(response.result).equals("Must have at least one graph");
             done();
           });
-    })
+    
+        })
 
-    it('Lack of text fields should give a warning', function(done){
+        it('Lack of text fields should give a warning', function(done){
         chai.request(server)
-        .post('/api/widgetsconfig')
+        .post('/api/widgets')
         .send({
             Widget:{
-                Title: "Nieuwe widget", 
-                DashboardId: 0,  
-                Color_Graph: "Red", 
-                Frequence: 40000 
+              Title: "Nieuwe widget", 
+              DashboardId: 0, 
+              Frequence: 40000,
+              Position: 1,
+              ISACTIVE: 1
             },
-            Position: 1,
             Graphs:[]
           })
         .end((err, res) => {
@@ -87,42 +215,44 @@ describe('CRUD Widgets', function(){
             expect(response.result).equals("A range must be filled in");
             done();
           });
-    })
+        })
 
-    it('Graph does not contain all required attributes within graphlist', function(done){
-        chai.request(server)
-        .post('/api/widgetsconfig')
-        .send({
+    
+        it('Graph does not contain all required attributes within graphlist', function(done){
+          chai.request(server)
+          .post('/api/widgets')
+          .send({
             Widget:{
-                Title: "Nieuwe widget", 
-                DashboardId: 0, 
-                DefaultRange: "16h", 
-                Color_Graph: "Red", 
-                Frequence: 40000 
+              Title: "Nieuwe widget", 
+              DashboardId: 0, 
+              Range: "16h", 
+              Frequence: 40000,
+              Position: 1,
+              ISACTIVE: 1
             },
-            Position: 1,
             Graphs:[{Measurement: "kwh", Name: "Voorbeeld"}]
           })
-        .end((err, res) => {
+          .end((err, res) => {
             const response = res.body;
             expect(response.message).equals("Input failure");
-            expect(response.result).equals("Type_Graph needs to be filled in");
+            expect(response.result).equals("Type needs to be filled in");
             done();
           });
-    })
+        })
 
-    it('No position given should give a warning', function(done){
+    
+        it('No position given should give a warning', function(done){
         chai.request(server)
-        .post('/api/widgetsconfig')
+        .post('/api/widgets')
         .send({
             Widget:{
-                Title: "Nieuwe widget", 
-                DashboardId: 0, 
-                DefaultRange: "16h", 
-                Color_Graph: "Red", 
-                Frequence: 40000 
+              Title: "Nieuwe widget", 
+              DashboardId: 0, 
+              Range: "16h", 
+              Frequence: 40000,
+              ISACTIVE: 1
             },
-            Graphs:[{Measurement: "kwh", Name: "Voorbeeld", Type_Graph: "Lijn"}]
+            Graphs:[{Measurement: "kwh", Name: "Voorbeeld", Type: "Lijn", Color: "#000000"}]
           })
         .end((err, res) => {
             const response = res.body;
@@ -130,158 +260,30 @@ describe('CRUD Widgets', function(){
             expect(response.result).equals("Must have a postion");
             done();
           });
-    })
+    
+        })
 
-    it('Widget should be succesfully created', function(done){
-        chai.request(server)
-        .post('/api/widgetsconfig')
-        .send({
+        it('Widget should be succesfully created', function(done){
+          chai.request(server)
+          .post('/api/widgets')
+          .send({
             Widget:{
-                Title: "Nieuwe widget", 
-                DashboardId: 0, 
-                DefaultRange: "16h", 
-                Color_Graph: "Red", 
-                Frequence: 40000 
-            },
-            Position: 1,
-            Graphs:[{Measurement: "kwh", Name: "Voorbeeld", Type_Graph: "Lijn"}]
-          })
-        .end((err, res) => {
-            const response = res.body;
-            expect(response.message).equals("Creation widget succeeded");
-            expect(response.succeeded).equals(true);
-            done();
-          });
-    })
-    it('Lack of graphs should give a warning', function(done){
-      chai.request(server)
-      .put('/api/widgetsconfig/1')
-      .send({
-          
-          Title: "Nieuwe widget", 
-          DashboardId: 0, 
-          DefaultRange: "16h", 
-          Color_Graph: "Red", 
-          Frequence: 40000, 
-          Settings:{
+              Title: "Nieuwe widget", 
+              DashboardId: 0, 
+              Range: "16h", 
               Position: 1,
-              ISACTIVE: 1,
-              SettingId: 1
-          }
-          ,
-          Graphs:[]
-        })
-      .end((err, res) => {
-          const response = res.body;
-          expect(response.message).equals("Input failure");
-          expect(response.result).equals("Must have at least one graph");
-          done();
-        });
-  })
-
-  it('Lack of text fields should give a warning', function(done){
-      chai.request(server)
-      .put('/api/widgetsconfig/1')
-      .send({
-          Title: "Nieuwe widget", 
-          DashboardId: 0, 
-          DefaultRange: "16h", 
-          Color_Graph: "Red", 
-          Frequence: 40000, 
-          Settings:{
-              Position: 1,
-              SettingId: 1
-          }
-          ,
-          Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type_Graph: "Lijn"}]
-        })
-      .end((err, res) => {
-          const response = res.body;
-          expect(response.message).equals("Input failure");
-          expect(response.result).equals("ISACTIVE needs to be filled in");
-          done();
-        });
-  })
-
-  it('No field given should give a warning', function(done){
-      chai.request(server)
-      .put('/api/widgetsconfig/1')
-      .send({
-          
-          Title: "Nieuwe widget", 
-          DashboardId: 0, 
-          Color_Graph: "Red", 
-          Frequence: 40000, 
-          Settings:{
-              Position: 1,
-              SettingId: 1
-          }
-          ,
-          Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type_Graph: "Lijn"}]
-        })
-      .end((err, res) => {
-          const response = res.body;
-          expect(response.message).equals("Input failure");
-          expect(response.result).equals("A range must be filled in");
-          done();
-        });
-  })
-
-  it('Widget should be succesfully updated', function(done){
-      chai.request(server)
-      .put('/api/widgetsconfig/1')
-      .send({
-          Title: "Nieuwe widget", 
-          DashboardId: 0, 
-          DefaultRange: "24h",
-          Color_Graph: "Red", 
-          Frequence: 40000, 
-          Settings:{
-              Position: 1,
-              SettingId: 1,
+              Frequence: 40000,
               ISACTIVE: 1
-          }
-          ,
-          Graphs:[{GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type_Graph: "Lijn"}]
+            },
+            Graphs:[{Measurement: "kwh", Name: "Voorbeeld", Type: "Lijn", Color: "#000000"}]
+            })
+          .end((err, res) => {
+              const response = res.body;
+              expect(response.message).equals("Creation widget succeeded");
+              expect(response.succeeded).equals(true);
+              done();
+            });
         })
-      .end((err, res) => {
-          const response = res.body;
-          expect(response.message).equals("Update is completed");
-          expect(response.result).equals(true);
-          done();
-        });
-  })
 
-  it('Widget should be given based on widgetId', function(done){
-    chai.request(server)
-    .get('/api/widgetsconfig/1')
-    .end((err, res) => {
-        const response = res.body;
-        expect(response.message).equals("Search result");
-        expect(response.result.WidgetId).equals(1);
-        done();
-      });
-})
-
-it('Gives all widgets', function(done){
-    chai.request(server)
-    .get('/api/widgetsconfig')
-    .end((err, res) => {
-        const response = res.body;
-        expect(response.message).equals("Widgets are retrieved");
-        expect(response.result.length).equals(1);
-        done();
-      });
-})
-
-it('Widget should be succesfully deleted', function(done){
-  chai.request(server)
-  .delete('/api/widgetsconfig/1')
-  .end((err, res) => {
-      const response = res.body;
-      expect(response.message).equals("Deletion has succeeded result");
-      expect(response.result).equals(true);
-      done();
-    });
-})
+    })
 })
