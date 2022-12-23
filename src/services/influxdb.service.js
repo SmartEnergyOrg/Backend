@@ -29,7 +29,7 @@ function buildFluxQuery(widget) {
   //Steps
   if(widget.Steps != undefined)
   {
-    queryParams.steps = `|> aggregateWindow(every: ${widget.Steps}, fn: mean)`
+    queryParams.steps = `|> aggregateWindow(every: ${widget.Steps}, fn: mean, createEmpty: false)`
   }
 
   //Construct Filter
