@@ -4,7 +4,7 @@ const Input = {
   CheckWidgetInput(Widget, GraphsList, Position, ISACTIVE) {
     try {
       assert(typeof Widget.Title == 'string', 'A title must be filled in');
-      assert(typeof Widget.Range == 'string', 'A range must be filled in');
+      assert(typeof Widget.Range == 'number', 'A range must be filled in');
       assert(typeof Widget.Frequence == 'number', 'Frequence must be filled in');
       assert(typeof Widget.Position == 'number', 'Must have a postion');
       assert(GraphsList.length > 0, 'Must have at least one graph');
