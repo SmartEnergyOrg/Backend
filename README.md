@@ -14,8 +14,8 @@ If you are on windows 10/11 Home:
 2. Restart your computer, and run in powershell:
 
 ```
-WSL -l
-```
+WSL -l 
+``` 
 
 3. If you receive any errors, troubleshoot.
 4. If Windows did not install a default distro (Ubuntu) Install one from the MS
