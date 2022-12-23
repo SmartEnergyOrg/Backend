@@ -1,10 +1,9 @@
-const { DatabaseInstance } = require("../db/InstanceOfDatabase");
 const { SqliteDataContext } = require("../db/sqllite.client");
 const WidgetGraphService = require("../services/graph.service");
 const { CheckGraphInput } = require("../services/input-validation.service");
 
 // sqlite service
-const database = DatabaseInstance();
+const database = new SqliteDataContext("DashboardConfigDB");
 
 // dependeny injeciton in service
 const GraphsService = new WidgetGraphService(database);
@@ -18,7 +17,7 @@ const Validate = async (req, res, next) => {
   } catch (error) {
     res.status(401).json({ message: "Input failure", result: error.message });
   }
-};
+}
 
 // get all graphs
 const GetAll = async (req, res) => {
@@ -27,23 +26,12 @@ const GetAll = async (req, res) => {
 
     const Graph = await GraphsService.GetAll(WidgetId);
 
-    res
-      .status(201)
-      .json({
-        message: "Retrieval all graphs succesful",
-        result: Graph,
-        succeeded: true,
-      });
+    res.status(201).json({ message: "Retrieval all graphs succesful", result: Graph, succeeded: true });
   } catch (error) {
-    res
-      .status(400)
-      .json({
-        message: "Alle grafiek zijn niet opgehaald",
-        result: error,
-        succeeded: false,
-      });
+    res.status(400).json({ message: "Alle grafiek zijn niet opgehaald", result: error, succeeded: false });
   }
-};
+
+}
 
 // get graph by id
 const GetOne = async (req, res) => {
@@ -56,19 +44,12 @@ const GetOne = async (req, res) => {
 
     const Graph = await GraphsService.GetOne(Id);
 
-    res
-      .status(201)
-      .json({ message: "Graph retrieved", result: Graph, succeeded: true });
+    res.status(201).json({ message: "Graph retrieved", result: Graph, succeeded: true });
   } catch (error) {
-    res
-      .status(400)
-      .json({
-        message: "Grafiek ophalen is mislukt",
-        result: error,
-        succeeded: false,
-      });
+    res.status(400).json({ message: "Grafiek ophalen is mislukt", result: error, succeeded: false });
   }
-};
+
+}
 
 // create graph
 const Create = async (req, res) => {
@@ -78,23 +59,12 @@ const Create = async (req, res) => {
 
     const Graph = await GraphsService.Create(widgetId, WidgetBody);
 
-    res
-      .status(201)
-      .json({
-        message: "Graph succesfully made",
-        result: Graph,
-        succeeded: true,
-      });
+    res.status(201).json({ message: "Graph succesfully made", result: Graph, succeeded: true });
   } catch (error) {
-    res
-      .status(401)
-      .json({
-        message: "Aanmaken van een grafiek is niet voltooid",
-        result: error,
-        succeeded: false,
-      });
+    res.status(401).json({ message: "Aanmaken van een grafiek is niet voltooid", result: error, succeeded: false });
   }
-};
+
+}
 
 // update graph
 const Update = async (req, res) => {
@@ -104,19 +74,12 @@ const Update = async (req, res) => {
     //Updates graph.
     const Graph = await GraphsService.Update(Id, WidgetBody);
 
-    res
-      .status(201)
-      .json({ message: "Graph is updated", result: Graph, succeeded: true });
+    res.status(201).json({ message: "Graph is updated", result: Graph, succeeded: true });
   } catch (error) {
-    res
-      .status(401)
-      .json({
-        message: "Wijzigen van een grafiek is niet voltooid",
-        result: error,
-        succeeded: false,
-      });
+    res.status(401).json({ message: "Wijzigen van een grafiek is niet voltooid", result: error, succeeded: false });
   }
-};
+
+}
 
 // delete graph
 const Delete = async (req, res) => {
@@ -126,23 +89,12 @@ const Delete = async (req, res) => {
     //Updates graph.
     const Graph = await GraphsService.Delete(Id);
 
-    res
-      .status(201)
-      .json({
-        message: "Graph is succesfully removed",
-        result: Graph,
-        succeeded: true,
-      });
+    res.status(201).json({ message: "Graph is succesfully removed", result: Graph, succeeded: true });
   } catch (error) {
-    res
-      .status(401)
-      .json({
-        message: "Deletion of graph did not succeed.",
-        result: error,
-        succeeded: false,
-      });
+    res.status(401).json({ message: "Deletion of graph did not succeed.", result: error, succeeded: false });
   }
-};
+
+}
 
 module.exports = {
   Validate,
@@ -150,5 +102,5 @@ module.exports = {
   GetOne,
   Create,
   Update,
-  Delete,
+  Delete
 };

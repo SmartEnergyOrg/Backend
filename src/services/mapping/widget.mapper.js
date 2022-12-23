@@ -1,7 +1,8 @@
+
 const MapWidgetsToArray = (widgets) => {
-  let list = [];
-  widgets.forEach((widget) => {
-    widget = JSON.parse(widget.data);
+  let list = []
+  widgets.forEach(widget => {
+    widget = JSON.parse(widget.data)
 
     let Widget = {
       WidgetId: widget.WidgetId,
@@ -11,17 +12,17 @@ const MapWidgetsToArray = (widgets) => {
       Frequence: widget.Frequence,
       Position: widget.Position,
       IsActive: !!widget.ISACTIVE,
-      Graphs: widget.Graphs,
+      Graphs: widget.Graphs
     };
 
     list.push(Widget);
   });
 
   return list;
-};
+}
 
 const MapWidgetToObject = (widget) => {
-  widget = JSON.parse(widget.data);
+  widget = JSON.parse(widget.data)
 
   let Widget = {
     WidgetId: widget.WidgetId,
@@ -31,10 +32,10 @@ const MapWidgetToObject = (widget) => {
     Frequence: widget.Frequence,
     Position: widget.Position,
     IsActive: !!widget.ISACTIVE,
-    Graphs: widget.Graphs,
+    Graphs: widget.Graphs
   };
-  console.log(Widget);
-  return Widget;
-};
+
+  return Widget
+}
 
 module.exports = { MapWidgetToObject, MapWidgetsToArray };
