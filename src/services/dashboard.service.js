@@ -1,6 +1,3 @@
-const { SqliteDataContext } = require("../db/sqllite.client");
-
-
 //Responsible with the querying of data operations of various tables.
 class DashboardService {
   //Uses a sqlite client.
@@ -12,7 +9,7 @@ class DashboardService {
 
   //Returns Dashboard
   async Create(UserId) {
-    const sql = 'INSERT INTO Dashboards(UserId) VALUES(?);'
+    const sql = "INSERT INTO Dashboards(UserId) VALUES(?);";
     return await this.SqlClient.Create(sql, UserId);
   }
 
@@ -23,30 +20,30 @@ class DashboardService {
     SET ShowNavbar = ?,
     PeakTariffOn = ?,
     ShowWeather = ?,
-    IdleTariff = ?,
+    NormalTariff = ?,
     PeakTariff = ?
-    WHERE DashboardId = ?;`
+    WHERE DashboardId = ?;`;
     const params = [
       UpdateValues.ShowNavbar,
       UpdateValues.PeakTariffOn,
       UpdateValues.ShowWeather,
-      UpdateValues.IdleTariff,
+      UpdateValues.NormalTariff,
       UpdateValues.PeakTariff,
-      DashboardId]
+      DashboardId,
+    ];
     return await this.SqlClient.Update(sql, params);
   }
 
   //Only pass a single attribute or null or undefined!
   async GetAll(UserId) {
-
     let Query;
     const params = [];
     //If a UserId is not present
     if (!UserId) {
-      Query = `SELECT * FROM Dashboards;`
+      Query = `SELECT * FROM Dashboards;`;
     } else {
       //Otherwise it will use a prepared statement.
-      Query = `SELECT * FROM Dashboards WHERE UserId = ?;`
+      Query = `SELECT * FROM Dashboards WHERE UserId = ?;`;
       params.push(UserId);
     }
     //Perform query.
@@ -55,7 +52,7 @@ class DashboardService {
   }
 
   async GetOne(DashboardId) {
-    const sql = `SELECT * FROM Dashboards WHERE DashboardId = ?;`
+    const sql = `SELECT * FROM Dashboards WHERE DashboardId = ?;`;
     const params = [DashboardId];
 
     return await this.SqlClient.GetOne(sql, params);

@@ -1,4 +1,7 @@
-const { MapWidgetToObject, MapWidgetsToArray } = require("./mapping/widget.mapper");
+const {
+  MapWidgetToObject,
+  MapWidgetsToArray,
+} = require("./mapping/widget.mapper");
 
 class WidgetService {
   // use a sqlite client.
@@ -20,7 +23,7 @@ class WidgetService {
       CreationObject.DashboardId,
       CreationObject.Range,
       CreationObject.Frequence,
-      CreationObject.Position
+      CreationObject.Position,
     ];
 
     return await this.SqlClient.Create(sql, params);
@@ -32,7 +35,9 @@ class WidgetService {
       SET Title = ?,
       DashboardId = ?,
       Range = ?,
-      Frequence = ?
+      Frequence = ?,
+      ISACTIVE = ?,
+      Position = ?
       WHERE WidgetId = ?;
     `;
 
@@ -41,7 +46,9 @@ class WidgetService {
       UpdateValues.DashboardId,
       UpdateValues.Range,
       UpdateValues.Frequence,
-      Id
+      UpdateValues.ISACTIVE,
+      UpdateValues.Position,
+      Id,
     ];
     return await this.SqlClient.Update(UpdateQuery, params);
   }
@@ -85,7 +92,7 @@ class WidgetService {
     }
 
     const result = await this.SqlClient.GetAll(Query, param);
-
+    console.log(result);
     return MapWidgetsToArray(result);
   }
 
@@ -113,13 +120,11 @@ class WidgetService {
       WHERE Widgets.WidgetId = ?
     `;
 
-    const Params = [
-      id
-    ];
+    const Params = [id];
 
     let Widget = await this.SqlClient.GetOne(Query, Params);
-
-    return MapWidgetToObject(Widget);;
+    console.log(Widget);
+    return MapWidgetToObject(Widget);
   }
 }
 

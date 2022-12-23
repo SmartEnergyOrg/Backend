@@ -11,7 +11,7 @@ class SqliteDataContext {
       if (err) {
         console.log("Database is not connected");
       } else {
-        console.log("Setup SQLLite database")
+        console.log("Setup SQLLite database");
         this.setupTables();
       }
     });
@@ -72,15 +72,15 @@ class SqliteDataContext {
       )
     `;
 
-    const defaultDashboard = `INSERT OR IGNORE INTO Dashboards(DashboardId, UserId) VALUES(0, 0);`
+    const defaultDashboard = `INSERT OR IGNORE INTO Dashboards(DashboardId, UserId) VALUES(0, 0);`;
 
     try {
       this.DataSQL.serialize(async () => {
-        this.DataSQL.get(FK_On);            // Enable foreign key
-        this.DataSQL.run(UserTable);        // Add user table
-        this.DataSQL.run(DashBoardTable);   // Add dashboard table
-        this.DataSQL.run(WidgetTable);      // Add widget table
-        this.DataSQL.run(GraphTable);       // Add graph table
+        this.DataSQL.get(FK_On); // Enable foreign key
+        this.DataSQL.run(UserTable); // Add user table
+        this.DataSQL.run(DashBoardTable); // Add dashboard table
+        this.DataSQL.run(WidgetTable); // Add widget table
+        this.DataSQL.run(GraphTable); // Add graph table
         this.DataSQL.run(defaultDashboard); // Create default dashboard
       });
     } catch (e) {
@@ -118,12 +118,12 @@ class SqliteDataContext {
       db.all(Query, Params, (err, rows) => {
         if (err) {
           reject(0);
-          console.log(err)
+          console.log(err);
         }
 
         resolve(rows);
       });
-    })
+    });
   }
 
   //Get one element
@@ -134,12 +134,12 @@ class SqliteDataContext {
       db.get(Query, Params, (err, rows) => {
         if (err) {
           reject(0);
-          console.log(err)
+          console.log(err);
         }
 
         resolve(rows);
       });
-    })
+    });
   }
 
   async JoinResult(Query, Params) {
@@ -155,12 +155,12 @@ class SqliteDataContext {
       db.run(Query, Params, function (err) {
         if (err) {
           reject(0);
-          console.log(err)
+          console.log(err);
         }
         //console.log(`Last Id is ${this.lastID}`);
         resolve(true);
       });
-    })
+    });
   }
 
   //Delete a element
@@ -172,11 +172,11 @@ class SqliteDataContext {
       db.run(Query, Params, function (err) {
         if (err) {
           reject(0);
-          console.log(err)
+          console.log(err);
         }
         resolve(true);
       });
-    })
+    });
   }
 
   //Create function.
@@ -184,16 +184,15 @@ class SqliteDataContext {
     const db = this.GetDb();
     //Via a promise, is it possible to async await a query
     return new Promise(function (resolve, reject) {
-      console.log(Query)
+      console.log(Query);
       db.run(Query, InputValues, function (err) {
         if (err) {
           reject(0);
-          console.log(err)
         }
+
         resolve(this.lastID);
       });
-    })
-
+    });
   }
 }
 
