@@ -1,7 +1,10 @@
 const { SqliteDataContext } = require("../db/sqllite.client");
 const WidgetService = require("../services/widget.service");
 const WidgetGraphService = require("../services/graph.service");
-const { CheckWidgetInput, CheckGraphInput } = require("../services/input-validation.service");
+const {
+  CheckWidgetInput,
+  CheckGraphInput,
+} = require("../services/input-validation.service");
 const { DatabaseInstance } = require("../db/InstanceOfDatabase");
 
 // sqlite service
@@ -23,7 +26,7 @@ const validate = async (req, res, next) => {
 
     CheckWidgetInput(WidgetBody, GraphList, ISACTIVE);
 
-    GraphList.forEach(graph => {
+    GraphList.forEach((graph) => {
       CheckGraphInput(graph);
     });
 
@@ -40,9 +43,21 @@ const GetAll = async (req, res) => {
 
     const result = await widgetService.GetAll(DashboardId);
 
-    res.status(200).json({ message: "Widgets are retrieved", result: result, succeeded: true });
+    res
+      .status(200)
+      .json({
+        message: "Widgets are retrieved",
+        result: result,
+        succeeded: true,
+      });
   } catch (error) {
-    res.status(400).json({ message: "Widgets are not retrieved", result: error, succeeded: false });
+    res
+      .status(400)
+      .json({
+        message: "Widgets are not retrieved",
+        result: error,
+        succeeded: false,
+      });
   }
 };
 
@@ -55,7 +70,9 @@ const GetOne = async (req, res) => {
 
     res.status(201).json({ message: "Search result", result: Widget });
   } catch (error) {
-    res.status(401).json({ message: "Search has failed", result: false, error });
+    res
+      .status(401)
+      .json({ message: "Search has failed", result: false, error });
   }
 };
 
@@ -70,7 +87,13 @@ const Create = async (req, res) => {
       GraphsService.Create(WidgetId, graph);
     });
 
-    res.status(201).json({ message: "Creation widget succeeded", result: WidgetId, succeeded: true });
+    res
+      .status(201)
+      .json({
+        message: "Creation widget succeeded",
+        result: WidgetId,
+        succeeded: true,
+      });
   } catch (error) {
     res.status(404).json({ message: error, succeeded: false });
   }
@@ -82,9 +105,13 @@ const Delete = async (req, res) => {
     const WidgetId = req.params.id;
     const result = await widgetService.Delete(WidgetId);
 
-    res.status(200).json({ message: "Deletion has succeeded result", result: true });
+    res
+      .status(200)
+      .json({ message: "Deletion has succeeded result", result: true });
   } catch (error) {
-    res.status(401).json({ message: "Deletion has failed", result: false, error });
+    res
+      .status(401)
+      .json({ message: "Deletion has failed", result: false, error });
   }
 };
 
@@ -109,7 +136,9 @@ const Update = async (req, res) => {
 
     res.status(201).json({ message: "Update is completed", result: true });
   } catch (error) {
-    res.status(401).json({ message: "Update has failed", result: false, error });
+    res
+      .status(401)
+      .json({ message: "Update has failed", result: false, error });
   }
 };
 
@@ -124,11 +153,9 @@ const Poll = async (req, res) => {
 
     const widget = await widgetService.GetOne(req.params.id);
     if (widget == null) {
-      res
-        .status(400)
-        .json({
-          message: `Widget with id: ${req.params.id} could not be found.`,
-        });
+      res.status(400).json({
+        message: `Widget with id: ${req.params.id} could not be found.`,
+      });
       return;
     }
 

@@ -4,7 +4,9 @@ const { InfluxDB, Point } = require("@influxdata/influxdb-client");
 const { DeleteAPI } = require("@influxdata/influxdb-client-apis");
 
 /** Environment variables **/
-const url = `${process.env.INFLUXDB_HOST || "http://localhost"}:${process.env.INFLUXDB_PORT}`;
+const url = `${process.env.INFLUXDB_HOST || "http://localhost"}:${
+  process.env.INFLUXDB_PORT
+}`;
 const token = process.env.DOCKER_INFLUXDB_INIT_ADMIN_TOKEN;
 const org = "SmartEnergy";
 const bucket = "SmartEnergy";
@@ -85,7 +87,7 @@ async function addSolarData() {
       .floatField("amount", solarAmount)
       .timestamp(timestamp);
     console.log(`${point}`);
-    pointArray.push(windPoint)
+    pointArray.push(windPoint);
     pointArray.push(point);
   }
   writeApi.writePoints(pointArray);
@@ -110,4 +112,3 @@ deleteAllSolarData()
     console.log(err);
     console.log("\nError during deletion");
   });
-
