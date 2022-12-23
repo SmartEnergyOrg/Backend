@@ -18,11 +18,18 @@ function buildFluxQuery(widget) {
   let queryParams = {
     range: null,
     filter: null,
+    steps: "",
   };
 
   //Filter Range
   {
     queryParams.range = `|> range(start: -${widget.Range})`;
+  }
+
+  //Steps
+  if(widget.Steps != undefined)
+  {
+    queryParams.steps = `|> aggregateWindow(every: ${widget.Steps}, fn: mean)`
   }
 
   //Construct Filter
@@ -37,7 +44,8 @@ function buildFluxQuery(widget) {
 
   const fluxQuery = `from(bucket: "${bucket}")
   ${queryParams.range}
-  ${queryParams.filter}`;
+  ${queryParams.filter}
+  ${queryParams.steps}`;
 
   // fluxquery teruggeven
   return fluxQuery;
