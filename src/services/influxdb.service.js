@@ -11,6 +11,10 @@ async function getDataByWidget(widget) {
   return await queryApi.collectRows(fluxQuery);
 }
 
+async function callFluxQuery(fluxQuery) {
+  return await queryApi.collectRows(fluxQuery);
+}
+
 // query bouw functie
 function buildFluxQuery(widget) {
   // fluxquery bouwen
@@ -27,9 +31,8 @@ function buildFluxQuery(widget) {
   }
 
   //Steps
-  if(widget.Steps != undefined)
-  {
-    queryParams.steps = `|> aggregateWindow(every: ${widget.Steps}, fn: mean, createEmpty: false)`
+  if (widget.Steps != undefined) {
+    queryParams.steps = `|> aggregateWindow(every: ${widget.Steps}, fn: mean, createEmpty: false)`;
   }
 
   //Construct Filter
@@ -51,4 +54,4 @@ function buildFluxQuery(widget) {
   return fluxQuery;
 }
 
-module.exports = { getDataByWidget };
+module.exports = { getDataByWidget, callFluxQuery };
