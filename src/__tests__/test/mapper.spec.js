@@ -4,7 +4,7 @@ const {
 } = require("../../services/mapping/widget.mapper");
 
 const data = {
-  data: `{"WidgetId":1,"DashboardId":12,"Title":"sblauw","Range":"34h","Frequence":40000,"IsActive":1,"Position":1,"Graphs":[{"Name":"Gasverbruik volgend jaar","Measurement":"Gas","Type":"Cirs","Color":"red"},{"Name":"Gertjan","Measurement":"wind","Type":"Cirs","Color":"red"},{"Name":"Josef","Measurement":"solar","Type":"Bar","Color":"red"}]}`,
+  data: `{"WidgetId":1,"DashboardId":12,"Title":"sblauw","Range":"34h","Frequence":40000,"IsActive":1,"Position":1,"Icon":"IconURL","Graphs":[{"Name":"Gasverbruik volgend jaar","Measurement":"Gas","Type":"Cirs","Color":"red"},{"Name":"Gertjan","Measurement":"wind","Type":"Cirs","Color":"red"},{"Name":"Josef","Measurement":"solar","Type":"Bar","Color":"red"}]}`,
 };
 const dataList = [
   {
@@ -22,12 +22,9 @@ describe("Test join result mapper", () => {
     const result = MapWidgetToObject(data);
     expect(result).toEqual({
       WidgetId: 1,
-      DashboardId: 12,
       Title: "sblauw",
-      Range: "34h",
-      Frequence: 40000,
+      Icon: "IconURL",
       Position: 1,
-      IsActive: false,
       Graphs: [
         {
           Name: "Gasverbruik volgend jaar",
