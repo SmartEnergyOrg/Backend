@@ -6,14 +6,14 @@ class GraphConfigService {
     this.SqlClient = database;
   }
   //Creates a graph entity
-  async Create(WidgetId, Datasource) {
+  async Create(widgetId, datasource) {
     try {
       const param = [
-        WidgetId,
-        Datasource.Type,
-        Datasource.Query,
-        Datasource.Interval,
-        Datasource.Color,
+        widgetId,
+        datasource.Type,
+        datasource.Query,
+        datasource.Interval,
+        datasource.Color,
       ];
       const query = `INSERT INTO Graphs(WidgetId, Type, Query, Interval, Color) VALUES(?, ?, ?, ?, ?)`;
 
@@ -26,13 +26,13 @@ class GraphConfigService {
   }
 
   //Updates graph entity
-  async Update(DatasourceId, Datasource) {
+  async Update(datasourceId, datasource) {
     const param = [
-      Datasource.Type,
-      Datasource.Query,
-      Datasource.Interval,
-      Datasource.Color,
-      DatasourceId,
+      datasource.Type,
+      datasource.Query,
+      datasource.Interval,
+      datasource.Color,
+      datasourceId,
     ];
     const query = `
     UPDATE Graphs
@@ -42,31 +42,31 @@ class GraphConfigService {
     return await this.SqlClient.Update(query, param);
   }
 
-  async Replace(GraphId, WidgetId, Datasource) {
+  async Replace(graphId, widgetId, datasource) {
     const sql = `REPLACE INTO Graphs(GraphId, WidgetId, Type, Query, Interval, Color) VALUES(?,?,?,?,?,?)`;
     const param = [
-      GraphId,
-      WidgetId,
-      Datasource.Type,
-      Datasource.Query,
-      Datasource.Interval,
-      Datasource.Color,
+      graphId,
+      widgetId,
+      datasource.Type,
+      datasource.Query,
+      datasource.Interval,
+      datasource.Color,
     ];
     return await this.SqlClient.Create(sql, param);
   }
 
   //Chooses if it is to delete datasources or to change it to a single parameter.
-  async Delete(DatasourceId) {
+  async Delete(datasourceId) {
     const Query = `DELETE FROM Graphs WHERE GraphId = ?;`;
-    return await this.SqlClient.Delete(Query, DatasourceId);
+    return await this.SqlClient.Delete(Query, datasourceId);
   }
 
   //Deletes datasources when it does not feature in the current composition
   //Example, when user does not want to use a certain datasource
-  async UpdateDelete(DataSourcesIdParams) {
+  async UpdateDelete(dataSourcesIdParams) {
     try {
       //Puts string array into a string seperated by comma's
-      const Values = String(DataSourcesIdParams);
+      const Values = String(dataSourcesIdParams);
       //Update/Delete query if
       const query = `DELETE FROM Graphs WHERE GraphId NOT IN (?)`;
       const params = Values;
@@ -77,16 +77,16 @@ class GraphConfigService {
     }
   }
 
-  async GetOne(GraphId) {
+  async GetOne(graphId) {
     const sql = `SELECT * FROM Graphs WHERE GraphId = ?;`;
 
-    return await this.SqlClient.GetOne(sql, [GraphId]);
+    return await this.SqlClient.GetOne(sql, [graphId]);
   }
 
-  async GetAll(WidgetId) {
+  async GetAll(widgetId) {
     const sql = `SELECT * FROM Graphs WHERE WidgetId = ?;`;
 
-    return await this.SqlClient.GetAll(sql, [WidgetId]);
+    return await this.SqlClient.GetAll(sql, [widgetId]);
   }
 }
 

@@ -1,16 +1,16 @@
 const assert = require("assert");
 
 const Input = {
-  CheckWidgetInput(Widget, GraphsList, ISACTIVE) {
+  CheckWidgetInput(widget, graphsList, ISACTIVE) {
     try {
-      assert(typeof Widget.Title == "string", "A title must be filled in");
-      assert(typeof Widget.Range == "number", "A range must be filled in");
+      assert(typeof widget.Title == "string", "A title must be filled in");
+      assert(typeof widget.Range == "number", "A range must be filled in");
       assert(
-        typeof Widget.Frequence == "number",
+        typeof widget.Frequence == "number",
         "Frequence must be filled in"
       );
-      assert(typeof Widget.Position == "number", "Must have a postion");
-      assert(GraphsList.length > 0, "Must have at least one graph");
+      assert(typeof widget.Position == "number", "Must have a postion");
+      assert(graphsList.length > 0, "Must have at least one graph");
       assert(
         typeof ISACTIVE == "boolean" || typeof ISACTIVE == "number",
         "ISACTIVE needs to be filled in"
@@ -22,15 +22,15 @@ const Input = {
     }
   },
 
-  CheckGraphInput(Graph) {
+  CheckGraphInput(graph) {
     try {
       assert(
-        typeof Graph.Measurement == "string",
+        typeof graph.Measurement == "string",
         "Measurement needs to be filled in"
       );
-      assert(typeof Graph.Name == "string", "Name needs to be filled in");
-      assert(typeof Graph.Type == "string", "Type needs to be filled in");
-      assert(typeof Graph.Color == "string", "Color needs to be filled in");
+      assert(typeof graph.Name == "string", "Name needs to be filled in");
+      assert(typeof graph.Type == "string", "Type needs to be filled in");
+      assert(typeof graph.Color == "string", "Color needs to be filled in");
 
       return true;
     } catch (error) {

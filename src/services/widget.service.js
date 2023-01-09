@@ -12,16 +12,16 @@ class WidgetService {
   }
 
   //Crud operations widgets
-  async Create(CreationObject) {
+  async Create(creationObject) {
     const sql = `
       INSERT INTO Widgets(Title, Position, Icon)
       VALUES (?, ?, ?)
     `;
 
     const params = [
-      CreationObject.Title,
-      CreationObject.Position,
-      CreationObject.Icon,
+      creationObject.Title,
+      creationObject.Position,
+      creationObject.Icon,
     ];
 
     return await this.SqlClient.Create(sql, params);
@@ -54,7 +54,7 @@ class WidgetService {
 
   //It will get all widgets, with the necessery graphs and settings.
   async GetAll() {
-    const Query = `
+    const query = `
       SELECT json_object(
         'WidgetId', widgets.WidgetId,
         'Title', widgets.Title,
@@ -77,7 +77,7 @@ class WidgetService {
     `;
     const param = [];
 
-    const result = await this.SqlClient.GetAll(Query, param);
+    const result = await this.SqlClient.GetAll(query, param);
     console.log(result);
     return MapWidgetsToArray(result);
   }
