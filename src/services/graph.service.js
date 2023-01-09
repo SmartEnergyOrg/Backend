@@ -10,12 +10,12 @@ class GraphConfigService {
     try {
       const param = [
         WidgetId,
-        Datasource.Name,
         Datasource.Type,
-        Datasource.Measurement,
+        Datasource.Query,
+        Datasource.Interval,
         Datasource.Color,
       ];
-      const query = `INSERT INTO Graphs(WidgetId, Name, Type, Measurement, Color) VALUES(?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO Graphs(WidgetId, Type, Query, Interval, Color) VALUES(?, ?, ?, ?, ?)`;
 
       const result = await this.SqlClient.Create(query, param);
 
@@ -28,28 +28,28 @@ class GraphConfigService {
   //Updates graph entity
   async Update(DatasourceId, Datasource) {
     const param = [
-      Datasource.Name,
       Datasource.Type,
-      Datasource.Measurement,
+      Datasource.Query,
+      Datasource.Interval,
       Datasource.Color,
       DatasourceId,
     ];
     const query = `
     UPDATE Graphs
-    SET Name = ?, Type = ?, Measurement = ?, Color = ?
+    SET Type = ?, Query = ?, Interval = ?, Color = ?
     WHERE GraphId = ?;`;
 
     return await this.SqlClient.Update(query, param);
   }
 
   async Replace(GraphId, WidgetId, Datasource) {
-    const sql = `REPLACE INTO Graphs(GraphId, WidgetId, Name, Type, Measurement, Color) VALUES(?,?,?,?,?,?)`;
+    const sql = `REPLACE INTO Graphs(GraphId, WidgetId, Type, Query, Interval, Color) VALUES(?,?,?,?,?,?)`;
     const param = [
       GraphId,
       WidgetId,
-      Datasource.Name,
       Datasource.Type,
-      Datasource.Measurement,
+      Datasource.Query,
+      Datasource.Interval,
       Datasource.Color,
     ];
     return await this.SqlClient.Create(sql, param);
