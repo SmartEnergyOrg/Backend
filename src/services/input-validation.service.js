@@ -3,13 +3,9 @@ const assert = require("assert");
 const Input = {
   CheckWidgetInput(widget, graphsList, ISACTIVE) {
     try {
-      assert(typeof widget.Title == "string", "A title must be filled in");
-      assert(typeof widget.Range == "number", "A range must be filled in");
-      assert(
-        typeof widget.Frequence == "number",
-        "Frequence must be filled in"
-      );
-      assert(typeof widget.Position == "number", "Must have a postion");
+      assert(typeof widget.Title == "string", "A Position must be filled in");
+      assert(typeof widget.Position == "number", "A Position must be filled in");
+      assert(typeof widget.Icon == "string", "Icon must be filled in");
       assert(graphsList.length > 0, "Must have at least one graph");
       assert(
         typeof ISACTIVE == "boolean" || typeof ISACTIVE == "number",

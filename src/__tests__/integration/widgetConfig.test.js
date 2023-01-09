@@ -13,23 +13,18 @@ chai.use(chaiHttp);
 
 //Queries
 const WidgetInsert =
-  "REPLACE INTO  Widgets(WidgetId, DashboardId, Title, Range, Frequence, ISACTIVE, Position) VALUES(1, 0, 'Widget voor gasverbruik', '24h', 3600, 1, 1);";
+  "REPLACE INTO Widgets(WidgetId, Title, Position, Icon) VALUES(1, 'Widget voor gasverbruik', 1, 'IconURL');"
 const GraphInsert =
-  "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type, Color) VALUES(1, 'Voorbeeld', 'kwh', 'lijn', '#000001')";
+  "REPLACE INTO Graphs (WidgetId, Type, Query, Interval, Color) VALUES(1, 'bar', 'SELECT FROM', 5, '#000001')"
 const WidgetInsert2 =
-  "REPLACE INTO  Widgets(WidgetId, DashboardId, Title, Range, Frequence, ISACTIVE, Position) VALUES(2, 0, 'Widget voor gasverbruik', '24h', 3600, 1, 1);";
+  "REPLACE INTO Widgets(WidgetId, Title, Position, Icon) VALUES(2, 'Widget voor gasverbruik', 2, 'IconURL');"
 const GraphInsert2 =
-  "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type, Color) VALUES(2, 'Voorbeeld', 'kwh', 'lijn', '#000001')";
+  "REPLACE INTO Graphs (WidgetId, Type, Query, Interval, Color) VALUES(2, 'bar', 'SELECT FROM', 30, '#000001')"
 
-const UserInsert = `REPLACE
-INTO Users(UserId, FirstName, LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
-const deleteQueryUser = `DELETE
-                         FROM Users;`;
-const deleteQueryWidget = `DELETE
-                           FROM Widgets;`;
+const UserInsert = `REPLACE INTO Users(UserId, FirstName, LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
+const deleteQueryUser = `DELETE FROM Users;`;
+const deleteQueryWidget = `DELETE FROM Widgets;`;
 const deleteGraph = "DELETE FROM Graphs";
-
-const SECONDS_IN_HOUR = 3600;
 
 describe("CRUD Widgets", function () {
   let Datab;
@@ -56,13 +51,8 @@ describe("CRUD Widgets", function () {
         .send({
           Widget: {
             Title: "Nieuwe widget",
-            DashboardId: 0,
-            Range: 16 * SECONDS_IN_HOUR,
-            Color_Graph: "Red",
-            Frequence: 40000,
+            Icon: "IconURL",
             Position: 1,
-            ISACTIVE: 1,
-            SettingId: 1,
           },
           Graphs: [],
         })
@@ -80,11 +70,8 @@ describe("CRUD Widgets", function () {
         .put("/api/widgets/1")
         .send({
           Widget: {
-            DashboardId: 0,
-            Range: 16 * SECONDS_IN_HOUR,
-            Frequence: 40000,
+            Icon: "IconURL",
             Position: 1,
-            ISACTIVE: 1,
           },
           Graphs: [
             {
