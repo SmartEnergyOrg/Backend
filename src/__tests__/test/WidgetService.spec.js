@@ -63,36 +63,32 @@ describe("Test widget CRUD operations", () => {
     });
   });
 
-  xdescribe("Read widgets", () => {
+  describe("Read widgets", () => {
     test("Read one widget", async () => {
       const widgetId = 1;
 
       const Check = await widgetService.GetOne(widgetId);
 
-      expect(Check.Title).toEqual("Widget voor gasverbruik");
-      expect(Check.Range).toEqual("24h");
       expect(Check.WidgetId).toEqual(1);
-      expect(Check.Frequence).toEqual(3600);
-      expect(Check.IsActive).toEqual(false);
+      expect(Check.Title).toEqual("Widget voor gasverbruik");
       expect(Check.Position).toEqual(1);
+      expect(Check.Icon).toEqual("IconURL");
       expect(Check.Graphs).toEqual([
         {
-          Measurement: "m3",
-          Name: "Een grafiek over gasgeneratie",
-          Type: null,
+          GraphId: 1,
+          WidgetId: 1,
+          Interval: 5,
+          Type: "bar",
+          Query: "SELECT FROM",
           Color: "#000001",
-          Measurement: "kwh",
-          Name: "Voorbeeld",
-          Type: "lijn",
         },
         {
-          Measurement: "m3",
-          Name: "Een grafiek over gasverbruik",
-          Type: null,
+          GraphId: 2,
+          WidgetId: 1,
+          Interval: 10,
+          Type: "line",
+          Query: "SELECT FROM",
           Color: "#000001",
-          Measurement: "kwh",
-          Name: "Voorbeeld",
-          Type: "lijn",
         },
       ]);
     });
@@ -103,62 +99,50 @@ describe("Test widget CRUD operations", () => {
       expect(Check.length).toEqual(2);
       expect(Check).toEqual([
         {
-          DashboardId: 0,
-          Frequence: 3600,
+          WidgetId: 1,
+          Title: "Widget voor gasverbruik",
+          Position: 1,
+          Icon: "IconURL",
           Graphs: [
             {
-              Measurement: "m3",
-              Name: "Een grafiek over gasgeneratie",
-              Type: null,
+              GraphId: 1,
+              WidgetId: 1,
+              Interval: 5,
+              Type: "bar",
+              Query: "SELECT FROM",
               Color: "#000001",
-              Measurement: "kwh",
-              Name: "Voorbeeld",
-              Type: "lijn",
             },
             {
-              Measurement: "m3",
-              Name: "Een grafiek over gasverbruik",
-              Type: null,
+              GraphId: 2,
+              WidgetId: 1,
+              Interval: 10,
+              Type: "line",
+              Query: "SELECT FROM",
               Color: "#000001",
-              Measurement: "kwh",
-              Name: "Voorbeeld",
-              Type: "lijn",
             },
           ],
-
-          IsActive: false,
-          Position: 1,
-
-          Range: "24h",
-          Title: "Widget voor gasverbruik",
-          WidgetId: 1,
         },
         {
-          DashboardId: 0,
-          Frequence: 3600,
+          WidgetId: 2,
+          Title: "Widget voor gasverbruik",
+          Position: 2,
+          Icon: "IconURL",
           Graphs: [
             {
-              Measurement: "m3",
-              Name: "Een grafiek over windgeneratie",
-              Type: null,
+              GraphId: 3,
+              WidgetId: 2,
+              Interval: 30,
+              Type: "bar",
+              Query: "SELECT FROM",
               Color: "#000001",
-              Measurement: "kwh",
-              Name: "Voorbeeld",
-              Type: "lijn",
             },
           ],
-
-          IsActive: false,
-          Position: 1,
-          Range: "24h",
-          Title: "Widget voor gasverbruik",
-          WidgetId: 2,
         },
       ]);
     });
   });
 
-  xdescribe("Delete widgets", () => {
+  describe("Delete widgets", () => {
     test("Delete widget", async () => {
       const deleteId = 2;
       const result = await widgetService.Delete(deleteId);
