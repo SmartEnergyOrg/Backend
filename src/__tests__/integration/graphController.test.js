@@ -11,15 +11,25 @@ chai.should();
 chai.use(chaiHttp);
 
 const WidgetInsert =
-  "REPLACE INTO  Widgets(WidgetId, DashboardId, Title, Range, Frequence, ISACTIVE, Position) VALUES(1, 0, 'Widget voor gasverbruik', '24h', 3600, 1, 1);";
+  "REPLACE INTO Widgets(WidgetId, Title, Position, Icon) VALUES(1, 'Widget voor gasverbruik', 1, 'IconURL');"
 const GraphInsert =
-  "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type, Color) VALUES(1, 'Voorbeeld', 'kwh', 'lijn', '#000001')";
+  "REPLACE INTO Graphs (WidgetId, Type, Query, Interval, Color) VALUES(1, 'bar', 'SELECT FROM', 5, '#000001')"
 const UserInsert = `REPLACE INTO Users(UserId, FirstName, 
     LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) 
     VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
 const deleteQueryUser = `DELETE FROM Users;`;
 const deleteQueryWidget = `DELETE FROM Widgets;`;
 const deleteGraph = "DELETE FROM Graphs";
+
+
+//Valid Models
+const validGraph = {
+  Type: "bar",
+  Query: "FLUXQUERY",
+  Interval: 30,
+  Color: "#000000"
+}
+
 describe("Create graphs test", function () {
   let Datab;
   before(async (done) => {
@@ -45,7 +55,7 @@ describe("Create graphs test", function () {
       .end((err, res) => {
         const response = res.body;
         expect(response.message).equals("Input failure");
-        expect(response.result).equals("Name needs to be filled in");
+        expect(response.result).equals("Query needs to be filled in");
         done();
       });
   });
@@ -54,12 +64,7 @@ describe("Create graphs test", function () {
     chai
       .request(server)
       .post("/api/widgets/9999/graphs")
-      .send({
-        Name: "Voorbeeld 2",
-        Type: "Cirkel",
-        Measurement: "M3",
-        Color: "#00000",
-      })
+      .send(validGraph)
       .end((err, res) => {
         const response = res.body;
         expect(response.message).equals(
@@ -74,12 +79,7 @@ describe("Create graphs test", function () {
     chai
       .request(server)
       .post("/api/widgets/1/graphs")
-      .send({
-        Name: "Voorbeeld 2",
-        Type: "Cirkel",
-        Measurement: "M3",
-        Color: "#00000",
-      })
+      .send(validGraph)
       .end((err, res) => {
         const response = res.body;
         expect(response.message).equals("Graph succesfully made");
@@ -123,12 +123,7 @@ describe("Update graphs test", function () {
     chai
       .request(server)
       .put("/api/widgets/1/graphs/1")
-      .send({
-        Name: "Voorbeeld 3",
-        Type: "Cirkel",
-        Measurement: "M3",
-        Color: "#000000",
-      })
+      .send(validGraph)
       .end((err, res) => {
         const response = res.body;
         expect(response.message).equals("Graph is updated");
@@ -204,9 +199,10 @@ describe("Read graphs", function () {
         expect(response.message).equals("Graph retrieved");
         expect(response.succeeded).equals(true);
         expect(graph.WidgetId).equals(1);
-        expect(graph.Name).equals("Voorbeeld");
-        expect(graph.Measurement).equals("kwh");
-        expect(graph.Type).equals("lijn");
+        expect(graph.Type).equals("bar");
+        expect(graph.Query).equals("SELECT FROM");
+        expect(graph.Interval).equals(5);
+        expect(graph.Color).equals("#000001");
         done();
       });
   });

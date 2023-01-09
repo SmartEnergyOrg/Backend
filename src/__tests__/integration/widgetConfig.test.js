@@ -26,6 +26,21 @@ const deleteQueryUser = `DELETE FROM Users;`;
 const deleteQueryWidget = `DELETE FROM Widgets;`;
 const deleteGraph = "DELETE FROM Graphs";
 
+
+//Valid Models
+const validGraph = {
+  Type: "bar",
+  Query: "FLUXQUERY",
+  Interval: 30,
+  Color: "#000000"
+}
+
+const validWidget = {
+  Title: "Nieuwe widget",
+  Icon: "IconURL",
+  Position: 1,
+}
+
 describe("CRUD Widgets", function () {
   let Datab;
   before(async () => {
@@ -74,34 +89,25 @@ describe("CRUD Widgets", function () {
             Position: 1,
           },
           Graphs: [
-            {
-              GraphId: 1,
-              Measurement: "kwh",
-              Name: "Nieuw",
-              Type: "Lijn",
-              Color: "#00000",
-            },
+            validGraph
           ],
         })
         .end((err, res) => {
           const response = res.body;
           expect(response.message).equals("Input failure");
-          expect(response.result).equals("A title must be filled in");
+          expect(response.result).equals("A Title must be filled in");
           done();
         });
     });
 
-    it("No field given should give a warning", function (done) {
+    it("No icon given should give a warning", function (done) {
       chai
         .request(server)
         .put("/api/widgets/1")
         .send({
           Widget: {
             Title: "Nieuwe widget",
-            DashboardId: 0,
-            Frequence: 40000,
             Position: 1,
-            ISACTIVE: 1,
           },
           Graphs: [
             { GraphId: 1, Measurement: "kwh", Name: "Nieuw", Type: "Lijn" },
@@ -110,7 +116,7 @@ describe("CRUD Widgets", function () {
         .end((err, res) => {
           const response = res.body;
           expect(response.message).equals("Input failure");
-          expect(response.result).equals("A range must be filled in");
+          expect(response.result).equals("Icon must be filled in");
           done();
         });
     });
@@ -121,21 +127,12 @@ describe("CRUD Widgets", function () {
         .put("/api/widgets/1")
         .send({
           Widget: {
-            Title: "Succesvolle update widget",
-            DashboardId: 0,
-            Range: 24 * SECONDS_IN_HOUR,
-            Frequence: 40000,
+            Title: "Nieuwe widget",
+            Icon: "IconURL",
             Position: 1,
-            ISACTIVE: 1,
           },
           Graphs: [
-            {
-              GraphId: 1,
-              Measurement: "kwh",
-              Name: "Nieuw",
-              Type: "Lijn",
-              Color: "#000000",
-            },
+            validGraph
           ],
         })
         .end((err, res) => {
@@ -194,11 +191,8 @@ describe("CRUD Widgets", function () {
         .send({
           Widget: {
             Title: "Nieuwe widget",
-            DashboardId: 0,
-            Range: 16 * SECONDS_IN_HOUR,
-            Frequence: 40000,
+            Icon: "IconURL",
             Position: 1,
-            ISACTIVE: 1,
           },
           Graphs: [],
         })
@@ -210,24 +204,21 @@ describe("CRUD Widgets", function () {
         });
     });
 
-    it("Lack of text fields should give a warning", function (done) {
+    it("Lack of Icon fields should give a warning", function (done) {
       chai
         .request(server)
         .post("/api/widgets")
         .send({
           Widget: {
             Title: "Nieuwe widget",
-            DashboardId: 0,
-            Frequence: 40000,
             Position: 1,
-            ISACTIVE: 1,
           },
           Graphs: [],
         })
         .end((err, res) => {
           const response = res.body;
           expect(response.message).equals("Input failure");
-          expect(response.result).equals("A range must be filled in");
+          expect(response.result).equals("Icon must be filled in");
           done();
         });
     });
@@ -239,13 +230,10 @@ describe("CRUD Widgets", function () {
         .send({
           Widget: {
             Title: "Nieuwe widget",
-            DashboardId: 0,
-            Range: 16 * SECONDS_IN_HOUR,
-            Frequence: 40000,
+            Icon: "IconURL",
             Position: 1,
-            ISACTIVE: 1,
           },
-          Graphs: [{ Measurement: "kwh", Name: "Voorbeeld" }],
+          Graphs: [{ Interval: 30, Query: "Voorbeeld" }],
         })
         .end((err, res) => {
           const response = res.body;
@@ -260,13 +248,7 @@ describe("CRUD Widgets", function () {
         .request(server)
         .post("/api/widgets")
         .send({
-          Widget: {
-            Title: "Nieuwe widget",
-            DashboardId: 0,
-            Range: 16 * SECONDS_IN_HOUR,
-            Frequence: 40000,
-            ISACTIVE: 1,
-          },
+          Widget: validWidget,
           Graphs: [
             {
               Measurement: "kwh",
@@ -279,7 +261,7 @@ describe("CRUD Widgets", function () {
         .end((err, res) => {
           const response = res.body;
           expect(response.message).equals("Input failure");
-          expect(response.result).equals("Must have a postion");
+          expect(response.result).equals("Query needs to be filled in");
           done();
         });
     });
@@ -289,21 +271,9 @@ describe("CRUD Widgets", function () {
         .request(server)
         .post("/api/widgets")
         .send({
-          Widget: {
-            Title: "Nieuwe widget",
-            DashboardId: 0,
-            Range: 16 * SECONDS_IN_HOUR,
-            Position: 1,
-            Frequence: 40000,
-            ISACTIVE: 1,
-          },
+          Widget: validWidget,
           Graphs: [
-            {
-              Measurement: "kwh",
-              Name: "Voorbeeld",
-              Type: "Lijn",
-              Color: "#000000",
-            },
+            validGraph,
           ],
         })
         .end((err, res) => {
