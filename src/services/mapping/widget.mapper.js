@@ -25,12 +25,9 @@ const MapWidgetToObject = (widget) => {
 
   let Widget = {
     WidgetId: widget.WidgetId,
-    DashboardId: widget.DashboardId,
     Title: widget.Title,
-    Range: widget.Range,
-    Frequence: widget.Frequence,
     Position: widget.Position,
-    IsActive: !!widget.ISACTIVE,
+    Icon: widget.Icon,
     Graphs: widget.Graphs,
   };
   console.log(Widget);

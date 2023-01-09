@@ -24,12 +24,9 @@ class SqliteDataContext {
     const WidgetTable = `
       CREATE TABLE IF NOT EXISTS Widgets (
         WidgetId INTEGER PRIMARY KEY,
-        DashboardId INTEGER DEFAULT 0,
         Title TEXT NOT NULL,
-        Range TEXT NOT NULL,
-        Frequence INTEGER DEFAULT 3600 NOT NULL,
-        ISACTIVE INTEGER CHECK ( 0 OR 1 ) DEFAULT 1,
-        Position INTEGER DEFAULT 0
+        Position INTEGER DEFAULT 0 NOT NULL,
+        Icon TEXT NOT NULL
       )
     `;
 
@@ -64,9 +61,9 @@ class SqliteDataContext {
       CREATE TABLE IF NOT EXISTS Graphs (
         GraphId INTEGER PRIMARY KEY,
         WidgetId INTEGER NOT NULL,
-        Name TEXT NOT NULL,
-        Measurement TEXT NOT NULL,
         Type TEXT NOT NULL,
+        Query TEXT NOT NULL,
+        Interval INTEGER DEFAULT 60 NOT NULL,
         Color TEXT DEFAULT "#000000",
         FOREIGN KEY (WidgetId) REFERENCES Widgets ON DELETE CASCADE
       )

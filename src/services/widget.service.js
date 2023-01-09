@@ -14,43 +14,35 @@ class WidgetService {
   //Crud operations widgets
   async Create(CreationObject) {
     const sql = `
-      INSERT INTO Widgets(Title, DashboardId, Range, Frequence, Position)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO Widgets(Title, Position, Icon)
+      VALUES (?, ?, ?)
     `;
 
     const params = [
       CreationObject.Title,
-      CreationObject.DashboardId,
-      CreationObject.Range,
-      CreationObject.Frequence,
       CreationObject.Position,
+      CreationObject.Icon,
     ];
 
     return await this.SqlClient.Create(sql, params);
   }
 
-  async Update(Id, UpdateValues) {
-    const UpdateQuery = `
+  async Update(id, updateValues) {
+    const updateQuery = `
       UPDATE Widgets
       SET Title = ?,
-      DashboardId = ?,
-      Range = ?,
-      Frequence = ?,
-      ISACTIVE = ?,
-      Position = ?
+      Position = ?,
+      Icon = ?
       WHERE WidgetId = ?;
     `;
 
     const params = [
-      UpdateValues.Title,
-      UpdateValues.DashboardId,
-      UpdateValues.Range,
-      UpdateValues.Frequence,
-      UpdateValues.ISACTIVE,
-      UpdateValues.Position,
-      Id,
+      updateValues.Title,
+      updateValues.Position,
+      updateValues.Icon,
+      id,
     ];
-    return await this.SqlClient.Update(UpdateQuery, params);
+    return await this.SqlClient.Update(updateQuery, params);
   }
 
   //Based on WidgetId, it will delete a widget.
@@ -100,17 +92,16 @@ class WidgetService {
     const Query = `
       SELECT json_object(
         'WidgetId', widgets.WidgetId,
-        'DashboardId', widgets.DashboardId,
         'Title', widgets.Title,
-        'Range', Widgets.Range,
-        'Frequence', Widgets.Frequence,
-        'IsActive', Widgets.ISACTIVE,
-        'Position', Widgets.Position,
+        'Position', widgets.Position,
+        'Icon', widgets.Icon,
         'Graphs', json_group_array(
           json_object(
-            'Name', Graphs.Name,
-            'Measurement', Graphs.Measurement,
+            'GraphId', Graphs.GraphId,
+            'WidgetId', Graphs.WidgetId,
             'Type', Graphs.Type,
+            'Query', Graphs.Query,
+            'Interval', Graphs.Interval,
             'Color', Graphs.Color
           )
         )
