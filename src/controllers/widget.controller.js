@@ -148,15 +148,23 @@ io.on("connection", (client) => {
       `${client.id.substr(0, 2)} subscribed to graph ${data.graphId}`
     );
     // let oldResult;
-    const interval = await GraphsService.GetOne(data.graphId).interval;
+    const placeholderResult = await GraphsService.GetOne(data.graphId);
+
+    //first emit
+    let influxResult = await influxdbService.callFluxQuery(
+      placeholderResult.Query
+    );
+    client.emit(`pollWidget(${data.graphId})`, influxResult);
+
+    //emits after interval time
     client.interval = setInterval(async () => {
       const result = await GraphsService.GetOne(data.graphId);
 
-      // console.log(`poll(${data.graphId}) contains:\n${JSON.stringify(result)}`);
+      console.log(`poll(${data.graphId}) contains:\n${JSON.stringify(result)}`);
 
-      let influxResult = await influxdbService.callFluxQuery(result.Query);
+      influxResult = await influxdbService.callFluxQuery(result.Query);
       client.emit(`pollWidget(${data.graphId})`, influxResult);
-    }, interval * 1000);
+    }, placeholderResult.Interval * 1000);
   });
   client.on("disconnect", () => {
     console.log(`client ${client.id.substr(0, 2)} disconnected`);
