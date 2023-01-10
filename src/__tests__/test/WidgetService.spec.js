@@ -12,21 +12,21 @@ describe("Test widget CRUD operations", () => {
     Database.serialize(() => {
       SqlDb.setupTables();
       Database.run(
-        "REPLACE INTO Widgets(WidgetId, DashboardId, Title, Range, Frequence, ISACTIVE, Position) VALUES(1, 0, 'Widget voor gasverbruik', '24h', 3600, 1, 1);"
+        "REPLACE INTO Widgets(WidgetId, Title, Position, Icon) VALUES(1, 'Widget voor gasverbruik', 1, 'IconURL');"
       );
       Database.run(
-        "REPLACE INTO Widgets(WidgetId, DashboardId, Title, Range, Frequence, ISACTIVE, Position) VALUES(2, 0, 'Widget voor gasverbruik', '24h', 3600, 1, 1);"
-      );
-
-      Database.run(
-        "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type, Color) VALUES(1, 'Voorbeeld', 'kwh', 'lijn', '#000001')"
-      );
-      Database.run(
-        "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type, Color) VALUES(1, 'Voorbeeld', 'kwh', 'lijn', '#000001')"
+        "REPLACE INTO Widgets(WidgetId, Title, Position, Icon) VALUES(2, 'Widget voor gasverbruik', 2, 'IconURL');"
       );
 
       Database.run(
-        "REPLACE INTO Graphs (WidgetId, Name, Measurement, Type, Color) VALUES(2, 'Voorbeeld', 'kwh', 'lijn', '#000001')"
+        "REPLACE INTO Graphs (WidgetId, Type, Query, Interval, Color) VALUES(1, 'bar', 'SELECT FROM', 5, '#000001')"
+      );
+      Database.run(
+        "REPLACE INTO Graphs (WidgetId, Type, Query, Interval, Color) VALUES(1, 'line', 'SELECT FROM', 10, '#000001')"
+      );
+
+      Database.run(
+        "REPLACE INTO Graphs (WidgetId, Type, Query, Interval, Color) VALUES(2, 'bar', 'SELECT FROM', 30, '#000001')"
       );
     });
   });
@@ -35,11 +35,8 @@ describe("Test widget CRUD operations", () => {
     test("Create widget", async () => {
       const createBody = {
         Title: "Nieuwe widget",
-        DashboardId: 0,
-        Range: "16h",
-        Frequence: 40000,
-        ISACTIVE: 1,
-        Position: 1,
+        Position: 0,
+        Icon: "Icon"
       };
 
       const result = await widgetService.Create(createBody);
@@ -52,11 +49,8 @@ describe("Test widget CRUD operations", () => {
     test("Update widget", async () => {
       const updateBody = {
         Title: "Gewijzigde widget",
-        DashboardId: 0,
-        Frequence: 3000,
-        Range: "48h",
-        ISACTIVE: 1,
-        Position: 1,
+        Position: 10,
+        Icon: "Gewijzigde icon"
       };
 
       const result = await widgetService.Update(1, updateBody);
@@ -64,8 +58,8 @@ describe("Test widget CRUD operations", () => {
 
       expect(result).toEqual(true);
       expect(Check.Title).toEqual("Gewijzigde widget");
-      expect(Check.Range).toEqual("48h");
-      expect(Check.Frequence).toEqual(3000);
+      expect(Check.Position).toEqual(10);
+      expect(Check.Icon).toEqual("Gewijzigde icon");
     });
   });
 
@@ -75,30 +69,26 @@ describe("Test widget CRUD operations", () => {
 
       const Check = await widgetService.GetOne(widgetId);
 
-      expect(Check.Title).toEqual("Widget voor gasverbruik");
-      expect(Check.Range).toEqual("24h");
       expect(Check.WidgetId).toEqual(1);
-      expect(Check.Frequence).toEqual(3600);
-      expect(Check.IsActive).toEqual(false);
+      expect(Check.Title).toEqual("Widget voor gasverbruik");
       expect(Check.Position).toEqual(1);
+      expect(Check.Icon).toEqual("IconURL");
       expect(Check.Graphs).toEqual([
         {
-          Measurement: "m3",
-          Name: "Een grafiek over gasgeneratie",
-          Type: null,
+          GraphId: 1,
+          WidgetId: 1,
+          Interval: 5,
+          Type: "bar",
+          Query: "SELECT FROM",
           Color: "#000001",
-          Measurement: "kwh",
-          Name: "Voorbeeld",
-          Type: "lijn",
         },
         {
-          Measurement: "m3",
-          Name: "Een grafiek over gasverbruik",
-          Type: null,
+          GraphId: 2,
+          WidgetId: 1,
+          Interval: 10,
+          Type: "line",
+          Query: "SELECT FROM",
           Color: "#000001",
-          Measurement: "kwh",
-          Name: "Voorbeeld",
-          Type: "lijn",
         },
       ]);
     });
@@ -109,56 +99,44 @@ describe("Test widget CRUD operations", () => {
       expect(Check.length).toEqual(2);
       expect(Check).toEqual([
         {
-          DashboardId: 0,
-          Frequence: 3600,
+          WidgetId: 1,
+          Title: "Widget voor gasverbruik",
+          Position: 1,
+          Icon: "IconURL",
           Graphs: [
             {
-              Measurement: "m3",
-              Name: "Een grafiek over gasgeneratie",
-              Type: null,
+              GraphId: 1,
+              WidgetId: 1,
+              Interval: 5,
+              Type: "bar",
+              Query: "SELECT FROM",
               Color: "#000001",
-              Measurement: "kwh",
-              Name: "Voorbeeld",
-              Type: "lijn",
             },
             {
-              Measurement: "m3",
-              Name: "Een grafiek over gasverbruik",
-              Type: null,
+              GraphId: 2,
+              WidgetId: 1,
+              Interval: 10,
+              Type: "line",
+              Query: "SELECT FROM",
               Color: "#000001",
-              Measurement: "kwh",
-              Name: "Voorbeeld",
-              Type: "lijn",
             },
           ],
-
-          IsActive: false,
-          Position: 1,
-
-          Range: "24h",
-          Title: "Widget voor gasverbruik",
-          WidgetId: 1,
         },
         {
-          DashboardId: 0,
-          Frequence: 3600,
+          WidgetId: 2,
+          Title: "Widget voor gasverbruik",
+          Position: 2,
+          Icon: "IconURL",
           Graphs: [
             {
-              Measurement: "m3",
-              Name: "Een grafiek over windgeneratie",
-              Type: null,
+              GraphId: 3,
+              WidgetId: 2,
+              Interval: 30,
+              Type: "bar",
+              Query: "SELECT FROM",
               Color: "#000001",
-              Measurement: "kwh",
-              Name: "Voorbeeld",
-              Type: "lijn",
             },
           ],
-
-          IsActive: false,
-          Position: 1,
-          Range: "24h",
-          Title: "Widget voor gasverbruik",
-          WidgetId: 2,
         },
       ]);
     });

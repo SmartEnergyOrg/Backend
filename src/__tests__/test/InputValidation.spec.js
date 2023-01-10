@@ -4,6 +4,20 @@ const {
   CheckGraphInput,
 } = require("../../services/input-validation.service");
 
+//Valid Models
+const validGraph = {
+  Type: "bar",
+  Query: "FLUXQUERY",
+  Interval: 30,
+  Color: "#000000"
+}
+
+const validWidget = {
+  Title: "Nieuwe widget",
+  Icon: "IconURL",
+  Position: 1,
+}
+
 describe("Test inputvalidation of entities", () => {
   describe("Test if fields of widget is correct", () => {
     test("No Title", () => {
@@ -44,29 +58,10 @@ describe("Test inputvalidation of entities", () => {
       );
     });
 
-    test("Must have ISACTIVE", () => {
-      const Widget = {
-        Title: "Nothing",
-        Range: "Range",
-        Frequence: 400,
-        Position: 1,
-      };
-      const list = [{ Obj: 1 }];
-      expect(() => CheckWidgetInput(Widget, list, Widget.ISACTIVE)).toThrow(
-        AssertionError
-      );
-    });
-
     test("Has correct input", () => {
-      const Widget = {
-        Title: "Nothing",
-        Range: 1,
-        Frequence: 400,
-        Position: 1,
-        ISACTIVE: 1,
-      };
-      const list = [{ Obj: 1 }];
-      expect(CheckWidgetInput(Widget, list, Widget.ISACTIVE)).toEqual(true);
+      const Widget = validWidget;
+      const list = [validGraph];
+      expect(CheckWidgetInput(Widget, list)).toEqual(true);
     });
   });
 
@@ -92,13 +87,8 @@ describe("Test inputvalidation of entities", () => {
     });
 
     test("Complete list", () => {
-      const Widget = {
-        Measurement: "Nothing",
-        Name: "Range",
-        Type: "Bar",
-        Color: "#000000",
-      };
-      expect(CheckGraphInput(Widget)).toEqual(true);
+      const graph = validGraph;
+      expect(CheckGraphInput(graph)).toEqual(true);
     });
   });
 });
