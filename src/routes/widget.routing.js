@@ -21,7 +21,4 @@ router.put(
 router.delete("/:id/graphs/:graphId", GraphController.Delete);
 router.post("/:id/graphs", GraphController.Validate, GraphController.Create);
 
-//Widget poll.
-router.get("/poll/:id", widgetController.Poll);
-
 module.exports = router;
