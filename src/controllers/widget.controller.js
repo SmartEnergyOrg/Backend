@@ -165,50 +165,6 @@ io.on("connection", (client) => {
 });
 server.listen(9400);
 
-// // poll widget
-// const Poll = async (req, res) => {
-//   try {
-//     // check if id exists
-//     if (isNaN(req.params.id)) {
-//       res.status(400).json({ message: "Id is missing, or is not a number." });
-//       return;
-//     }
-//
-//     const widget = await widgetService.GetOne(req.params.id);
-//     if (widget == null) {
-//       res.status(400).json({
-//         message: `Widget with id: ${req.params.id} could not be found.`,
-//       });
-//       return;
-//     }
-//
-//     //TODO remove this when the type of Range is back to string.
-//     //This also includes a default for steps, this can still be overwritten with query params
-//     {
-//       widget.Range = "24h";
-//       widget.Steps = "30m";
-//     }
-//
-//     //Handle query overrides
-//     {
-//       if (typeof req.query.range == "string" && req.query.range.length > 0) {
-//         //Custom range is defined
-//         widget.Range = req.query.range;
-//       }
-//
-//       if (typeof req.query.steps == "string" && req.query.steps.length > 0) {
-//         //Custom steps is defined
-//         widget.Steps = req.query.steps;
-//       }
-//     }
-//
-//     const influxdbResponse = await influxdbService.getDataByWidget(widget);
-//     res.status(200).json(influxdbResponse);
-//   } catch (err) {
-//     res.status(500).json({ message: "Something unexpected happened!", err });
-//   }
-// };
-
 module.exports = {
   validate,
   GetAll,
@@ -216,5 +172,4 @@ module.exports = {
   Create,
   Update,
   Delete,
-  // Poll,
 };
