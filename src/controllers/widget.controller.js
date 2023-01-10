@@ -142,6 +142,7 @@ const Update = async (req, res) => {
 
 io.on("connection", (client) => {
   console.log(`user ${client.id.substr(0, 2)} connected`);
+  client.interval = [];
 
   client.on("subscribe", async (data) => {
     console.log(
@@ -157,18 +158,20 @@ io.on("connection", (client) => {
     client.emit(`pollWidget(${data.graphId})`, influxResult);
 
     //emits after interval time
-    client.interval = setInterval(async () => {
+    client.interval.push(setInterval(async () => {
       const result = await GraphsService.GetOne(data.graphId);
 
       console.log(`poll(${data.graphId}) contains:\n${JSON.stringify(result)}`);
 
       influxResult = await influxdbService.callFluxQuery(result.Query);
       client.emit(`pollWidget(${data.graphId})`, influxResult);
-    }, placeholderResult.Interval * 1000);
+    }, Math.max(placeholderResult.Interval, 1) * 1000));
   });
   client.on("disconnect", () => {
     console.log(`client ${client.id.substr(0, 2)} disconnected`);
-    clearInterval(client.interval);
+    if(client.interval != null){
+      client.interval.forEach(e => clearInterval(e));
+    }
   });
 });
 server.listen(9400);
