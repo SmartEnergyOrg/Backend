@@ -143,27 +143,18 @@ const Update = async (req, res) => {
 io.on("connection", (client) => {
   console.log(`user ${client.id.substr(0, 2)} connected`);
 
-  client.on("subscribe", (data) => {
+  client.on("subscribe", async (data) => {
     console.log(
       `${client.id.substr(0, 2)} subscribed to graph ${data.graphId}`
     );
     // let oldResult;
-    // const interval = await GraphsService.GetOne(data.graphId).interval; // ???
-    const interval = 5;
+    const interval = await GraphsService.GetOne(data.graphId).interval;
     client.interval = setInterval(async () => {
       const result = await GraphsService.GetOne(data.graphId);
 
-      console.log(`poll(${data.graphId}) contains:\n${JSON.stringify(result)}`);
+      // console.log(`poll(${data.graphId}) contains:\n${JSON.stringify(result)}`);
 
-      // let influxResult = influxdbService.callFluxQuery(result.Query);
-      let influxResult =
-        await influxdbService.callFluxQuery(`from(bucket: "Zilverhof")
-  |> range(start: -6h)
-  |> filter(fn: (r) => r["_measurement"] == "Temperature")
-  |> filter(fn: (r) => r["_field"] == "value")
-  |> filter(fn: (r) => r["idx"] == "1115")
-  |> filter(fn: (r) => r["name"] == "Buitentemperatuur")
-  |> yield(name: "mean")`);
+      let influxResult = await influxdbService.callFluxQuery(result.Query);
       client.emit(`pollWidget(${data.graphId})`, influxResult);
     }, interval * 1000);
   });
@@ -174,49 +165,49 @@ io.on("connection", (client) => {
 });
 server.listen(9400);
 
-// poll widget
-const Poll = async (req, res) => {
-  try {
-    // check if id exists
-    if (isNaN(req.params.id)) {
-      res.status(400).json({ message: "Id is missing, or is not a number." });
-      return;
-    }
-
-    const widget = await widgetService.GetOne(req.params.id);
-    if (widget == null) {
-      res.status(400).json({
-        message: `Widget with id: ${req.params.id} could not be found.`,
-      });
-      return;
-    }
-
-    //TODO remove this when the type of Range is back to string.
-    //This also includes a default for steps, this can still be overwritten with query params
-    {
-      widget.Range = "24h";
-      widget.Steps = "30m";
-    }
-
-    //Handle query overrides
-    {
-      if (typeof req.query.range == "string" && req.query.range.length > 0) {
-        //Custom range is defined
-        widget.Range = req.query.range;
-      }
-
-      if (typeof req.query.steps == "string" && req.query.steps.length > 0) {
-        //Custom steps is defined
-        widget.Steps = req.query.steps;
-      }
-    }
-
-    const influxdbResponse = await influxdbService.getDataByWidget(widget);
-    res.status(200).json(influxdbResponse);
-  } catch (err) {
-    res.status(500).json({ message: "Something unexpected happened!", err });
-  }
-};
+// // poll widget
+// const Poll = async (req, res) => {
+//   try {
+//     // check if id exists
+//     if (isNaN(req.params.id)) {
+//       res.status(400).json({ message: "Id is missing, or is not a number." });
+//       return;
+//     }
+//
+//     const widget = await widgetService.GetOne(req.params.id);
+//     if (widget == null) {
+//       res.status(400).json({
+//         message: `Widget with id: ${req.params.id} could not be found.`,
+//       });
+//       return;
+//     }
+//
+//     //TODO remove this when the type of Range is back to string.
+//     //This also includes a default for steps, this can still be overwritten with query params
+//     {
+//       widget.Range = "24h";
+//       widget.Steps = "30m";
+//     }
+//
+//     //Handle query overrides
+//     {
+//       if (typeof req.query.range == "string" && req.query.range.length > 0) {
+//         //Custom range is defined
+//         widget.Range = req.query.range;
+//       }
+//
+//       if (typeof req.query.steps == "string" && req.query.steps.length > 0) {
+//         //Custom steps is defined
+//         widget.Steps = req.query.steps;
+//       }
+//     }
+//
+//     const influxdbResponse = await influxdbService.getDataByWidget(widget);
+//     res.status(200).json(influxdbResponse);
+//   } catch (err) {
+//     res.status(500).json({ message: "Something unexpected happened!", err });
+//   }
+// };
 
 module.exports = {
   validate,
@@ -225,5 +216,5 @@ module.exports = {
   Create,
   Update,
   Delete,
-  Poll,
+  // Poll,
 };
