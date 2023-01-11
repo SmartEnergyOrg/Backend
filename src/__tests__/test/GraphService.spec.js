@@ -1,4 +1,4 @@
-const { SqliteDataContext } = require("../../db/sqllite.client");
+const { SqliteDataContext } = require("../../db/sqlite.client");
 const GraphConfigService = require("../../services/graph.service");
 
 describe("Test graph retrieval", () => {
@@ -106,7 +106,7 @@ describe("Test graph retrieval", () => {
         Type: "cirkel",
         Query: "ReplacedQuery",
         Interval: 100,
-        Color: "#000000"
+        Color: "#000000",
       };
       const deleteResult = await GraphService.Replace(25, 1, replaceBody);
 
@@ -120,7 +120,7 @@ describe("Test graph retrieval", () => {
         Type: "Circle",
         Query: "Nieuwe Query",
         Interval: 200,
-        Color: "NEWCOLOR"
+        Color: "NEWCOLOR",
       };
       const Id = 26;
       await GraphService.Update(Id, UpdateBody);
@@ -140,7 +140,7 @@ describe("Test graph retrieval", () => {
         Type: "line",
         Query: "NEW SELECT",
         Interval: 300,
-        Color: "#000003"
+        Color: "#000003",
       };
       const WidgetId = 2;
       const createResult = await GraphService.Create(WidgetId, CreationBody);
