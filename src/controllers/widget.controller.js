@@ -26,9 +26,8 @@ const validate = async (req, res, next) => {
   try {
     const WidgetBody = req.body.Widget;
     const GraphList = req.body.Graphs;
-    const ISACTIVE = req.body.Widget.ISACTIVE || 1;
 
-    CheckWidgetInput(WidgetBody, GraphList, ISACTIVE);
+    CheckWidgetInput(WidgetBody, GraphList);
 
     GraphList.forEach((graph) => {
       CheckGraphInput(graph);
@@ -36,7 +35,7 @@ const validate = async (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(401).json({ message: "Input failure", result: error.message });
+    res.status(400).json({ message: "Input failure", result: error.message });
   }
 };
 
