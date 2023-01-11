@@ -157,14 +157,23 @@ io.on("connection", (client) => {
     );
     client.emit(`pollWidget(${data.graphId})`, influxResult);
 
+    let oldInfluxResult;
+
     //emits after interval time
     client.interval.push(setInterval(async () => {
       const result = await GraphsService.GetOne(data.graphId);
 
-      console.log(`poll(${data.graphId}) contains:\n${JSON.stringify(result)}`);
+      // console.log(`poll(${data.graphId}) contains:\n${JSON.stringify(result)}`);
 
+      //
       influxResult = await influxdbService.callFluxQuery(result.Query);
-      client.emit(`pollWidget(${data.graphId})`, influxResult);
+      
+      // sends only new data
+      if (influxResult !== oldInfluxResult) {
+        client.emit(`pollWidget(${data.graphId})`, influxResult);
+      }
+
+      oldInfluxResult = influxResult;
     }, Math.max(placeholderResult.Interval, 1) * 1000));
   });
   client.on("disconnect", () => {
