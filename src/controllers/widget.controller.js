@@ -160,26 +160,28 @@ io.on("connection", (client) => {
     let oldInfluxResult;
 
     //emits after interval time
-    client.interval.push(setInterval(async () => {
-      const result = await GraphsService.GetOne(data.graphId);
+    client.interval.push(
+      setInterval(async () => {
+        const result = await GraphsService.GetOne(data.graphId);
 
-      // console.log(`poll(${data.graphId}) contains:\n${JSON.stringify(result)}`);
+        influxResult = await influxdbService.callFluxQuery(result.Query);
 
-      //
-      influxResult = await influxdbService.callFluxQuery(result.Query);
-      
-      // sends only new data
-      if (influxResult !== oldInfluxResult) {
-        client.emit(`pollWidget(${data.graphId})`, influxResult);
-      }
+        // sends only new data by checking if latest _time is equal to already received _time
+        if (
+          oldInfluxResult !== undefined &&
+          influxResult[0]._time !== oldInfluxResult[0]._time
+        ) {
+          client.emit(`pollWidget(${data.graphId})`, influxResult);
+        }
 
-      oldInfluxResult = influxResult;
-    }, Math.max(placeholderResult.Interval, 1) * 1000));
+        oldInfluxResult = influxResult;
+      }, Math.max(placeholderResult.Interval, 1) * 1000)
+    );
   });
   client.on("disconnect", () => {
     console.log(`client ${client.id.substr(0, 2)} disconnected`);
-    if(client.interval != null){
-      client.interval.forEach(e => clearInterval(e));
+    if (client.interval != null) {
+      client.interval.forEach((e) => clearInterval(e));
     }
   });
 });
