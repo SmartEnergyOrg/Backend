@@ -13,7 +13,7 @@ services:
       - "12345:3333"
     restart: unless-stopped
     environment:
-      - INFLUXDB_HOST=http://influx
+      - INFLUXDB_HOST=http://influx:8086
     depends_on:
       - influxdb
 
