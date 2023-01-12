@@ -174,7 +174,7 @@ io.on("connection", (client) => {
         }
 
         oldInfluxResult = influxResult;
-      }, Math.max(placeholderResult.Interval, 1) * 1000)
+      }, Math.max(placeholderResult.Interval, 10) * 1000)
     );
   });
   client.on("disconnect", () => {
