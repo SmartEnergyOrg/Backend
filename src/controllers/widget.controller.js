@@ -150,32 +150,34 @@ io.on("connection", (client) => {
     // let oldResult;
     const placeholderResult = await GraphsService.GetOne(data.graphId);
 
-    //first emit
-    let influxResult = await influxdbService.callFluxQuery(
-      placeholderResult.Query
-    );
-    client.emit(`pollWidget(${data.graphId})`, influxResult);
+    if (placeholderResult && placeholderResult.Query) {
+      //first emit
+      let influxResult = await influxdbService.callFluxQuery(
+        placeholderResult.Query
+      );
+      client.emit(`pollWidget(${data.graphId})`, influxResult);
 
-    let oldInfluxResult;
+      let oldInfluxResult;
 
-    //emits after interval time
-    client.interval.push(
-      setInterval(async () => {
-        const result = await GraphsService.GetOne(data.graphId);
+      //emits after interval time
+      client.interval.push(
+        setInterval(async () => {
+          const result = await GraphsService.GetOne(data.graphId);
 
-        influxResult = await influxdbService.callFluxQuery(result.Query);
+          influxResult = await influxdbService.callFluxQuery(result.Query);
 
-        // sends only new data by checking if latest _time is equal to already received _time
-        if (
-          oldInfluxResult !== undefined &&
-          influxResult[0]._time !== oldInfluxResult[0]._time
-        ) {
-          client.emit(`pollWidget(${data.graphId})`, influxResult);
-        }
+          // sends only new data by checking if latest _time is equal to already received _time
+          if (
+            oldInfluxResult !== undefined &&
+            influxResult[0]._time !== oldInfluxResult[0]._time
+          ) {
+            client.emit(`pollWidget(${data.graphId})`, influxResult);
+          }
 
-        oldInfluxResult = influxResult;
-      }, Math.max(placeholderResult.Interval, 10) * 1000)
-    );
+          oldInfluxResult = influxResult;
+        }, Math.max(placeholderResult.Interval, 10) * 1000)
+      );
+    }
   });
   client.on("disconnect", () => {
     console.log(`client ${client.id.substr(0, 2)} disconnected`);
