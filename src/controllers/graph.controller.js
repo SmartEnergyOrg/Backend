@@ -16,7 +16,7 @@ const Validate = async (req, res, next) => {
     CheckGraphInput(graph);
     next();
   } catch (error) {
-    res.status(401).json({ message: "Input failure", result: error.message });
+    res.status(400).json({ message: "Input failure", result: error.message });
   }
 };
 
@@ -27,14 +27,14 @@ const GetAll = async (req, res) => {
 
     const Graph = await GraphsService.GetAll(WidgetId);
 
-    res.status(201).json({
-      message: "Retrieval all graphs succesful",
+    res.status(200).json({
+      message: "Successfully retrieved all graphs",
       result: Graph,
       succeeded: true,
     });
   } catch (error) {
-    res.status(400).json({
-      message: "Alle grafiek zijn niet opgehaald",
+    res.status(500).json({
+      message: "Could not retrieve all graphs",
       result: error,
       succeeded: false,
     });
@@ -47,17 +47,17 @@ const GetOne = async (req, res) => {
     const Id = req.params.graphId;
 
     if (isNaN(Id)) {
-      throw new Error("Id moet een nummer zijn");
+      throw new Error("Id has to be a number");
     }
 
     const Graph = await GraphsService.GetOne(Id);
 
     res
-      .status(201)
+      .status(200)
       .json({ message: "Graph retrieved", result: Graph, succeeded: true });
   } catch (error) {
-    res.status(400).json({
-      message: "Grafiek ophalen is mislukt",
+    res.status(404).json({
+      message: "This graph was not found",
       result: error,
       succeeded: false,
     });
@@ -73,13 +73,13 @@ const Create = async (req, res) => {
     const Graph = await GraphsService.Create(widgetId, WidgetBody);
 
     res.status(201).json({
-      message: "Graph succesfully made",
+      message: "Graph successfully made",
       result: Graph,
       succeeded: true,
     });
   } catch (error) {
-    res.status(401).json({
-      message: "Aanmaken van een grafiek is niet voltooid",
+    res.status(500).json({
+      message: "Creation of graph failed",
       result: error,
       succeeded: false,
     });
@@ -98,8 +98,8 @@ const Update = async (req, res) => {
       .status(201)
       .json({ message: "Graph is updated", result: Graph, succeeded: true });
   } catch (error) {
-    res.status(401).json({
-      message: "Wijzigen van een grafiek is niet voltooid",
+    res.status(500).json({
+      message: "Could not make changes to graph",
       result: error,
       succeeded: false,
     });
@@ -114,13 +114,13 @@ const Delete = async (req, res) => {
     //Updates graph.
     const Graph = await GraphsService.Delete(Id);
 
-    res.status(201).json({
-      message: "Graph is succesfully removed",
+    res.status(200).json({
+      message: "Graph is successfully removed",
       result: Graph,
       succeeded: true,
     });
   } catch (error) {
-    res.status(401).json({
+    res.status(500).json({
       message: "Deletion of graph did not succeed.",
       result: error,
       succeeded: false,

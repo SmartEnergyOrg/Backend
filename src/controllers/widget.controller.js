@@ -52,7 +52,7 @@ const GetAll = async (req, res) => {
       succeeded: true,
     });
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
       message: "Widgets are not retrieved",
       result: error,
       succeeded: false,
@@ -70,7 +70,7 @@ const GetOne = async (req, res) => {
     res.status(201).json({ message: "Search result", result: Widget });
   } catch (error) {
     res
-      .status(401)
+      .status(404)
       .json({ message: "Search has failed", result: false, error });
   }
 };
@@ -92,7 +92,7 @@ const Create = async (req, res) => {
       succeeded: true,
     });
   } catch (error) {
-    res.status(404).json({ message: error, succeeded: false });
+    res.status(400).json({ message: error, succeeded: false });
   }
 };
 
@@ -103,11 +103,11 @@ const Delete = async (req, res) => {
     const result = await widgetService.Delete(WidgetId);
 
     res
-      .status(200)
+      .status(204)
       .json({ message: "Deletion has succeeded result", result: true });
   } catch (error) {
     res
-      .status(401)
+      .status(400)
       .json({ message: "Deletion has failed", result: false, error });
   }
 };
@@ -131,10 +131,10 @@ const Update = async (req, res) => {
       GraphsService.Replace(e.GraphId, WidgetId, e);
     });
 
-    res.status(201).json({ message: "Update is completed", result: true });
+    res.status(204).json({ message: "Update is completed", result: true });
   } catch (error) {
     res
-      .status(401)
+      .status(400)
       .json({ message: "Update has failed", result: false, error });
   }
 };
@@ -174,7 +174,7 @@ io.on("connection", (client) => {
         }
 
         oldInfluxResult = influxResult;
-      }, Math.max(placeholderResult.Interval, 1) * 1000)
+      }, Math.max(placeholderResult.Interval, 10) * 1000)
     );
   });
   client.on("disconnect", () => {

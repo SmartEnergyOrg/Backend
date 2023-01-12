@@ -16,10 +16,10 @@ const GetAll = async (req, res) => {
     const result = await dashboardService.GetAll();
 
     console.log("All dashboards ended");
-    res.status(200).json({ message: "Everything is alright", result: result });
+    res.status(200).json({ message: "Retrieval successful", result: result });
   } catch (error) {
     res
-      .status(400)
+      .status(500)
       .json({ message: "Retrieval of dashboard has failed", result: false });
   }
 };
@@ -35,9 +35,9 @@ const GetOne = async (req, res) => {
       throw new Error("Dashboard not found");
     }
 
-    res.status(200).json({ message: "Everything is alright", result: result });
+    res.status(200).json({ message: "Retrieval successful", result: result });
   } catch (error) {
-    res.status(400).json({
+    res.status(404).json({
       message: "Dashboard search failed",
       result: false,
       errorMessage: error,
@@ -58,9 +58,11 @@ const Update = async (req, res) => {
       DashboardBody
     );
 
-    res.status(200).json({ message: "Everything is alright", result: result });
+    res
+      .status(200)
+      .json({ message: "Execution was successful", result: result });
   } catch (error) {
-    res.status(400).json({ message: "Dashboard update failed", result: false });
+    res.status(500).json({ message: "Dashboard update failed", result: false });
   }
 };
 
@@ -70,10 +72,12 @@ const Create = async (req, res) => {
     const DashboardBody = req.body.UserId; // req.headers.UserId
 
     const result = await dashboardService.Create(DashboardBody);
-
-    res.status(200).json({ message: "Everything is alright", result: result });
+    
+    res
+      .status(204)
+      .json({ message: "Execution was successful", result: result });
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
       message: "Dashboard creation failed",
       result: false,
       errorMessage: error,
@@ -89,9 +93,11 @@ const Delete = async (req, res) => {
 
     const result = await dashboardService.Delete(DashboardId);
 
-    res.status(200).json({ message: "Everything is alright", result: result });
+    res
+      .status(200)
+      .json({ message: "Execution was successful", result: result });
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
       message: "Dashboard deletion failed",
       result: false,
       errorMessage: error,
