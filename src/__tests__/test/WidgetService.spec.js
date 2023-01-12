@@ -1,4 +1,4 @@
-const { SqliteDataContext } = require("../../db/sqllite.client");
+const { SqliteDataContext } = require("../../db/sqlite.client");
 const WidgetService = require("../../services/widget.service");
 
 describe("Test widget CRUD operations", () => {
@@ -36,7 +36,7 @@ describe("Test widget CRUD operations", () => {
       const createBody = {
         Title: "Nieuwe widget",
         Position: 0,
-        Icon: "Icon"
+        Icon: "Icon",
       };
 
       const result = await widgetService.Create(createBody);
@@ -50,7 +50,7 @@ describe("Test widget CRUD operations", () => {
       const updateBody = {
         Title: "Gewijzigde widget",
         Position: 10,
-        Icon: "Gewijzigde icon"
+        Icon: "Gewijzigde icon",
       };
 
       const result = await widgetService.Update(1, updateBody);

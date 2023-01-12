@@ -1,4 +1,4 @@
-const { SqliteDataContext } = require("../../db/sqllite.client");
+const { SqliteDataContext } = require("../../db/sqlite.client");
 const DashboardConfigService = require("../../services/dashboard.service");
 
 describe("Test dashboard config service", () => {

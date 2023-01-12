@@ -1,5 +1,5 @@
 const { DatabaseInstance } = require("../db/InstanceOfDatabase");
-const { SqliteDataContext } = require("../db/sqllite.client");
+const { SqliteDataContext } = require("../db/sqlite.client");
 const DashboardService = require("../services/dashboard.service");
 
 // sqlite service
@@ -72,7 +72,7 @@ const Create = async (req, res) => {
     const DashboardBody = req.body.UserId; // req.headers.UserId
 
     const result = await dashboardService.Create(DashboardBody);
-
+    
     res
       .status(204)
       .json({ message: "Execution was successful", result: result });
