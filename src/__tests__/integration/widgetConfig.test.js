@@ -4,7 +4,7 @@ const server = require("../../../app");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
-const { SqliteDataContext } = require("../../db/sqllite.client");
+const { SqliteDataContext } = require("../../db/sqlite.client");
 const { before, after, beforeEach, afterEach } = require("mocha");
 const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
 
@@ -13,33 +13,32 @@ chai.use(chaiHttp);
 
 //Queries
 const WidgetInsert =
-  "REPLACE INTO Widgets(WidgetId, Title, Position, Icon) VALUES(1, 'Widget voor gasverbruik', 1, 'IconURL');"
+  "REPLACE INTO Widgets(WidgetId, Title, Position, Icon) VALUES(1, 'Widget voor gasverbruik', 1, 'IconURL');";
 const GraphInsert =
-  "REPLACE INTO Graphs (WidgetId, Type, Query, Interval, Color) VALUES(1, 'bar', 'SELECT FROM', 5, '#000001')"
+  "REPLACE INTO Graphs (WidgetId, Type, Query, Interval, Color) VALUES(1, 'bar', 'SELECT FROM', 5, '#000001')";
 const WidgetInsert2 =
-  "REPLACE INTO Widgets(WidgetId, Title, Position, Icon) VALUES(2, 'Widget voor gasverbruik', 2, 'IconURL');"
+  "REPLACE INTO Widgets(WidgetId, Title, Position, Icon) VALUES(2, 'Widget voor gasverbruik', 2, 'IconURL');";
 const GraphInsert2 =
-  "REPLACE INTO Graphs (WidgetId, Type, Query, Interval, Color) VALUES(2, 'bar', 'SELECT FROM', 30, '#000001')"
+  "REPLACE INTO Graphs (WidgetId, Type, Query, Interval, Color) VALUES(2, 'bar', 'SELECT FROM', 30, '#000001')";
 
 const UserInsert = `REPLACE INTO Users(UserId, FirstName, LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
 const deleteQueryUser = `DELETE FROM Users;`;
 const deleteQueryWidget = `DELETE FROM Widgets;`;
 const deleteGraph = "DELETE FROM Graphs";
 
-
 //Valid Models
 const validGraph = {
   Type: "bar",
   Query: "FLUXQUERY",
   Interval: 30,
-  Color: "#000000"
-}
+  Color: "#000000",
+};
 
 const validWidget = {
   Title: "Nieuwe widget",
   Icon: "IconURL",
   Position: 1,
-}
+};
 
 describe("CRUD Widgets", function () {
   let Datab;
@@ -88,9 +87,7 @@ describe("CRUD Widgets", function () {
             Icon: "IconURL",
             Position: 1,
           },
-          Graphs: [
-            validGraph
-          ],
+          Graphs: [validGraph],
         })
         .end((err, res) => {
           const response = res.body;
@@ -131,9 +128,7 @@ describe("CRUD Widgets", function () {
             Icon: "IconURL",
             Position: 1,
           },
-          Graphs: [
-            validGraph
-          ],
+          Graphs: [validGraph],
         })
         .end((err, res) => {
           const response = res.body;
@@ -272,9 +267,7 @@ describe("CRUD Widgets", function () {
         .post("/api/widgets")
         .send({
           Widget: validWidget,
-          Graphs: [
-            validGraph,
-          ],
+          Graphs: [validGraph],
         })
         .end((err, res) => {
           const response = res.body;

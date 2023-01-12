@@ -1,4 +1,4 @@
-const sqlLite = require("sqlite3").verbose();
+const sqlite = require("sqlite3").verbose();
 
 class SqliteDataContext {
   DataSQL;
@@ -7,11 +7,11 @@ class SqliteDataContext {
   //Connects app to a Sqlite database.
   constructor(DatabaseName) {
     console.log(`Database is connected to ${DatabaseName}. Welcome`);
-    this.DataSQL = new sqlLite.Database(DatabaseName, (err) => {
+    this.DataSQL = new sqlite.Database(DatabaseName, (err) => {
       if (err) {
         console.log("Database is not connected");
       } else {
-        console.log("Setup SQLLite database");
+        console.log("Setup SQLite database");
         this.setupTables();
       }
     });

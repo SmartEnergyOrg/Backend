@@ -1,5 +1,5 @@
 const { DatabaseInstance } = require("../db/InstanceOfDatabase");
-const { SqliteDataContext } = require("../db/sqllite.client");
+const { SqliteDataContext } = require("../db/sqlite.client");
 const DashboardService = require("../services/dashboard.service");
 
 // sqlite service
@@ -37,13 +37,11 @@ const GetOne = async (req, res) => {
 
     res.status(200).json({ message: "Everything is alright", result: result });
   } catch (error) {
-    res
-      .status(400)
-      .json({
-        message: "Dashboard search failed",
-        result: false,
-        errorMessage: error,
-      });
+    res.status(400).json({
+      message: "Dashboard search failed",
+      result: false,
+      errorMessage: error,
+    });
   }
 };
 
@@ -75,13 +73,11 @@ const Create = async (req, res) => {
 
     res.status(200).json({ message: "Everything is alright", result: result });
   } catch (error) {
-    res
-      .status(400)
-      .json({
-        message: "Dashboard creation failed",
-        result: false,
-        errorMessage: error,
-      });
+    res.status(400).json({
+      message: "Dashboard creation failed",
+      result: false,
+      errorMessage: error,
+    });
   }
 };
 
@@ -95,13 +91,11 @@ const Delete = async (req, res) => {
 
     res.status(200).json({ message: "Everything is alright", result: result });
   } catch (error) {
-    res
-      .status(400)
-      .json({
-        message: "Dashboard deletion failed",
-        result: false,
-        errorMessage: error,
-      });
+    res.status(400).json({
+      message: "Dashboard deletion failed",
+      result: false,
+      errorMessage: error,
+    });
   }
 };
 

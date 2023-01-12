@@ -1,4 +1,4 @@
-const { SqliteDataContext } = require("../db/sqllite.client");
+const { SqliteDataContext } = require("../db/sqlite.client");
 const WidgetService = require("../services/widget.service");
 const WidgetGraphService = require("../services/graph.service");
 const {

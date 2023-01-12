@@ -1,4 +1,4 @@
-const { SqliteDataContext } = require("./sqllite.client");
+const { SqliteDataContext } = require("./sqlite.client");
 
 var Single;
 function CreateDb() {
