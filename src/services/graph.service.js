@@ -61,22 +61,6 @@ class GraphConfigService {
     return await this.SqlClient.Delete(Query, datasourceId);
   }
 
-  //Deletes datasources when it does not feature in the current composition
-  //Example, when user does not want to use a certain datasource
-  async UpdateDelete(dataSourcesIdParams) {
-    try {
-      //Puts string array into a string seperated by comma's
-      const Values = String(dataSourcesIdParams);
-      //Update/Delete query if
-      const query = `DELETE FROM Graphs WHERE GraphId NOT IN (?)`;
-      const params = Values;
-
-      return await this.SqlClient.Delete(query, params);
-    } catch (error) {
-      return -1;
-    }
-  }
-
   async GetOne(graphId) {
     const sql = `SELECT * FROM Graphs WHERE GraphId = ?;`;
 
