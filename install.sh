@@ -51,7 +51,7 @@ apt-get install --assume-yes \
 
 # Add Docker's official GPG key:
 mkdir -p /etc/apt/keyrings
-if [ ! -f /etc/apt/keyrings/docker.gpg ]; then
+if [ -f /etc/apt/keyrings/docker.gpg ]; then
   rm /etc/apt/keyrings/docker.gpg
 fi
 curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
