@@ -5,7 +5,7 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-echo "this script has only been tested with debian, if you use a different distro you're on your own"
+echo "this script has only been tested with and was made for debian, if you use a different distro you're on your own"
 
 # https://docs.docker.com/engine/install/debian/
 apt-get remove docker docker-engine docker.io containerd runc -y
@@ -20,6 +20,7 @@ apt-get install --assume-yes \
 
 # Add Docker's official GPG key:
 mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
 # Use the following command to set up the repository:
 echo \
