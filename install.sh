@@ -5,11 +5,23 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+# check if the user has an editor
+echo "checking whether root has an editor"
+sleep 2
+if [[ -z "${EDITOR}" ]]; then
+  echo "root does not have an editor. either set the editor for the root user or restart the script using EDITOR=<your editor program> ./install.sh"
+  exit
+else
+  echo "editor found! editor is ${EDITOR}"
+fi
+
 # check if the .env file exists
 if [ ! -f ./.env ]; then
     echo "the .env file has not been created. Creating it for you..."
     cp sample.env .env
+    sleep 2
     echo "please edit the .env file so that it contains the correct values"
+    sleep 2
     echo "opening .env using ${EDITOR} in 3 seconds..."
     # give the user a moment just in case
     sleep 3
