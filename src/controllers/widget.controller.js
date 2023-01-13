@@ -185,9 +185,13 @@ io.on("connection", (client) => {
       let errorEventData = {
         eventName: "subscribe",
         clientData: data,
+        message: err.message,
         error: err
       }
 
+      console.log(
+        `${client.id.substr(0, 2)} subscribe event failed`
+      )
       client.emit("error", errorEventData);
     }
   });
