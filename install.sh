@@ -20,12 +20,12 @@ check_editor() {
 
 # check if the .env file exists
 if [ ! -f ./.env ]; then
+  check_editor
   echo "the .env file has not been created. Creating it for you..."
   cp sample.env .env
   sleep 2
   echo "please edit the .env file so that it contains the correct values"
   sleep 2
-  check_editor
   echo "opening .env using ${EDITOR} in 3 seconds..."
   # give the user a moment just in case
   sleep 3
