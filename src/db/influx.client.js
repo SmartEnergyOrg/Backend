@@ -5,7 +5,7 @@ const { InfluxDB } = require("@influxdata/influxdb-client");
 /** Environment variables **/
 const url = `${process.env.INFLUXDB_HOST || "http://localhost:8086"}`;
 const token = process.env.DOCKER_INFLUXDB_INIT_ADMIN_TOKEN;
-const org = "Sendlab";
+const org = process.env.INFLUXDB_ORG || "Sendlab";
 
 console.log(`influx url: ${url}`);
 console.log(`influx token: ${token}`);
