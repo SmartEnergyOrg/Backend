@@ -12,13 +12,13 @@ apt-get remove docker docker-engine docker.io containerd runc -y
 
 # Update the apt package index and install packages to allow apt to use a repository over HTTPS:
 apt-get update
-apt-get install \
+apt-get install --assume-yes \
     ca-certificates \
     curl \
     gnupg \
     lsb-release
 
-# Add Docker’s official GPG key:
+# Add Docker's official GPG key:
 mkdir -p /etc/apt/keyrings
 
 # Use the following command to set up the repository:
@@ -31,7 +31,7 @@ chmod a+r /etc/apt/keyrings/docker.gpg
 apt-get update
 
 # Install Docker Engine, containerd, and Docker Compose.
-apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+apt-get install --assume-yes docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 # run the project's container
 docker-compose build
