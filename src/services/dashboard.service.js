@@ -16,13 +16,13 @@ class DashboardService {
   async Update(UserId, DashboardId, UpdateValues) {
     //const sql = `UPDATE Dashboards SET ShowNavbar = ? WHERE UserId = ? AND DashboardId = ?;`
     const sql = `
-    UPDATE Dashboards
-    SET ShowNavbar = ?,
-    PeakTariffOn = ?,
-    ShowWeather = ?,
-    NormalTariff = ?,
-    PeakTariff = ?
-    WHERE DashboardId = ?;`;
+      UPDATE Dashboards
+      SET ShowNavbar   = ?,
+          PeakTariffOn = ?,
+          ShowWeather  = ?,
+          NormalTariff = ?,
+          PeakTariff   = ?
+      WHERE DashboardId = ?;`;
     const params = [
       UpdateValues.ShowNavbar,
       UpdateValues.PeakTariffOn,
@@ -40,10 +40,13 @@ class DashboardService {
     const params = [];
     //If a UserId is not present
     if (!UserId) {
-      Query = `SELECT * FROM Dashboards;`;
+      Query = `SELECT *
+               FROM Dashboards;`;
     } else {
       //Otherwise it will use a prepared statement.
-      Query = `SELECT * FROM Dashboards WHERE UserId = ?;`;
+      Query = `SELECT *
+               FROM Dashboards
+               WHERE UserId = ?;`;
       params.push(UserId);
     }
     //Perform query.
@@ -52,7 +55,9 @@ class DashboardService {
   }
 
   async GetOne(DashboardId) {
-    const sql = `SELECT * FROM Dashboards WHERE DashboardId = ?;`;
+    const sql = `SELECT *
+                 FROM Dashboards
+                 WHERE DashboardId = ?;`;
     const params = [DashboardId];
 
     return await this.SqlClient.GetOne(sql, params);
@@ -60,7 +65,10 @@ class DashboardService {
 
   //Deletes dashboard, except if the dashboardId is 0!
   async Delete(DashboardId) {
-    const sql = `DELETE FROM Dashboards WHERE DashboardId = ? AND DashboardId != 0;`;
+    const sql = `DELETE
+                 FROM Dashboards
+                 WHERE DashboardId = ?
+                   AND DashboardId != 0;`;
     return await this.SqlClient.Delete(sql, [DashboardId]);
   }
 }

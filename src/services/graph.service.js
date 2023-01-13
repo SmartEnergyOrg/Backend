@@ -5,6 +5,7 @@ class GraphConfigService {
   constructor(database) {
     this.SqlClient = database;
   }
+
   //Creates a graph entity
   async Create(widgetId, datasource) {
     try {
@@ -15,11 +16,12 @@ class GraphConfigService {
         datasource.Interval,
         datasource.Color,
       ];
-      const query = `INSERT INTO Graphs(WidgetId, Type, Query, Interval, Color) VALUES(?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO Graphs(WidgetId, Type, Query, Interval, Color)
+                     VALUES (?, ?, ?, ?, ?)`;
 
       const result = await this.SqlClient.Create(query, param);
 
-      return result != 0 ? result : null;
+      return result !== 0 ? result : null;
     } catch (error) {
       throw new Error("Creation mistake");
     }
@@ -35,15 +37,19 @@ class GraphConfigService {
       datasourceId,
     ];
     const query = `
-    UPDATE Graphs
-    SET Type = ?, Query = ?, Interval = ?, Color = ?
-    WHERE GraphId = ?;`;
+      UPDATE Graphs
+      SET Type     = ?,
+          Query    = ?,
+          Interval = ?,
+          Color    = ?
+      WHERE GraphId = ?;`;
 
     return await this.SqlClient.Update(query, param);
   }
 
   async Replace(graphId, widgetId, datasource) {
-    const sql = `REPLACE INTO Graphs(GraphId, WidgetId, Type, Query, Interval, Color) VALUES(?,?,?,?,?,?)`;
+    const sql = `REPLACE
+    INTO Graphs(GraphId, WidgetId, Type, Query, Interval, Color) VALUES(?,?,?,?,?,?)`;
     const param = [
       graphId,
       widgetId,
@@ -57,18 +63,24 @@ class GraphConfigService {
 
   //Chooses if it is to delete datasources or to change it to a single parameter.
   async Delete(datasourceId) {
-    const Query = `DELETE FROM Graphs WHERE GraphId = ?;`;
+    const Query = `DELETE
+                   FROM Graphs
+                   WHERE GraphId = ?;`;
     return await this.SqlClient.Delete(Query, datasourceId);
   }
 
   async GetOne(graphId) {
-    const sql = `SELECT * FROM Graphs WHERE GraphId = ?;`;
+    const sql = `SELECT *
+                 FROM Graphs
+                 WHERE GraphId = ?;`;
 
     return await this.SqlClient.GetOne(sql, [graphId]);
   }
 
   async GetAll(widgetId) {
-    const sql = `SELECT * FROM Graphs WHERE WidgetId = ?;`;
+    const sql = `SELECT *
+                 FROM Graphs
+                 WHERE WidgetId = ?;`;
 
     return await this.SqlClient.GetAll(sql, [widgetId]);
   }
