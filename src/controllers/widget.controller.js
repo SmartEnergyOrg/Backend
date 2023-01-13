@@ -121,14 +121,9 @@ const Update = async (req, res) => {
     // update widget
     await widgetService.Update(WidgetId, WidgetBody);
 
-    //Updates all graphsources in this table.
-    //Deletes all graphs not present in the object.
-    await GraphsService.UpdateDelete(GraphList.map((e) => e.GraphId));
-
-    // replaces graphs
-    await GraphList.forEach(async (e) => {
-      // update with new values
-      GraphsService.Replace(e.GraphId, WidgetId, e);
+    // replace old graphs with their updated versions
+    await GraphList.forEach((graph) => {
+      GraphsService.Replace(graph.GraphId, WidgetId, graph);
     });
 
     res.status(204).json({ message: "Update is completed", result: true });
