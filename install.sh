@@ -32,6 +32,9 @@ if [ ! -f ./.env ]; then
   ${EDITOR} .env
 fi
 
+echo "please make sure that the .env file contains the correct values"
+sleep 2
+
 echo "this script has only been tested with and was made for debian, if you use a different distro you're on your own"
 
 # https://docs.docker.com/engine/install/debian/
@@ -62,5 +65,6 @@ apt-get update
 apt-get install --assume-yes docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
 
 # run the project's container
+systemctl enable --now docker
 docker-compose build
 docker-compose up -d
