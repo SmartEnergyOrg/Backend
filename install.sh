@@ -36,6 +36,7 @@ echo "please make sure that the .env file contains the correct values"
 sleep 2
 
 echo "this script has only been tested with and was made for debian, if you use a different distro you're on your own"
+sleep 2
 
 # https://docs.docker.com/engine/install/debian/
 apt-get remove --assume-yes docker docker-engine docker.io containerd runc
