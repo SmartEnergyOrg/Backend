@@ -5,10 +5,21 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+# check if the .env file exists
+if [ ! -f ./.env ]; then
+    echo "the .env file has not been created. Creating it for you..."
+    cp sample.env .env
+    echo "please edit the .env file so that it contains the correct values"
+    echo "opening .env using ${EDITOR} in 3 seconds..."
+    # give the user a moment just in case
+    sleep 3
+    ${EDITOR} .env
+fi
+
 echo "this script has only been tested with and was made for debian, if you use a different distro you're on your own"
 
 # https://docs.docker.com/engine/install/debian/
-apt-get remove docker docker-engine docker.io containerd runc -y
+apt-get remove --assume-yes docker docker-engine docker.io containerd runc
 
 # Update the apt package index and install packages to allow apt to use a repository over HTTPS:
 apt-get update
@@ -32,7 +43,7 @@ chmod a+r /etc/apt/keyrings/docker.gpg
 apt-get update
 
 # Install Docker Engine, containerd, and Docker Compose.
-apt-get install --assume-yes docker-ce docker-ce-cli containerd.io docker-compose-plugin
+apt-get install --assume-yes docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
 
 # run the project's container
 docker-compose build
