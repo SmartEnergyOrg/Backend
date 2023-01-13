@@ -139,39 +139,55 @@ io.on("connection", (client) => {
   client.interval = [];
 
   client.on("subscribe", async (data) => {
-    console.log(
-      `${client.id.substr(0, 2)} subscribed to graph ${data.graphId}`
-    );
-    // let oldResult;
-    const placeholderResult = await GraphsService.GetOne(data.graphId);
-
-    if (placeholderResult && placeholderResult.Query) {
-      //first emit
-      let influxResult = await influxdbService.callFluxQuery(
-        placeholderResult.Query
+    try{
+      console.log(
+        `${client.id.substr(0, 2)} subscribed to graph ${data.graphId}`
       );
-      client.emit(`pollWidget(${data.graphId})`, influxResult);
 
-      let oldInfluxResult;
+      // let oldResult;
+      const placeholderResult = await GraphsService.GetOne(data.graphId);
 
-      //emits after interval time
-      client.interval.push(
-        setInterval(async () => {
-          const result = await GraphsService.GetOne(data.graphId);
+      if (placeholderResult && placeholderResult.Query) {
+        //first emit
+        let influxResult = await influxdbService.callFluxQuery(
+          placeholderResult.Query
+        );
+        client.emit(`pollWidget(${data.graphId})`, influxResult);
 
-          influxResult = await influxdbService.callFluxQuery(result.Query);
+        let oldInfluxResult;
 
-          // sends only new data by checking if latest _time is equal to already received _time
-          if (
-            oldInfluxResult !== undefined &&
-            influxResult[0]._time !== oldInfluxResult[0]._time
-          ) {
-            client.emit(`pollWidget(${data.graphId})`, influxResult);
-          }
+        //emits after interval time
+        client.interval.push(
+          setInterval(async () => {
+            const result = await GraphsService.GetOne(data.graphId);
 
-          oldInfluxResult = influxResult;
-        }, Math.max(placeholderResult.Interval, 10) * 1000)
-      );
+            influxResult = await influxdbService.callFluxQuery(result.Query);
+
+            // sends only new data by checking if latest _time is equal to already received _time
+            if (
+              oldInfluxResult !== undefined &&
+              influxResult[0]._time !== oldInfluxResult[0]._time
+            ) {
+              client.emit(`pollWidget(${data.graphId})`, influxResult);
+            }
+
+            oldInfluxResult = influxResult;
+          }, Math.max(placeholderResult.Interval, 10) * 1000)
+        );
+      }
+    }
+    catch(err){
+      let errorEventData = {
+        eventName: "subscribe",
+        clientData: data,
+        message: `${err.statusMessage}: ${err.message}`,
+        error: err
+      }
+
+      console.log(
+        `${client.id.substr(0, 2)} subscribe event failed`
+      )
+      client.emit("error", errorEventData);
     }
   });
   client.on("disconnect", () => {
