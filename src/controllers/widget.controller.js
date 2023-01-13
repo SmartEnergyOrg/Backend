@@ -185,7 +185,7 @@ io.on("connection", (client) => {
       let errorEventData = {
         eventName: "subscribe",
         clientData: data,
-        message: err.message,
+        message: `${err.statusMessage}: ${err.message}`,
         error: err
       }
 
