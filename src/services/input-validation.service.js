@@ -27,6 +27,18 @@ const Input = {
       throw error;
     }
   },
+
+  CheckWeatherInput(weatherConfig){
+    try {
+      assert(typeof weatherConfig.name == "string", "City needs to be filled in");
+      assert(typeof weatherConfig.country == "string", "Country needs to be filled in");
+      assert(typeof weatherConfig.lat == "number", "lattitude needs to be filled in");
+      assert(typeof weatherConfig.lon == "number", "Longtitude needs to be filled in");
+      return true;
+    } catch (error) {
+      throw error
+    }
+  }
 };
 
 module.exports = Input;
