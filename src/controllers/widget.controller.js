@@ -139,7 +139,7 @@ io.on("connection", (client) => {
   client.interval = [];
 
   client.on("subscribe", async (data) => {
-    try{
+    try {
       console.log(
         `${client.id.substr(0, 2)} subscribed to graph ${data.graphId}`
       );
@@ -157,36 +157,45 @@ io.on("connection", (client) => {
         let oldInfluxResult;
 
         //emits after interval time
-        client.interval.push(
-          setInterval(async () => {
-            const result = await GraphsService.GetOne(data.graphId);
+        let intervalId = setInterval(async () => {
+          const result = await GraphsService.GetOne(data.graphId);
 
-            influxResult = await influxdbService.callFluxQuery(result.Query);
+          influxResult = await influxdbService.callFluxQuery(result.Query);
 
+          // emit error if the result is empty or undefined
+          if (
+            typeof influxResult == "array" &&
+            typeof oldInfluxResult == "array" &&
+            influxResult.length > 0 &&
+            oldInfluxResult.length > 0
+          ) {
             // sends only new data by checking if latest _time is equal to already received _time
-            if (
-              oldInfluxResult !== undefined &&
-              influxResult[0]._time !== oldInfluxResult[0]._time
-            ) {
+            if (influxResult[0]._time !== oldInfluxResult[0]._time) {
               client.emit(`pollWidget(${data.graphId})`, influxResult);
             }
+          } else {
+            client.emit("error", {
+              eventName: "subscribe",
+              clientData: data,
+              message: "Bad Request: this query doesn't return any data",
+              error: "",
+            });
+            clearInterval(intervalId);
+          }
 
-            oldInfluxResult = influxResult;
-          }, Math.max(placeholderResult.Interval, 10) * 1000)
-        );
+          oldInfluxResult = influxResult;
+        }, Math.max(placeholderResult.Interval, 10) * 1000);
+        client.interval.push(intervalId);
       }
-    }
-    catch(err){
+    } catch (err) {
       let errorEventData = {
         eventName: "subscribe",
         clientData: data,
         message: `${err.statusMessage}: ${err.message}`,
-        error: err
-      }
+        error: err,
+      };
 
-      console.log(
-        `${client.id.substr(0, 2)} subscribe event failed`
-      )
+      console.log(`${client.id.substr(0, 2)} subscribe event failed`);
       client.emit("error", errorEventData);
     }
   });
