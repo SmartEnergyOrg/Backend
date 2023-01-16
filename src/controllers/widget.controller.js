@@ -126,7 +126,7 @@ const Update = async (req, res) => {
       GraphsService.Replace(graph.GraphId, WidgetId, graph);
     });
 
-    res.status(204).json({ message: "Update is completed", result: true });
+    res.status(200).json({ message: "Update is completed", result: true });
   } catch (error) {
     res
       .status(400)

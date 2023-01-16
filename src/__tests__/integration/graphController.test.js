@@ -14,8 +14,8 @@ const WidgetInsert =
   "REPLACE INTO Widgets(WidgetId, Title, Position, Icon) VALUES(1, 'Widget voor gasverbruik', 1, 'IconURL');"
 const GraphInsert =
   "REPLACE INTO Graphs (WidgetId, Type, Query, Interval, Color) VALUES(1, 'bar', 'SELECT FROM', 5, '#000001')"
-const UserInsert = `REPLACE INTO Users(UserId, FirstName, 
-    LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) 
+const UserInsert = `REPLACE INTO Users(UserId, FirstName,
+    LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password)
     VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
 const deleteQueryUser = `DELETE FROM Users;`;
 const deleteQueryWidget = `DELETE FROM Widgets;`;
@@ -67,9 +67,7 @@ describe("Create graphs test", function () {
       .send(validGraph)
       .end((err, res) => {
         const response = res.body;
-        expect(response.message).equals(
-          "Aanmaken van een grafiek is niet voltooid"
-        );
+        expect(response.message).equals("Creation of graph failed");
         expect(response.succeeded).equals(false);
         done();
       });
@@ -82,7 +80,7 @@ describe("Create graphs test", function () {
       .send(validGraph)
       .end((err, res) => {
         const response = res.body;
-        expect(response.message).equals("Graph succesfully made");
+        expect(response.message).equals("Graph successfully made");
         expect(response.succeeded).equals(true);
         done();
       });
@@ -155,7 +153,7 @@ describe("Delete graphs test", function () {
       .delete("/api/widgets/1/graphs/1")
       .end((err, res) => {
         const response = res.body;
-        expect(response.message).equals("Graph is succesfully removed");
+        expect(response.message).equals("Graph is successfully removed");
         expect(response.succeeded).equals(true);
         done();
       });
@@ -183,7 +181,7 @@ describe("Read graphs", function () {
       .get("/api/widgets/1/graphs")
       .end((err, res) => {
         const response = res.body;
-        expect(response.message).equals("Retrieval all graphs succesful");
+        expect(response.message).equals("Successfully retrieved all graphs");
         expect(response.succeeded).equals(true);
         done();
       });
