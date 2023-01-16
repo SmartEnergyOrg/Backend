@@ -2,30 +2,36 @@
 
 ## Inleiding
 
-(Introductie van de applicatie + achtergrondinformatie)
+(Introductie van de API + achtergrondinformatie)
+
+(Link naar de frontend readme)
+<a href="https://github.com/SmartEnergyOrg/Frontend#readme">Frontend</a>
 
 ## Inhoudsopgave
 
 (Inhoudsopgaven)
-<a href="#Installation">Installatie applicatie</a>
-<a href="#StartupApp">Opstarten applicatie</a>
-<a href="#OpenApp">Openen van de applicatie</a>
-<a href="#FAQ">Veelgestelde vragen</a>
 
-## Installatie van de applicatie
+<div>
+<a href="#Installation">Installatie API</a>
+<a href="#StartupApp">Opstarten API</a>
+<a href="#OpenApp">Openen van de API</a>
+<a href="#FAQ">Veelgestelde vragen</a>
+</div>
+
+## Installatie van de API
 
 <div id="#Installation"></div>
 (Instructies voor het installeren van de api)
 
-## Opstarten van applicatie
+## Opstarten van API
 
 <div id="#StartupApp"></div>
 (Instructies voor het opstarten van de api)
 
-## Openen van de applicatie
+## Openen van de API
 
 <div id="#OpenApp"></div>
-(De url van de applicatie om de applicatie te openen)
+(De url van de API om de API te openen)
 
 ## Veelgestelde vragen
 
