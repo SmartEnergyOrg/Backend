@@ -162,7 +162,7 @@ io.on("connection", (client) => {
 
           influxResult = await influxdbService.callFluxQuery(result.Query);
 
-          // emit error if the result is empty or undefined
+          // check if InfluxResult and oldInfluxResult are arrays and have atleast 1 element
           if (
             typeof influxResult == "array" &&
             typeof oldInfluxResult == "array" &&
@@ -173,14 +173,6 @@ io.on("connection", (client) => {
             if (influxResult[0]._time !== oldInfluxResult[0]._time) {
               client.emit(`pollWidget(${data.graphId})`, influxResult);
             }
-          } else {
-            client.emit("error", {
-              eventName: "subscribe",
-              clientData: data,
-              message: "Bad Request: this query doesn't return any data",
-              error: "",
-            });
-            clearInterval(intervalId);
           }
 
           oldInfluxResult = influxResult;
