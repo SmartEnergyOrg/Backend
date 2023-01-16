@@ -72,10 +72,8 @@ const Create = async (req, res) => {
     const DashboardBody = req.body.UserId; // req.headers.UserId
 
     const result = await dashboardService.Create(DashboardBody);
-    
-    res
-      .status(204)
-      .json({ message: "Execution was successful", result: result });
+
+    res.status(201).json({ message: "Execution was successful", result: result });
   } catch (error) {
     res.status(500).json({
       message: "Dashboard creation failed",
