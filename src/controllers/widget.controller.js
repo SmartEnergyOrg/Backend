@@ -117,14 +117,31 @@ const Update = async (req, res) => {
     const WidgetId = req.params.id;
     const WidgetBody = req.body.Widget;
     const GraphList = req.body.Graphs;
+    const GraphListIds = req.body.Graphs.map(g => g.GraphId)
 
     // update widget
     await widgetService.Update(WidgetId, WidgetBody);
+
+    // prepare list of graphs to delete
+    let graphsToDelete = await GraphsService.GetAll(WidgetId);
+    graphsToDelete = graphsToDelete.filter(g => {
+      if (!GraphListIds.includes(g.GraphId)) {
+        //GraphId is not included in the request body, thus delete
+        return true;
+      }
+      return false;
+    })
 
     // replace old graphs with their updated versions
     await GraphList.forEach((graph) => {
       GraphsService.Replace(graph.GraphId, WidgetId, graph);
     });
+
+    // delete dangling graphs
+    graphsToDelete.forEach((graph) => {
+      GraphsService.Delete(graph.GraphId)
+    })
+
 
     res.status(200).json({ message: "Update is completed", result: true });
   } catch (error) {
