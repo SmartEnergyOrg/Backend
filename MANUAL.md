@@ -100,7 +100,7 @@ Als de API correct geïnstalleerd, is de volgende stap om de webapplicatie te in
 
 Klik op deze link om de installatiehandleiding van de webapplicatie te openen
 
-[Installatie webapplicatie](https://github.com/SmartEnergyOrg/Frontend#readme)
+[Installatie webapplicatie](https://github.com/SmartEnergyOrg/Frontend#manual)
 
 ## Veelgestelde vragen
 
