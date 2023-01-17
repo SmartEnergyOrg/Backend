@@ -57,13 +57,13 @@ In deze installatiehandleiding, heeft het betrekking tot het installeren van de 
 4. Navigeer vanuit de root folder, direct naar de Backend folder via de volgende commando
 
 ```
-cd ./Backend/Backend
+cd ./Backend-main/Backend-main
 ```
 
 Of als men vanuit de zip-folder de terminal opent
 
 ```
-cd ./Backend
+cd ./Backend-main
 ```
 
 5. Binnen de Backend folder, voer in de terminal de volgende commando uit om het installatiescript uit te voeren.
@@ -79,13 +79,18 @@ In dat geval zal men een terminal moeten downloaden zoals, cmd of een vergelijkb
 Als het installatiescript zonder fouten uitgevoerd is, dan start applicatie automatisch op en kan er gebruik gemaakt worden.
 
 #### Opstarten van de API
-
 <div id="#OpenApp">
   <p>In het geval dat de applicatie correct is geïnstalleerd. Open de onderstaande link om de API te bedienen.<p>
 </div>
 
 ```
 http://localhost:12345/api
+```
+
+##### Handmatig opstarten.
+Om de API handmatig op te starten, navigeer de innerste Backend-main folder en voer de volgende commando uit:
+```
+npm run dev
 ```
 
 ## Verdere stappen
