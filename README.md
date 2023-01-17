@@ -1,13 +1,12 @@
 ![120393305](https://user-images.githubusercontent.com/38434237/212727884-4746ef79-9726-4618-8a16-37bde6750281.png)
 # Installatiehandleiding API Smart Energy
 
-#### Ontwikkelaars betrokken bij het project
+## Ontwikkelaars
 Studenten
 |Xin|Silvester|Marcello|Jens|Mick|Joost|
 |----|----|----|----|----|----|
 
- #####
-Projectbegeleiders
+#### Projectbegeleiders
 |Remo van der Heijden|Jan Montizaan|
 |----|----|
 
@@ -39,7 +38,7 @@ Het gevolg hiervan is dat een gebruiker energie ontvangt van meerdere bronnen. D
 ### Dankwoord
 Namens het projectgroep, willen we onze contactpersoon Arno Broeders bedanken voor onze samenwerking tijdens het project. Ook willen onze begeleiders Remo van der Heijden en Jan Montizaan bedanken bij het ondersteunen van het ontwikkelingsproces.
 
-## Applicatieinformatie
+### Applicatieinformatie
 Om dit systeem op te zetten, is het vereist om twee soorten applicaties te installeren:
 1. **De API. (Huidige pagina)**
 2. <a href="https://github.com/SmartEnergyOrg/Frontend#readme"> De webapplicatie</a>
