@@ -7,7 +7,7 @@ Via de link hieronder, zal er verwezen worden naar de installatiehandleiding van
 [Handleiding API](https://github.com/SmartEnergyOrg/Backend/blob/feature-documentation/MANUAL.md)
 
 
-### Achtergrond
+## Achtergrond
 Een belangrijke reden voor de ontwikkeling van dit systeem, is dat er een energietransitie van fossiele brandstof naar duurzame energie plaatsvind. Eén voorbeeld van duurzame energie is via zonne-energie via zonnepanelen.
 Het gevolg hiervan is dat een gebruiker energie ontvangt van meerdere bronnen. Dit systeem is bedoeld om deze energietransitie te ondersteunen.
 
