@@ -59,19 +59,9 @@ In deze installatiehandleiding, heeft het betrekking tot het installeren van de 
 
 2. Open het ZIP-bestand en pak alles uit in de root folder.
 
-3. Open cmd of terminal om te navigeren naar de applicatiefolder.
+3. Open de terminal/cmd of soortgelijke editor.
 
-4. Navigeer vanuit de root folder, direct naar de Backend folder via de volgende commando
-
-```
-cd ./Backend/Backend
-```
-
-Of als men vanuit de zip-folder de terminal opent
-
-```
-cd ./Backend
-```
+4. Navigeer naar de innerste Backend-main folder van de applicatie
 
 5. Binnen de Backend folder, voer in de terminal de volgende commando uit om het installatiescript uit te voeren.
 
@@ -104,7 +94,3 @@ Klik op deze link om de installatiehandleiding van de webapplicatie te openen
 
 [Installatie webapplicatie](https://github.com/SmartEnergyOrg/Frontend#readme)
 
-## Veelgestelde vragen
-
-<div id="#FAQ">Veelgestelde vragen</div>
-(Vragen en antwoorden voor troubleshooting)
