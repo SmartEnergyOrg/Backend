@@ -4,6 +4,7 @@ In dit document zal een korte achtergrond van het project uitgelegd worden. Ook 
 
 ## Handleiding API
 Via de link hieronder, zal er verwezen worden naar de installatiehandleiding van de API:
+
 [Handleiding API](https://github.com/SmartEnergyOrg/Backend/blob/feature-documentation/MANUAL.md)
 
 
