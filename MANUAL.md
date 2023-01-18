@@ -1,21 +1,16 @@
 ![120393305](https://user-images.githubusercontent.com/38434237/212727884-4746ef79-9726-4618-8a16-37bde6750281.png)
-# Installatiehandleiding API Smart Energy
+# Smart Energy API
 
-#### Ontwikkelaars betrokken bij het project
-Studenten
+## Betrokken partijen
+Hierin worden betrokken partijen op een rij gezet en geven alle personen aan die bij het project betrokken waren.
+
+### Ontwikkelaars
 |Xin|Sylvester|Marcello|Jens|Mick|Joost|
 |----|----|----|----|----|----|
 
- #####
-Projectbegeleiders
+### Projectbegeleiders
 |Remo van der Heijden|Jan Montizaan|
 |----|----|
-
-### Versie
-
-|Versie|Datum|
-|----|----|
-|1.0|16 januari 2023|
 
 ## Inhoudsopgave
 
@@ -77,7 +72,7 @@ Als het installatiescript zonder fouten uitgevoerd is, dan start applicatie auto
 http://localhost:12345/api
 ```
 
-##### Handmatig opstarten.
+#### Handmatig opstarten.
 Om de API handmatig op te starten, navigeer de innerste Backend-main folder en voer de volgende commando uit:
 ```
 npm run start
@@ -91,8 +86,3 @@ Als de API correct geïnstalleerd, is de volgende stap om de webapplicatie te in
 Klik op deze link om de installatiehandleiding van de webapplicatie te openen
 
 [Installatie webapplicatie](https://github.com/SmartEnergyOrg/Frontend#manual)
-
-## Veelgestelde vragen
-
-<div id="#FAQ">Veelgestelde vragen</div>
-(Vragen en antwoorden voor troubleshooting)
