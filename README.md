@@ -1,7 +1,5 @@
 ![120393305](https://user-images.githubusercontent.com/38434237/212727884-4746ef79-9726-4618-8a16-37bde6750281.png)
-# Smart Energy - Status Monitor
-
-# Smart Energie dankwoord.
+# Smart Energy - Status Energy API
 In dit document zal een korte achtergrond van het project uitgelegd worden. Ook zal namens het projetgroep een dankwoord geuit worden aan alle betrokken partijen.
 
 ## Handleiding API
