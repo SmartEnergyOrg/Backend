@@ -33,91 +33,49 @@ Studenten
 |Arno Broeders|
 |----|
 
-# Contribution rules
+# Project setup
 
-## Environment setup
+## Variabele
 
-Add all variables from sample.env to your own custom .env file.
+Voeg alle variabele van ```sample.env``` toe aan je eigen ```.env``` bestand.
 
 ## Docker setup
 
-If you are on windows 10/11 Home:
-
-1. Install WSL: [WSL installation guide](https://docs.microsoft.com/en-us/windows/wsl/install)
-2. Restart your computer, and run in powershell:
+Op Windows 10/11 Home:
+1. Installeer WSL: [WSL installation guide](https://docs.microsoft.com/en-us/windows/wsl/install)
+2. Herstart je apparaat en voer het volgende powershell command uit:
 
 ```
 WSL -l
 ```
 
-3. If you receive any errors, troubleshoot.
-4. If Windows did not install a default distro (Ubuntu) Install one from the MS
-   store: [Ubuntu from MS store](https://apps.microsoft.com/store/detail/ubuntu/9PDXGNCFSCZV?hl=en-us&gl=US)
-5. For a more comfortable working environment get Windows Terminal and set Ubuntu as your default
-   CLI: [Windows Terminal from MS store](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701)
-6. Install Docker: [Docker](https://www.docker.com/)
-7. Restart computer
-8. Open Docker-Desktop, open settings and go to: `Resources > WSL Integration` Enable Ubuntu and press refresh
-9. Open Windows Terminal or Ubuntu and see if the `docker` command is working.
+3. Indien Windows niet automatisch ee nstandaard distro (Ubuntu) heeft geinstalleerd kan je deze handmatig [installeren vanuit de Microsoft Store.](https://apps.microsoft.com/store/detail/ubuntu/9PDXGNCFSCZV?hl=en-us&gl=US)
+4. Installeer [Windows Terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701) en zet Ubuntu als standaard.
+5. Installeer [Docker](https://www.docker.com/)
+6. Herstart apparaat
+7. Open Docker-Desktop, open settings en ga naar: `Resources > WSL Integration` Druk op `Enable integration with my default WSL distro` en druk op opslaan.
+8. Open Windows Terminal of Ubuntu and controleer of het command `docker` werkt.
 
+Indien op Linux, Mac of Windows 10/11 Pro
 If you are on Linux, Mac or Windows 10/11 Pro:
 
-1. Install Docker
-2. Run `docker` in a CLI to see if it works
+1. Installeer [Docker](https://www.docker.com/)
+2. Controleer of het command `docker` werkt.
 
-### When Docker is installed:
+## Deployment
 
-1. navigate to the repo in a terminal or inside your IDE's CLI
-2. copy and paste `sample.env` (to keep it on the repo) and rename it to `.env`
-3. edit the `.env` file so that it contains your preferred values
-4. run `docker-compose build`
-5. run `docker-compose up -d` to run the containers in the background
-6. run `docker-compose down` to stop and remove the containers
+1. Navigeer naar de repo in een terminal of in de CLI van je IDE.
+2. Kopieer en plak 'sample.env' en hernoem het naar `.env`
+3. Bewerk het '.env' bestand zodat deze je gewenste waarden bevat.
+4. Voer 'docker-compose build' uit.
+5. Voer 'docker-compose up -d' uit om de containers op de achtergrond uit te voeren.
+6. Voer 'docker-compose down' uit om de containers te stoppen en te verwijderen.
 
-## Code conventions
+## Afspraken Git en Github
 
-- Strict convention rules are not applied in any frontend Projects. Most components and boilerplate will be generated
-  already.
-- No unused variables
-- Always make use of semicolons (;) at the end of a statement.
-- Use double quotes.
-- All functions must have a JSDoc comment.
-
-```TS
-   /**
-    * I am a JSDoc, I describe the function below me.
-    * This function calls someone SUS!
-    * @param person - The person who's gonna be sus.
-    */
-  function amongUs(person: any): void {
-    console.log(`${person} is sus`);
-  }
-```
-
-- No unused functions
-- When you use an ESLint Ignore statement add an explanation.
-
-### What happens when code is committed that does not follow the code conventions?
-
-When code is committed that contains linting errors it will fail whilst running in the pipeline.
-Your pull request will fail and can therefor not be pr'd back to dev or main.
-
-## Git and Github rules
-
-- Do not push directly to Dev or Main.
-- Use Milestones for user stories.
-- Use an issue per problem you'll tackle.
-- Add corresponding Milestones (user stories) to your issue.
-- Add fitting labels to your issue (bugfix, new feature, documentation etc.)
-- For every new problem you'll solve you work on a different feature or bug-fix branch. (feature/stream-window,
-  bug-fix/centered-div)
-- When done with a branch create a pull request with your pushed branch.
-- in the description write: Closes #Issue number of issue you've solved. This way Issues will automatically be closed
-  after the pull request has been submitted.
-- Every pull request needs at least one code review.
-- Only use `feature` and `bug-fix` branches.
-- Do your code reviews seriously.
-- Do not review/submit pull requests that are still running CI tests.
-- Assign yourself and other people if necessary to the assignee's tab in a pull request.
-- Feel free to request reviewers in a pull request.
-- Make sure not to commit big chunks of changes, commit in small steps.
+- Push niet direct naar Dev of Main.
+- Als je klaar bent met een branch maak je een pull request aan van je gepushte branch.
+- Elk pull request heeft minstens één code review nodig.
+- Gebruik alleen `feature` en `bug-fix` branches.
+- Doe je code-reviews serieus.
+- Geen bulk commits
