@@ -32,6 +32,7 @@ Studenten
 |----|
 
 # Project setup
+Dit gedeelte van het document is bedoeld voor ontwikkelaars die aan dit project bijdragen. Het bevat instructies voor het opzetten van zijn ontwikkelomgeving en bevatten regels voor het onderhouden van deze git-repository.
 
 ## Variabele
 
