@@ -1,7 +1,39 @@
 ![120393305](https://user-images.githubusercontent.com/38434237/212727884-4746ef79-9726-4618-8a16-37bde6750281.png)
 # Smart Energy - Status Monitor
 
-[project description here]
+# Smart Energie dankwoord.
+In dit document zal een korte achtergrond van het project uitgelegd worden. Ook zal namens het projetgroep een dankwoord geuit worden aan alle betrokken partijen.
+
+## Handleiding API
+Via de link hieronder, zal er verwezen worden naar de installatiehandleiding van de API:
+
+[Handleiding API](https://github.com/SmartEnergyOrg/Backend/blob/feature-documentation/MANUAL.md)
+
+
+## Achtergrond
+Een belangrijke reden voor de ontwikkeling van dit systeem, is dat er een energietransitie van fossiele brandstof naar duurzame energie plaatsvind. Eén voorbeeld van duurzame energie is via zonne-energie via zonnepanelen.
+Het gevolg hiervan is dat een gebruiker energie ontvangt van meerdere bronnen. Dit systeem is bedoeld om deze energietransitie te ondersteunen.
+
+### Dankwoord
+Namens het projectgroep, willen we onze contactpersoon Arno Broeders bedanken voor onze samenwerking tijdens het project. Ook willen onze begeleiders Remo van der Heijden en Jan Montizaan bedanken bij het ondersteunen van het ontwikkelingsproces.
+
+## Betrokken partijen
+Hierin worden betrokken partijen op een rij gezet en geven alle personen aan die bij het project betrokken waren.
+
+### Ontwikkelaars
+Studenten
+|Xin|Sylvester|Marcello|Jens|Mick|Joost|
+|----|----|----|----|----|----|
+
+### Projectbegeleiders
+|Remo van der Heijden|Jan Montizaan|
+|----|----|
+
+### Contactpersoon
+|Arno Broeders|
+|----|
+
+# Contribution rules
 
 ## Environment setup
 
@@ -41,18 +73,6 @@ If you are on Linux, Mac or Windows 10/11 Pro:
 4. run `docker-compose build`
 5. run `docker-compose up -d` to run the containers in the background
 6. run `docker-compose down` to stop and remove the containers
-
-### Using remote containers with VSCode
-
-For an optimal dev environment use the remote containers extension
-
-1. Open VSCode in this project
-2. Install Remote - Containers from Microsoft (ms-vscode-remote.remote-containers)
-3. Copy and paste `sample.env` (to keep it on the repo) and rename it to `.env`
-4. Open the command pallet `ctrl` + `shift` + `p` and run `> Remote Containers: Open Folder in container..`
-5. You should now be inside the container within VSCode.
-
-# Contribution rules
 
 ## Code conventions
 
@@ -101,35 +121,3 @@ Your pull request will fail and can therefor not be pr'd back to dev or main.
 - Assign yourself and other people if necessary to the assignee's tab in a pull request.
 - Feel free to request reviewers in a pull request.
 - Make sure not to commit big chunks of changes, commit in small steps.
-
-# Smart Energie dankwoord.
-In dit document zal een korte achtergrond van het project uitgelegd worden. Ook zal namens het projetgroep een dankwoord geuit worden aan alle betrokken partijen.
-
-## Handleiding API
-Via de link hieronder, zal er verwezen worden naar de installatiehandleiding van de API:
-
-[Handleiding API](https://github.com/SmartEnergyOrg/Backend/blob/feature-documentation/MANUAL.md)
-
-
-## Achtergrond
-Een belangrijke reden voor de ontwikkeling van dit systeem, is dat er een energietransitie van fossiele brandstof naar duurzame energie plaatsvind. Eén voorbeeld van duurzame energie is via zonne-energie via zonnepanelen.
-Het gevolg hiervan is dat een gebruiker energie ontvangt van meerdere bronnen. Dit systeem is bedoeld om deze energietransitie te ondersteunen.
-
-### Dankwoord
-Namens het projectgroep, willen we onze contactpersoon Arno Broeders bedanken voor onze samenwerking tijdens het project. Ook willen onze begeleiders Remo van der Heijden en Jan Montizaan bedanken bij het ondersteunen van het ontwikkelingsproces.
-
-## Betrokken partijen
-Hierin worden betrokken partijen op een rij gezet en geven alle personen aan die bij het project betrokken waren.
-
-### Ontwikkelaars
-Studenten
-|Xin|Silvester|Marcello|Jens|Mick|Joost|
-|----|----|----|----|----|----|
-
-### Projectbegeleiders
-|Remo van der Heijden|Jan Montizaan|
-|----|----|
-
-### Contactpersoon
-|Arno Broeders|
-|----|
