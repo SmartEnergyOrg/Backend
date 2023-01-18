@@ -4,9 +4,7 @@ const { InfluxDB, Point } = require("@influxdata/influxdb-client");
 const { DeleteAPI } = require("@influxdata/influxdb-client-apis");
 
 /** Environment variables **/
-const url = `${process.env.INFLUXDB_HOST || "http://localhost"}:${
-  process.env.INFLUXDB_PORT
-}`;
+const url = `${process.env.INFLUXDB_HOST || "http://localhost:8086"}`;
 const token = process.env.DOCKER_INFLUXDB_INIT_ADMIN_TOKEN;
 const org = "SmartEnergy";
 const bucket = "SmartEnergy";

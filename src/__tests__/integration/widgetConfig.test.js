@@ -7,6 +7,7 @@ const { expect } = require("chai");
 const { SqliteDataContext } = require("../../db/sqlite.client");
 const { before, after, beforeEach, afterEach } = require("mocha");
 const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
+const { fluxExpression } = require("@influxdata/influxdb-client");
 
 chai.should();
 chai.use(chaiHttp);
@@ -171,9 +172,7 @@ describe("CRUD Widgets", function () {
         .request(server)
         .delete("/api/widgets/1")
         .end((err, res) => {
-          const response = res.body;
-          expect(response.message).equals("Deletion has succeeded result");
-          expect(response.result).equals(true);
+          expect(res.status).equals(204);
           done();
         });
     });

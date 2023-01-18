@@ -69,6 +69,16 @@ class SqliteDataContext {
       )
     `;
 
+    const WeatherTable = `
+    CREATE TABLE IF NOT EXISTS Weathers (
+      WeatherId INTEGER PRIMARY KEY,
+      Name TEXT NOT NULL,
+      Country TEXT NOT NULL,
+      Lat INTEGER NOT NULL,
+      Lon INTEGER NOT NULL
+    )
+    `
+
     const defaultDashboard = `INSERT OR IGNORE INTO Dashboards(DashboardId, UserId) VALUES(0, 0);`;
 
     try {
@@ -79,6 +89,7 @@ class SqliteDataContext {
         this.DataSQL.run(WidgetTable); // Add widget table
         this.DataSQL.run(GraphTable); // Add graph table
         this.DataSQL.run(defaultDashboard); // Create default dashboard
+        this.DataSQL.run(WeatherTable); //Create weather table.
       });
     } catch (e) {
       throw new Error(e);

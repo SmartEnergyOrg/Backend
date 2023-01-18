@@ -117,21 +117,33 @@ const Update = async (req, res) => {
     const WidgetId = req.params.id;
     const WidgetBody = req.body.Widget;
     const GraphList = req.body.Graphs;
+    const GraphListIds = req.body.Graphs.map(g => g.GraphId)
 
     // update widget
     await widgetService.Update(WidgetId, WidgetBody);
 
-    //Updates all graphsources in this table.
-    //Deletes all graphs not present in the object.
-    await GraphsService.UpdateDelete(GraphList.map((e) => e.GraphId));
+    // prepare list of graphs to delete
+    let graphsToDelete = await GraphsService.GetAll(WidgetId);
+    graphsToDelete = graphsToDelete.filter(g => {
+      if (!GraphListIds.includes(g.GraphId)) {
+        //GraphId is not included in the request body, thus delete
+        return true;
+      }
+      return false;
+    })
 
-    // replaces graphs
-    await GraphList.forEach(async (e) => {
-      // update with new values
-      GraphsService.Replace(e.GraphId, WidgetId, e);
+    // replace old graphs with their updated versions
+    await GraphList.forEach((graph) => {
+      GraphsService.Replace(graph.GraphId, WidgetId, graph);
     });
 
-    res.status(204).json({ message: "Update is completed", result: true });
+    // delete dangling graphs
+    graphsToDelete.forEach((graph) => {
+      GraphsService.Delete(graph.GraphId)
+    })
+
+
+    res.status(200).json({ message: "Update is completed", result: true });
   } catch (error) {
     res
       .status(400)
@@ -144,39 +156,56 @@ io.on("connection", (client) => {
   client.interval = [];
 
   client.on("subscribe", async (data) => {
-    console.log(
-      `${client.id.substr(0, 2)} subscribed to graph ${data.graphId}`
-    );
-    // let oldResult;
-    const placeholderResult = await GraphsService.GetOne(data.graphId);
-
-    if (placeholderResult && placeholderResult.Query) {
-      //first emit
-      let influxResult = await influxdbService.callFluxQuery(
-        placeholderResult.Query
+    try {
+      console.log(
+        `${client.id.substr(0, 2)} subscribed to graph ${data.graphId}`
       );
-      client.emit(`pollWidget(${data.graphId})`, influxResult);
 
-      let oldInfluxResult;
+      // let oldResult;
+      const placeholderResult = await GraphsService.GetOne(data.graphId);
 
-      //emits after interval time
-      client.interval.push(
-        setInterval(async () => {
+      if (placeholderResult && placeholderResult.Query) {
+        //first emit
+        let influxResult = await influxdbService.callFluxQuery(
+          placeholderResult.Query
+        );
+        client.emit(`pollWidget(${data.graphId})`, influxResult);
+
+        let oldInfluxResult;
+
+        //emits after interval time
+        let intervalId = setInterval(async () => {
           const result = await GraphsService.GetOne(data.graphId);
 
           influxResult = await influxdbService.callFluxQuery(result.Query);
 
-          // sends only new data by checking if latest _time is equal to already received _time
+          // check if InfluxResult and oldInfluxResult are arrays and have atleast 1 element
           if (
-            oldInfluxResult !== undefined &&
-            influxResult[0]._time !== oldInfluxResult[0]._time
+            typeof influxResult == "array" &&
+            typeof oldInfluxResult == "array" &&
+            influxResult.length > 0 &&
+            oldInfluxResult.length > 0
           ) {
-            client.emit(`pollWidget(${data.graphId})`, influxResult);
+            // sends only new data by checking if latest _time is equal to already received _time
+            if (influxResult[0]._time !== oldInfluxResult[0]._time) {
+              client.emit(`pollWidget(${data.graphId})`, influxResult);
+            }
           }
 
           oldInfluxResult = influxResult;
-        }, Math.max(placeholderResult.Interval, 10) * 1000)
-      );
+        }, Math.max(placeholderResult.Interval, 10) * 1000);
+        client.interval.push(intervalId);
+      }
+    } catch (err) {
+      let errorEventData = {
+        eventName: "subscribe",
+        clientData: data,
+        message: `${err.statusMessage}: ${err.message}`,
+        error: err,
+      };
+
+      console.log(`${client.id.substr(0, 2)} subscribe event failed`);
+      client.emit("error", errorEventData);
     }
   });
   client.on("disconnect", () => {

@@ -9,8 +9,8 @@ const { DatabaseInstance } = require("../../db/InstanceOfDatabase");
 
 chai.should();
 chai.use(chaiHttp);
-const UserInsert = `REPLACE INTO Users(UserId, FirstName, 
-  LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password) 
+const UserInsert = `REPLACE INTO Users(UserId, FirstName,
+  LastName, Street, HomeNr, PostalCode, Country, Emailadres, Password)
   VALUES(0, 'Test', 'Name', 'TestPlein', '1B', '8080EX', 'Testistan', 'Test@example.com', 'Password')`;
 describe("Read dashboards", function () {
   it("Should give a list of dashboards back", function (done) {
@@ -19,7 +19,7 @@ describe("Read dashboards", function () {
       .get("/api/dashboards")
       .end((err, res) => {
         const response = res.body;
-        expect(response.message).equals("Everything is alright");
+        expect(response.message).equals("Retrieval successful");
         expect(response.result.length).equals(1);
         done();
       });
@@ -31,7 +31,7 @@ describe("Read dashboards", function () {
       .get("/api/dashboards/0")
       .end((err, res) => {
         const response = res.body;
-        expect(response.message).equals("Everything is alright");
+        expect(response.message).equals("Retrieval successful");
         expect(response.result.DashboardId).equals(0);
         expect(response.result.UserId).equals(0);
         expect(response.result.ShowNavbar).equals(1);
@@ -77,24 +77,12 @@ describe("Create dashboard", function () {
       .send({ UserId: 2 })
       .end((err, res) => {
         const response = res.body;
-        expect(response.message).equals("Everything is alright");
+
         expect(response.result).equals(1);
+        expect(response.message).equals("Execution was successful");
         done();
       });
   });
-
-  /*it("Create dashboard failed", function (done) {
-    chai
-      .request(server)
-      .post("/api/dashboards")
-      .send({UserId: 999})
-      .end((err, res) => {
-        const response = res.body;
-        expect(response.message).equals("Dashboard creation failed");
-        expect(response.result).equals(false);
-        done();
-      });
-  });*/
 });
 
 describe("Update dashboard", function () {
@@ -125,33 +113,11 @@ describe("Update dashboard", function () {
       })
       .end((err, res) => {
         const response = res.body;
-        expect(response.message).equals("Everything is alright");
+        expect(response.message).equals("Execution was successful");
         expect(response.result).equals(true);
         done();
       });
   });
-
-  /*
-  it("Update dashboard fails, if userId does not exist.", function (done) {
-    chai
-      .request(server)
-      .put("/api/dashboards/211")
-      .send({
-        UserId: 1, 
-        ShowNavbar: 0, 
-        PeakTariffOn: 1, 
-        ShowWeather: 0, 
-        IdleTariff: 5, 
-        PeakTariff: 5
-      })
-      .end((err, res) => {
-        const response = res.body;
-        expect(response.message).equals("Everything is alright");
-        expect(response.result).equals(true);
-        done();
-      });
-  });
-  */
 });
 
 describe("Delete dashboard", function () {
@@ -174,7 +140,7 @@ describe("Delete dashboard", function () {
       .delete("/api/dashboards/2")
       .end((err, res) => {
         const response = res.body;
-        expect(response.message).equals("Everything is alright");
+        expect(response.message).equals("Execution was successful");
         expect(response.result).equals(true);
         done();
       });
