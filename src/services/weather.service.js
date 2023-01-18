@@ -1,46 +1,55 @@
+class WeatherService {
+  databaseInstance;
 
+  constructor(database) {
+    this.databaseInstance = database;
+  }
 
-class WeatherService{
+  async Create(weatherConfig) {
+    try {
+      const query =
+        "REPLACE INTO Weathers (WeatherId, Country, Name, Lat, Lon) VALUES(1,?,?,?,?);";
+      const params = [
+        weatherConfig.country,
+        weatherConfig.name,
+        weatherConfig.lat,
+        weatherConfig.lon,
+      ];
 
-    databaseInstance;
+      this.databaseInstance.Create(query, params);
 
-    constructor(database){
-        this.databaseInstance = database;
+      return await this.GetOne();
+    } catch (error) {
+      throw new Error("Creation has failed. Try later.");
     }
+  }
 
-    async Create(weatherConfig){
-        try {
-            const query = "REPLACE INTO Weathers (WeatherId, Country, Name, Lat, Lon) VALUES(1,?,?,?,?);";
-            const params = [weatherConfig.name, weatherConfig.country, weatherConfig.lat, weatherConfig.lon];
+  async Update(weatherConfig) {
+    try {
+      const query =
+        "REPLACE INTO Weathers (WeatherId, Country, Name, Lat, Lon) VALUES(1,?,?,?,?);";
+      const params = [
+        weatherConfig.country,
+        weatherConfig.name,
+        weatherConfig.lat,
+        weatherConfig.lon,
+      ];
+      await this.databaseInstance.Update(query, params);
 
-            this.databaseInstance.Create(query, params);
-
-            return await this.GetOne();
-        } catch (error) {
-            throw new Error("Creation has failed. Try later.");
-        }
+      return await this.GetOne();
+    } catch (error) {
+      throw new Error("Update has failed. Try once more");
     }
+  }
 
-    async Update(weatherConfig){
-        try {
-            const query = "REPLACE INTO Weathers (WeatherId, Country, Name, Lat, Lon) VALUES(1,?,?,?,?);";
-            const params = [ weatherConfig.name, weatherConfig.country, weatherConfig.lat, weatherConfig.lon];
-            await this.databaseInstance.Update(query, params);
-
-            return await this.GetOne();
-        } catch (error) {
-            throw new Error("Update has failed. Try once more");
-        }
+  async GetOne() {
+    try {
+      const query = "SELECT * FROM Weathers WHERE WeatherId = 1;";
+      return this.databaseInstance.GetOne(query);
+    } catch (error) {
+      throw new Error("There is no weather configuration. Configure a new one");
     }
-
-    async GetOne(){
-        try {
-            const query = "SELECT * FROM Weathers WHERE WeatherId = 1;";
-            return this.databaseInstance.GetOne(query);
-        } catch (error) {
-            throw new Error("There is no weather configuration. Configure a new one");
-        }
-    }
+  }
 }
 
 module.exports = WeatherService;
