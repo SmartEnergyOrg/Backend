@@ -3,7 +3,7 @@
 
 #### Ontwikkelaars betrokken bij het project
 Studenten
-|Xin|Silvester|Marcello|Jens|Mick|Joost|
+|Xin|Sylvester|Marcello|Jens|Mick|Joost|
 |----|----|----|----|----|----|
 
  #####
@@ -54,29 +54,19 @@ In deze installatiehandleiding, heeft het betrekking tot het installeren van de 
 
 3. Open cmd of terminal om te navigeren naar de applicatiefolder.
 
-4. Navigeer vanuit de root folder, direct naar de Backend folder via de volgende commando
-
-```
-cd ./Backend-main/Backend-main
-```
-
-Of als men vanuit de zip-folder de terminal opent
-
-```
-cd ./Backend-main
-```
+4. Navigeer vanuit de root folder, direct naar de Backend folder waarin de `install.sh` bestand gelocaliseert is.
 
 5. Binnen de Backend folder, voer in de terminal de volgende commando uit om het installatiescript uit te voeren.
 
-Deze commando installeert docker en de bijbehorende docker container en packages. 
+Dit commando installeert docker en de bijbehorende docker container en packages. 
 
-**Let op!** Als het apparaat geen editor heeft geïnstalleerd, dan zal het installatiescript een foutmelding teruggeven. 
-In dat geval zal men een terminal moeten downloaden zoals, cmd of een vergelijkbare editor.
+**Let op!** Als het apparaat geen command line editor heeft geïnstalleerd, dan zal het installatiescript een foutmelding teruggeven. 
+In dat geval zal men een command-line editor moeten downloaden.
 
 ```
 ./install.sh
 ```
-Als het installatiescript zonder fouten uitgevoerd is, dan start applicatie automatisch op en kan er gebruik gemaakt worden.
+Als het installatiescript zonder fouten uitgevoerd is, dan start applicatie automatisch op en kan er gebruikt gemaakt van worden.
 
 #### Opstarten van de API
 <div id="#OpenApp">
@@ -90,7 +80,7 @@ http://localhost:12345/api
 ##### Handmatig opstarten.
 Om de API handmatig op te starten, navigeer de innerste Backend-main folder en voer de volgende commando uit:
 ```
-npm run dev
+npm run start
 ```
 
 ## Verdere stappen
