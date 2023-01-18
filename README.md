@@ -27,7 +27,7 @@ Studenten
 |Remo van der Heijden|Jan Montizaan|
 |----|----|
 
-### Contactpersoon
+### Product Owner
 |Arno Broeders|
 |----|
 
