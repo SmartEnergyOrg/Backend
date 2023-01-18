@@ -54,19 +54,19 @@ In deze installatiehandleiding, heeft het betrekking tot het installeren van de 
 
 3. Open cmd of terminal om te navigeren naar de applicatiefolder.
 
-4. Navigeer vanuit de root folder, direct naar de Backend folder waarin de `install.sh` bestand gelocaliseert is.
+4. Navigeer vanuit de root folder naar de Backend folder waarin het `install.sh` bestand staat.
 
 5. Binnen de Backend folder, voer in de terminal de volgende commando uit om het installatiescript uit te voeren.
 
 Dit commando installeert docker en de bijbehorende docker container en packages. 
 
-**Let op!** Als het apparaat geen command line editor heeft geïnstalleerd, dan zal het installatiescript een foutmelding teruggeven. 
-In dat geval zal men een command-line editor moeten downloaden.
+**Let op!** Als het apparaat geen command line editor heeft gedefinieerd, dan zal het installatiescript een foutmelding teruggeven. 
+In dat geval zal men een command-line editor moeten downloaden en/of definiëren, bijvoorbeeld door `EDITOR=<your editor here> ./install.sh` uit te voeren in plaats van `./install.sh`. Dit zorgt ervoor dat het script wordt uitgevoerd waar de EDITOR variabele is gedefinieerd.
 
 ```
 ./install.sh
 ```
-Als het installatiescript zonder fouten uitgevoerd is, dan start applicatie automatisch op en kan er gebruikt gemaakt van worden.
+Als het installatiescript zonder fouten uitgevoerd is, dan start applicatie automatisch op en kan er gebruik gemaakt van worden.
 
 #### Opstarten van de API
 <div id="#OpenApp">
