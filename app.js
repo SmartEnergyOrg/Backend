@@ -1,28 +1,43 @@
 require("dotenv").config();
+const cors = require("cors");
+const router = require("./src/routes/router");
+// const errors = require("./src/helpers/errors");
 
 const express = require("express");
+const { default: Logger } = require("js-logger");
 const app = express();
+
+// // Log messages will be written to the window's console.
+// Logger.useDefaults();
 
 // middleware
 app.use(express.json());
+app.use(cors());
 
-console.log("hello world");
+app.use("/api", router);
 
-// routes
-app.get("/", (req, res) => {
-  res.send(
-    "<h1>StatusMonitor Home Energy API</h1><a href='/api/v1/monitors'>test</a>"
-  );
+// error responses
+app.use("*", (err, req, res, next) => {
+  console.error(`${err.name}: ${err.message}`);
+  next(err);
 });
 
-const port = process.env.PORT || 3333;
+// app.use("*", errors.handlers);
 
-const start = async () => {
-  try {
-    app.listen(port, console.log(`Server listening on port ${port}...`));
-  } catch (error) {
-    console.log(error);
+app.use("*", (err, req, res, next) => {
+  if (err.code === "invalid_token") {
+    res.status(401).json({
+      error: "Token invalid",
+    });
+  } else {
+    res.status(500).json({
+      error: "something unexpected happened. please contact developers",
+    });
   }
-};
+});
 
-start();
+const port = 3333;
+
+app.listen(port, console.log(`💡 Server is listening for requests`));
+
+module.exports = app;

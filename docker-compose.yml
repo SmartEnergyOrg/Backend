@@ -1,44 +1,11 @@
 version: "3"
+
 services:
   node:
     container_name: "statusmonitor_node"
     build: .
-    volumes:
-      - .:/app
+    env_file:
+      - .env
     ports:
-      - "3333:3333"
-    #env_file:
-    #  - .env
-    #environment:
-    #  PORT: ${PORT}
+      - "12345:3333"
     restart: unless-stopped
-    depends_on:
-      - influxdb
-
-  influxdb:
-    image: influxdb:latest
-    container_name: "statusmonitor_influxdb"
-    volumes:
-      - myInfluxVolume:/var/lib/influxdb2:rw # hiermee wordt data gepersisteerd
-    #env_file:
-    #  - .env
-    ports:
-      - "8086:8086"
-    restart: unless-stopped
-
-  influxdb_cli:
-    links:
-      - influxdb-cli
-    image: influxdb:latest
-    container_name: "statusmonitor_influxdb-cli"
-    environment:
-      # Use these same configurations parameters in your telegraf configuration, mytelegraf.conf.
-      - DOCKER_INFLUXDB_INIT_MODE=setup # do not change
-      - DOCKER_INFLUXDB_INIT_USERNAME=root # required
-      - DOCKER_INFLUXDB_INIT_PASSWORD=smartenergy # required, use environment variables for security
-      - DOCKER_INFLUXDB_INIT_ORG=SmartEnergy # required
-      - DOCKER_INFLUXDB_INIT_BUCKET=mybucket # required
-    entrypoint: [ "./entrypoint.sh" ]
-    restart: unless-stopped
-    depends_on:
-      - influxdb
